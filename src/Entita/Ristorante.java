@@ -6,17 +6,16 @@ public class Ristorante {
     private String tipoDiCucina;
     private boolean delivery;
     private boolean prenotazione;
-    private float prezzoMinimo;
-    private float prezzoMassimo;
+    private float prezzoMedio;
 
-    public Ristorante(String nome, String luogo, String tipoDiCucina, boolean delivery, boolean prenotazione, float prezzoMinimo, float prezzoMassimo){
+
+    public Ristorante(String nome, String luogo, String tipoDiCucina, boolean delivery, boolean prenotazione, float prezzoMedio){
         this.nome=nome;
         this.luogo=luogo;
         this.tipoDiCucina=tipoDiCucina;
         this.delivery=delivery;
         this.prenotazione=prenotazione;
-        this.prezzoMinimo=prezzoMinimo;
-        this.prezzoMassimo=prezzoMassimo;
+        this.prezzoMedio=prezzoMedio;
     }
 
     public String getNOme(){return nome;}
@@ -24,8 +23,7 @@ public class Ristorante {
     public String getTipoDiCucina(){return tipoDiCucina;}
     public boolean getDelivery(){return delivery;}
     public boolean getPrenotazione(){return prenotazione;}
-    public float getPrezzoMinimo(){return prezzoMinimo;}
-    public float getPrezzoMassimo(){return prezzoMassimo;}
+    public float getPrezzoMedio(){return prezzoMedio;}
 
 
 
