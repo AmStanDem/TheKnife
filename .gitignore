@@ -1,31 +1,17 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-.idea
-TheKnife.iml
+# IntelliJ
+.idea/
+*.iml
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+# Build
+/out/
+target/
+build/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/ddist/
-  /.nb-gradle/
-ist/
-/nb
-### VS Code ###
-.vscode/
+# Logs
+*.log
 
-### Mac OS ###
+# OS
 .DS_Store
+Thumbs.db!/.idea/
+!/TheKnife.iml
+/.idea/
