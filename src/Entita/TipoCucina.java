@@ -1,3 +1,5 @@
+package Entita;
+
 /**
  * Rappresenta le diverse tipologie di cucina (elenco esteso).
  */

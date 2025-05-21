@@ -1,7 +1,9 @@
+package Entita;
+
 import java.time.LocalDate;
 
 /**
- * Classe che rappresenta un Utente del sistema.
+ * Classe che rappresenta un Entita.Utente del sistema.
  * Un utente può essere un cliente o un ristoratore.
  * Un utente ha dei dati anagrafici di base.
  * @author Thomas Riotto

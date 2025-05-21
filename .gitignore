@@ -20,10 +20,10 @@ bin/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
+/ddist/
+  /.nb-gradle/
+ist/
+/nb
 ### VS Code ###
 .vscode/
 
