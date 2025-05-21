@@ -53,7 +53,7 @@ public enum TipoCucina {
     public String getNome() {
         return nome;
     }
-
+/**/
     /**
      * Override del metodo toString per restituire il nome della tipologia di cucina.
      *
