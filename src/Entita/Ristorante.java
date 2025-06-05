@@ -18,7 +18,7 @@ public class Ristorante {
         this.prezzoMedio=prezzoMedio;
     }
 
-    public String getNome(){return nome;}
+    public String getNOme(){return nome;}
     public String getLuogo(){return luogo;}
     public TipoCucina getTipoDiCucina(){return tipoDiCucina;}
     public boolean getDelivery(){return delivery;}
