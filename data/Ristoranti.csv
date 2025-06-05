@@ -1,11 +1,11 @@
 Nome,Prezzo,Cucina,Nazione,Città,Indirizzo,Latitudine,Longitudine,Descrizione,Delivery,Prenotazione
-Da Michele,€,Pizzeria,Italia,Napoli,Via Cesare Sersale 1,40.851774,14.269096,"Storica pizzeria napoletana, famosa per la pizza margherita e marinara.",Sì,No
-Osteria Francescana,€€€€,Moderna,Italia,Modena,Via Stella 22,44.64654,10.92552,"Ristorante stellato Michelin dello chef Massimo Bottura, cucina innovativa.",No,Sì
-Trattoria da Armando al Pantheon,€€,Romana,Italia,Roma,Salita de' Crescenzi 31,41.89928,12.47648,"Autentica trattoria romana a due passi dal Pantheon, piatti della tradizione.",No,Sì
-Sushi B,€€€,Giapponese,Italia,Milano,Via Vincenzo Monti 21,45.47055,9.17045,"Ristorante giapponese di alta qualità, con focus su sushi e sashimi.",Sì,Sì
-Antica Bottega del Vino,€€€,Veneta,Italia,Verona,Via Scudo di Francia 3,45.4414,10.99723,"Enoteca storica con cucina tradizionale veronese, vasta selezione di vini.",No,Sì
-Pizzeria Gino Sorbillo,€,Pizzeria,Italia,Napoli,Via dei Tribunali 32,40.85227,14.2607,"Famosa pizzeria nel cuore di Napoli, offre pizze classiche e creative.",Sì,No
-Hostaria Romana,€€,Romana,Italia,Roma,Via di San Francesco a Ripa 179,41.8845,12.473,"Tipica hostaria romana con piatti della tradizione e atmosfera accogliente.",No,Sì
-Langosteria,€€€€,Pesce,Italia,Milano,Via Savona 10,45.4542,9.1678,"Ristorante di pesce di lusso, rinomato per la freschezza degli ingredienti.",No,Sì
-All'Antico Vinaio,€,Paninoteca,Italia,Firenze,Via dei Neri 74R,43.7686,11.2583,"Paninoteca molto popolare, famosa per i suoi panini gourmet con ingredienti toscani.",Sì,No
-La Pergola,€€€€,Italiana,Italia,Roma,Via Alberto Cadlolo 101,41.9084,12.4497,"Ristorante a tre stelle Michelin con vista panoramica su Roma, cucina raffinata.",No,Sì
+Da Michele,15,Pizzeria,Italia,Napoli,Via Cesare Sersale 1,40.851774,14.269096,"Storica pizzeria napoletana, famosa per la pizza margherita e marinara.",Sì,No
+Osteria Francescana,70,Moderna,Italia,Modena,Via Stella 22,44.64654,10.92552,"Ristorante stellato Michelin dello chef Massimo Bottura, cucina innovativa.",No,Sì
+Trattoria da Armando al Pantheon,30,Romana,Italia,Roma,Salita de' Crescenzi 31,41.89928,12.47648,"Autentica trattoria romana a due passi dal Pantheon, piatti della tradizione.",No,Sì
+Sushi B,10,Giapponese,Italia,Milano,Via Vincenzo Monti 21,45.47055,9.17045,"Ristorante giapponese di alta qualità, con focus su sushi e sashimi.",Sì,Sì
+Antica Bottega del Vino,50,Veneta,Italia,Verona,Via Scudo di Francia 3,45.4414,10.99723,"Enoteca storica con cucina tradizionale veronese, vasta selezione di vini.",No,Sì
+Pizzeria Gino Sorbillo,8,Pizzeria,Italia,Napoli,Via dei Tribunali 32,40.85227,14.2607,"Famosa pizzeria nel cuore di Napoli, offre pizze classiche e creative.",Sì,No
+Hostaria Romana,25,Romana,Italia,Roma,Via di San Francesco a Ripa 179,41.8845,12.473,"Tipica hostaria romana con piatti della tradizione e atmosfera accogliente.",No,Sì
+Langosteria,30,Pesce,Italia,Milano,Via Savona 10,45.4542,9.1678,"Ristorante di pesce di lusso, rinomato per la freschezza degli ingredienti.",No,Sì
+All'Antico Vinaio,5,Paninoteca,Italia,Firenze,Via dei Neri 74R,43.7686,11.2583,"Paninoteca molto popolare, famosa per i suoi panini gourmet con ingredienti toscani.",Sì,No
+La Pergola,80,Italiana,Italia,Roma,Via Alberto Cadlolo 101,41.9084,12.4497,"Ristorante a tre stelle Michelin con vista panoramica su Roma, cucina raffinata.",No,Sì
