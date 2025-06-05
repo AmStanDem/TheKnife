@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @author Thomas Riotto
  */
 
-public class Utente {
+public abstract class Utente {
 
     //region Attributi
     private String nome;
@@ -17,17 +17,17 @@ public class Utente {
     private String username;
     private String password;
     private LocalDate dataDiNascita;
-    private String luogo; // Da vedere dopo
+     // Da vedere dopo
     //endregion
 
     //region Costruttore
-    public Utente(String nome, String cognome, String username, String password, LocalDate dataDiNascita, String luogo) {
+    public Utente(String nome, String cognome, String username, String password, LocalDate dataDiNascita) {
         this.nome = nome;
         this.cognome = cognome;
         this.username = username;
         this.password = password;
         this.dataDiNascita = dataDiNascita;
-        this.luogo = luogo;
+
     }
     //endregion
 
@@ -38,10 +38,6 @@ public class Utente {
 
     public LocalDate getDataDiNascita() {
         return dataDiNascita;
-    }
-
-    public String getLuogo() {
-        return luogo;
     }
 
     public String getNome() {
