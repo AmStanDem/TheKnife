@@ -43,7 +43,7 @@ public class Ristorante {
     public boolean getDelivery(){return delivery;}
     public boolean getPrenotazione(){return prenotazione;}
     public float getPrezzoMedio(){return prezzoMedio;}
-    public  String getDescrizione(){return descrizione;}
+    public String getDescrizione(){return descrizione;}
 
 
 
