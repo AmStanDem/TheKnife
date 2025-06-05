@@ -1,6 +1,7 @@
 package io_file;
 
 import Entita.Ristorante;
+import Entita.Cliente;
 import Entita.TipoCucina;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -10,6 +11,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,13 +61,32 @@ public class GestoreFile {
                 (nuovoRistorante.getPrenotazione() ? "Sì" : "No")
         };
         writer.writeNext(dati);
+        writer.close();
     }
+
+    public static void aggiungiCliente(Cliente nuovoCliente) throws IOException {
+        CSVWriter writer = new CSVWriter(new FileWriter(fileUtenti.toFile(), true));
+        // Scrive una nuova riga con i dati del cliente
+        String[] dati = new String[] {
+                nuovoCliente.getNome(),
+                nuovoCliente.getCognome(),
+                nuovoCliente.getUsername(),
+                nuovoCliente.getPassword(),
+                nuovoCliente.getDataDiNascita().format(DateTimeFormatter.ISO_DATE),
+                nuovoCliente.getLuogo()
+        };
+        writer.writeNext(dati);
+        writer.close();
+    }
+
 
 
     public static void main(String[] args) throws IOException, CsvException {
         var dati = GestoreFile.getRistoranti();
         System.out.printf(dati.toString());
-        var bob = new Ristorante("A","1","a","A,A",1,2, TipoCucina.AMERICANA,true,false,1.2f,"AA");
-        GestoreFile.aggiungiRistorante(bob);
+        // var bob = new Ristorante("A","1","a","A,A",1,2, TipoCucina.AMERICANA,true,false,1.2f,"AA");
+        // GestoreFile.aggiungiRistorante(bob);
+        var ciccio = new Cliente("Antonio","Pesavento","apesavento", "ciao", LocalDate.of(2006,1,14),"Varese");
+        GestoreFile.aggiungiCliente(ciccio);
     }
 }
