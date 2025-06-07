@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class GestoreFile {
@@ -91,4 +91,24 @@ public class GestoreFile {
         var ciccio = new Cliente("Antonio","Pesavento","apesavento", "ciao", LocalDate.of(2006,1,14),"Varese");
         GestoreFile.aggiungiCliente(ciccio);
     }
+
+
+
+
+    public static boolean Login(String username, String password) throws IOException, CsvException {
+        //Cerca se l'utente che fa il login è già registrato nel file o no
+        CSVReader reader = new CSVReader(new FileReader(fileUtenti.toFile()));
+        List<String[]> righe = reader.readAll();
+        for (int i=0; i<righe.size(); i++) {
+            String[] riga = righe.get(i);
+            String name = riga[2];
+            String key = riga[3];
+            if(name.equals(username)&& key.equals(password)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
