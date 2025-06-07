@@ -65,30 +65,62 @@ public class GestoreFile {
         writer.close();
     }
 
-    public static void aggiungiCliente(Cliente nuovoCliente) throws IOException {
-        CSVWriter writer = new CSVWriter(new FileWriter(fileUtenti.toFile(), true));
-        // Scrive una nuova riga con i dati del cliente
-        String[] dati = new String[] {
-                nuovoCliente.getNome(),
-                nuovoCliente.getCognome(),
-                nuovoCliente.getUsername(),
-                nuovoCliente.getPassword(),
-                nuovoCliente.getDataDiNascita().format(DateTimeFormatter.ISO_DATE),
-                nuovoCliente.getLuogo()
-        };
-        writer.writeNext(dati);
-        writer.close();
+    public static void aggiungiCliente(Cliente nuovoCliente) throws IOException, CsvException {
+        // Controlla che non ci sia già un utente con lo stesso username
+        if(getCliente(nuovoCliente.getUsername())!=null)
+            System.out.println("\nEsiste già un utente con questo username; Azione interrotta");
+        else {
+            CSVWriter writer = new CSVWriter(new FileWriter(fileUtenti.toFile(), true));
+            // Scrive una nuova riga con i dati del cliente
+            String[] dati = new String[]{
+                    nuovoCliente.getNome(),
+                    nuovoCliente.getCognome(),
+                    nuovoCliente.getUsername(),
+                    nuovoCliente.getPassword(),
+                    nuovoCliente.getDataDiNascita().format(DateTimeFormatter.ISO_DATE),
+                    nuovoCliente.getLuogo()
+            };
+            writer.writeNext(dati);
+            writer.close();
+        }
+    }
+
+    public static Cliente getCliente(String username) throws IOException, CsvException {
+        CSVReader reader = new CSVReader(new FileReader(fileUtenti.toFile()));
+        List<String[]> righe = reader.readAll();
+
+        for (int i = 1; i < righe.size(); i++) {
+            String[] riga = righe.get(i);
+            if(username.equals(riga[2])) { // Ricerca un cliente per username; se lo trova, lo copia
+                String nome = riga[0];
+                String cognome = riga[1];
+                // String username2 = riga[2]; inutile perchè l'user è già nei parametri del metodo, e (in teoria) è uguale
+                String password = riga[3];
+                LocalDate dataDiNascita = LocalDate.parse(riga[4]);
+                String luogo = riga[5];
+                reader.close();
+                return new Cliente(nome,cognome,username,password,dataDiNascita,luogo);
+            }
+        }
+        reader.close();
+        System.out.println("\nNon e' stato trovato nessun cliente corrispondente"); // se non trova ristoranti validi
+        return null;
     }
 
 
-
     public static void main(String[] args) throws IOException, CsvException {
-        var dati = GestoreFile.getRistoranti();
-        System.out.printf(dati.toString());
+        //var dati = GestoreFile.getRistoranti();
+        //System.out.printf(dati.toString());
         // var bob = new Ristorante("A","1","a","A,A",1,2, TipoCucina.AMERICANA,true,false,1.2f,"AA");
         // GestoreFile.aggiungiRistorante(bob);
         var ciccio = new Cliente("Antonio","Pesavento","apesavento", "ciao", LocalDate.of(2006,1,14),"Varese");
         GestoreFile.aggiungiCliente(ciccio);
+        var ciccio2 = new Cliente("Alessandro","Tullo","atullo","bsgdfjsnhsdhj",LocalDate.of(2005,11,19),"Cittiglio");
+        GestoreFile.aggiungiCliente(ciccio2);
+        getCliente("apesavento");
+        getCliente("atullo");
+        getCliente("amstandem");
+
     }
 
 
