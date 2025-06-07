@@ -45,7 +45,6 @@ public class GestoreFile {
     }
 
 
-
     public static void aggiungiRistorante(Ristorante nuovoRistorante) throws IOException {
         CSVWriter writer = new CSVWriter(new FileWriter(fileRistoranti.toFile(), true));
         // Scrive una nuova riga con i dati del ristorante
