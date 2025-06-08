@@ -1,56 +1,249 @@
 package Entita;
 
+import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
- * Classe che rappresenta un Entita.Utente del sistema.
- * Un utente può essere un cliente o un ristoratore.
- * Un utente ha dei dati anagrafici di base.
+ * Rappresenta un utente del sistema, che può essere un cliente o un ristoratore.
+ * <p>
+ * Ogni utente possiede dati anagrafici di base (nome, cognome, username,
+ * data di nascita e luogo di domicilio).
+ * La classe è astratta e va estesa da classi concrete come {@code Cliente} o {@code Ristoratore}.
+ * <p>
+ * Le password vengono cifrate automaticamente tramite l’algoritmo BCrypt.
+ * I nomi e i luoghi vengono formattati con la prima lettera maiuscola in ogni parola.
+ *
  * @author Thomas Riotto
+ * @author Antonio Pesavento
+ * @author Alessandro Tullo
+ * @author Marco Zaro
+ * @version 1.0
  */
-
 public abstract class Utente {
+    protected String nome;
+    protected String cognome;
+    protected String username;
+    protected String password;
+    protected LocalDate dataNascita;
+    protected String luogoDomicilio;
 
-    //region Attributi
-    private String nome;
-    private String cognome;
-    private String username;
-    private String password;
-    private LocalDate dataDiNascita;
-     // Da vedere dopo
-    //endregion
-
-    //region Costruttore
-    public Utente(String nome, String cognome, String username, String password, LocalDate dataDiNascita) {
-        this.nome = nome;
-        this.cognome = cognome;
+    /**
+     * Crea un nuovo utente impostando i dati anagrafici e cifrando la password.
+     * Nomi, cognome e luogo di domicilio vengono formattati correttamente.
+     *
+     * @param nome           Nome dell’utente (in chiaro, con qualsiasi formato)
+     * @param cognome        Cognome dell’utente (in chiaro)
+     * @param username       Username scelto per l’accesso
+     * @param password       Password in chiaro da cifrare
+     * @param dataNascita    Data di nascita dell’utente
+     * @param luogoDomicilio Luogo di domicilio (in chiaro)
+     */
+    public Utente(String nome, String cognome, String username, String password,
+                  LocalDate dataNascita, String luogoDomicilio) {
+        this.nome = formattaNome(nome);
+        this.cognome = formattaNome(cognome);
         this.username = username;
-        this.password = password;
-        this.dataDiNascita = dataDiNascita;
-
+        this.password = cifraPassword(password);
+        this.dataNascita = dataNascita;
+        this.luogoDomicilio = formattaNome(luogoDomicilio);
     }
+
+    //region --- Getters e Setters ---
+
+    /** @return Il nome formattato dell’utente */
+    public String getNome() { return nome; }
+
+    /** @param nome Nuovo nome (verrà formattato automaticamente) */
+    public void setNome(String nome) {
+        this.nome = formattaNome(nome);
+    }
+
+    /** @return Il cognome formattato dell’utente */
+    public String getCognome() { return cognome; }
+
+    /** @param cognome Nuovo cognome (verrà formattato automaticamente) */
+    public void setCognome(String cognome) {
+        this.cognome = formattaNome(cognome);
+    }
+
+    /** @return Lo username dell’utente */
+    public String getUsername() { return username; }
+
+    /** @param username Nuovo username */
+    public void setUsername(String username) { this.username = username; }
+
+    /** @return La password cifrata dell’utente */
+    public String getPassword() { return password; }
+
+    /**
+     * Imposta una nuova password per l’utente, cifrandola automaticamente.
+     *
+     * @param password Nuova password in chiaro
+     */
+    public void setPassword(String password) {
+        this.password = cifraPassword(password);
+    }
+
+    /** @return La data di nascita dell’utente */
+    public LocalDate getDataNascita() { return dataNascita; }
+
+    /** @param dataNascita Nuova data di nascita */
+    public void setDataNascita(LocalDate dataNascita) { this.dataNascita = dataNascita; }
+
+    /** @return Il luogo di domicilio formattato */
+    public String getLuogoDomicilio() { return luogoDomicilio; }
+
+    /** @param luogo Luogo di domicilio (verrà formattato automaticamente) */
+    public void setLuogoDomicilio(String luogo) {
+        this.luogoDomicilio = formattaNome(luogo);
+    }
+
     //endregion
 
-    //region Metodi
-    public String getCognome() {
-        return cognome;
+    //region --- Metodi di utilità ---
+
+    /**
+     * Ritorna il tipo concreto dell’utente.
+     * @return Stringa che rappresenta il tipo utente ("Cliente" per {@code Cliente}, "Ristoratore" per {@code Ristoratore})
+     */
+    public String getTipoUtente() {
+        return getClass().getSimpleName();
     }
 
-    public LocalDate getDataDiNascita() {
-        return dataDiNascita;
+    /**
+     * Verifica che la password in chiaro corrisponda a quella salvata cifrata.
+     *
+     * @param password Password in chiaro da verificare
+     * @return {@code true} se la password è corretta, {@code false} altrimenti
+     */
+    public boolean verificaPassword(String password) {
+        return BCrypt.checkpw(password, this.password);
     }
 
-    public String getNome() {
-        return nome;
+    /**
+     * Calcola l’hash BCrypt di una password in chiaro.
+     *
+     * @param password Password in chiaro da cifrare
+     * @return Stringa contenente l’hash della password
+     */
+    private String cifraPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public String getPassword() {
-        return password;
+    /**
+     * Effettua l’equivalenza tra utenti in base allo username.
+     *
+     * @param o Altro oggetto da confrontare
+     * @return {@code true} se l’altro utente ha lo stesso username
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Utente utente)) return false;
+        return username.equals(utente.username);
     }
 
-    public String getUsername() {
-        return username;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(username);
     }
+
+    /**
+     * Rappresentazione testuale dell’utente, nel formato "Nome Cognome (username)".
+     *
+     * @return Stringa descrittiva dell’utente
+     */
+    @Override
+    public String toString() {
+        return String.format("%s %s (%s)", nome, cognome, username);
+    }
+
+    // Metodo privato di utilità: formattazione della stringa (singole e multiple parole)
+    // con prima lettera maiuscola e il resto minuscolo.
+    private String formattaNome(String input) {
+        if (input == null || input.isEmpty()) return input;
+
+        String[] parole = input.trim().toLowerCase().split("\\s+");
+        StringBuilder risultato = new StringBuilder();
+
+        for (String parola : parole) {
+            if (!parola.isEmpty()) {
+                risultato.append(parola.substring(0, 1).toUpperCase());
+                if (parola.length() > 1) {
+                    risultato.append(parola.substring(1));
+                }
+                risultato.append(" ");
+            }
+        }
+
+        return risultato.toString().trim();
+    }
+
     //endregion
-    //
+
+    public static void main(String[] args) {
+        System.out.println("TEST CLASSE UTENTE\n");
+
+        String password1 = "minefraift?!";
+        String password2 = "bruuuuh";
+
+        Cliente cliente = new Cliente( // Per pochi
+                "marco b",
+                "porterai",
+                "minefraft",
+                password1,
+                LocalDate.of(2004, 10, 9),
+                "ehm, no"
+        );
+
+        // Test toString() e formattaNome
+        System.out.println("➤ Dati iniziali:");
+        System.out.println(cliente); // nome, cognome, username
+
+        // Test getTipoUtente()
+        System.out.println("Tipo utente: " + cliente.getTipoUtente());
+
+        // Test verificaPassword()
+        System.out.println("\n➤ Verifica password:");
+        System.out.println("Password corretta? " + cliente.verificaPassword(password1)); // true
+        System.out.println("Password errata? " + cliente.verificaPassword("sbagliata"));     // false
+
+        // Test setters
+        cliente.setNome("bruh");
+        cliente.setCognome("bruh");
+        cliente.setLuogoDomicilio("milano centrale");
+        cliente.setUsername("bruh");
+        cliente.setDataNascita(LocalDate.of(1999, 5, 20));
+        cliente.setPassword(password2);
+
+        System.out.println("\n➤ Dopo modifica dati:");
+        System.out.println(cliente);
+        System.out.println("\n➤ Test dei getters:");
+        System.out.println("Nome: " + cliente.getNome()); // atteso: "Bruh"
+        System.out.println("Cognome: " + cliente.getCognome()); // atteso: "Bruh"
+        System.out.println("Username: " + cliente.getUsername()); // atteso: "bruh"
+        System.out.println("Luogo di domicilio: " + cliente.getLuogoDomicilio()); // atteso: "Milano Centrale"
+        System.out.println("Data di nascita: " + cliente.getDataNascita()); // atteso: 1999-05-20
+        System.out.println("Password cifrata: " + cliente.getPassword()); // sarà un hash, non confrontabile
+
+        System.out.println("Password nuova corretta? " + cliente.verificaPassword(password2));
+
+        // Test equals()
+        Cliente altro = new Cliente(
+                "Cavallo",
+                "Pazzo",
+                "bruh",
+                "Rabiot",
+                LocalDate.of(2000, 1, 1),
+                "Milano please, vieni al Milan"
+        );
+
+        System.out.println("\n➤ Test equals tra utenti con stesso username:");
+        System.out.println("Sono uguali? " + cliente.equals(altro)); // true
+
+        // Test hashCode
+        System.out.println("\n➤ hashCode:");
+        System.out.println("HashCode cliente: " + cliente.hashCode());
+        System.out.println("HashCode altro:   " + altro.hashCode());
+    }
 }

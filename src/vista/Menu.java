@@ -14,12 +14,8 @@ public abstract class Menu {
         System.out.println("\t   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝     ╚══════╝");
         System.out.println();
     }
-
     public abstract void mostra();
-
     public static void main(String[] args) {
         stampaBanner();
     }
-
-
 }

@@ -3,13 +3,18 @@ package Entita;
 import java.time.LocalDate;
 
 public class Cliente extends Utente {
-    private String luogo;
-    public Cliente(String nome, String cognome, String username, String password, LocalDate dataDiNascita, String luogo) {
-        super(nome, cognome, username, password, dataDiNascita);
-        this.luogo=luogo;
+    public Cliente(String nome, String cognome, String username, String password, LocalDate dataDiNascita, String luogoDomicilio) {
+        super(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
     }
 
-    public String getLuogo() {
-        return luogo;
+    public static void main(String[] args) {
+        System.out.println(new Cliente
+                ("admin",
+                        "admin",
+                        "admin",
+                        "admin",
+                        LocalDate.now(),
+                        "admin")
+                .getTipoUtente()); // Stampa Cliente
     }
 }

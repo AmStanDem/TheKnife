@@ -1,3 +1,3 @@
-
-"Antonio","Pesavento","apesavento","ciao","2006-01-14","Varese"
-"Alessandro","Tullo","atullo","bsgdfjsnhsdhj","2005-11-19","Cittiglio"
+nome,cognome,username,password,data_nascita,luogo_domicilio,ruolo
+"Antonio","Pesavento","apesavento","$2a$10$addAbZQIQn.yKyRuJWKdHOdPRkHOWMAp2YdslqBLWbIsrGtDtr47K","2006-01-14","Varese","Cliente"
+"Alessandro","Tullo","atullo","$2a$10$8rno2LF3eC9tc5F0tsBZU.aANcIxUbDExoF55l.83mP8eB7Xufav6","2005-11-19","Cittiglio","Cliente"

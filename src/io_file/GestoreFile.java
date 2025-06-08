@@ -2,7 +2,6 @@ package io_file;
 
 import Entita.Ristorante;
 import Entita.Cliente;
-import Entita.TipoCucina;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class GestoreFile {
@@ -33,16 +31,15 @@ public class GestoreFile {
         // Salta intestazione se presente
         for (int i = 1; i < righe.size(); i++) {
             String[] riga = righe.get(i);
-            if (riga.length >= 3) {
-                String nome = riga[0];
-                String citta = riga[4];
-                Ristorante r = new Ristorante(nome, citta);
-                lista.add(r);
-            }
+            var nome = riga[0];
+            var citta = riga[4];
+            Ristorante r = new Ristorante(nome, citta);
+            lista.add(r);
         }
         reader.close();
         return lista;
     }
+
 
 
     public static void aggiungiRistorante(Ristorante nuovoRistorante) throws IOException {
@@ -77,8 +74,9 @@ public class GestoreFile {
                     nuovoCliente.getCognome(),
                     nuovoCliente.getUsername(),
                     nuovoCliente.getPassword(),
-                    nuovoCliente.getDataDiNascita().format(DateTimeFormatter.ISO_DATE),
-                    nuovoCliente.getLuogo()
+                    nuovoCliente.getDataNascita().format(DateTimeFormatter.ISO_DATE),
+                    nuovoCliente.getLuogoDomicilio(),
+                    nuovoCliente.getTipoUtente()
             };
             writer.writeNext(dati);
             writer.close();
@@ -130,16 +128,13 @@ public class GestoreFile {
         //Cerca se l'utente che fa il login è già registrato nel file o no
         CSVReader reader = new CSVReader(new FileReader(fileUtenti.toFile()));
         List<String[]> righe = reader.readAll();
-        for (int i=0; i<righe.size(); i++) {
-            String[] riga = righe.get(i);
+        for (String[] riga : righe) {
             String name = riga[2];
             String key = riga[3];
-            if(name.equals(username)&& key.equals(password)){
+            if (name.equals(username) && key.equals(password)) {
                 return true;
             }
         }
         return false;
     }
-
-
 }
