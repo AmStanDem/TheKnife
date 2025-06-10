@@ -41,6 +41,7 @@ public abstract class Utente {
      */
     public Utente(String nome, String cognome, String username, String password,
                   LocalDate dataNascita, String luogoDomicilio) {
+        validaAttributi(nome, cognome, username, password, luogoDomicilio);
         this.nome = formattaNome(nome);
         this.cognome = formattaNome(cognome);
         this.username = username;
@@ -56,7 +57,9 @@ public abstract class Utente {
 
     /** @param nome Nuovo nome (verrà formattato automaticamente) */
     public void setNome(String nome) {
-        this.nome = formattaNome(nome);
+        if (nome != null && !nome.isEmpty()) {
+            this.nome = formattaNome(nome);
+        }
     }
 
     /** @return Il cognome formattato dell’utente */
@@ -64,14 +67,20 @@ public abstract class Utente {
 
     /** @param cognome Nuovo cognome (verrà formattato automaticamente) */
     public void setCognome(String cognome) {
-        this.cognome = formattaNome(cognome);
+        if (cognome != null && !cognome.isEmpty()) {
+            this.cognome = formattaNome(cognome);
+        }
     }
 
     /** @return Lo username dell’utente */
     public String getUsername() { return username; }
 
     /** @param username Nuovo username */
-    public void setUsername(String username) { this.username = username; }
+    public void setUsername(String username) {
+        if (username != null && !username.isEmpty()) {
+            this.username = username;
+        }
+    }
 
     /** @return La password cifrata dell’utente */
     public String getPassword() { return password; }
@@ -82,7 +91,9 @@ public abstract class Utente {
      * @param password Nuova password in chiaro
      */
     public void setPassword(String password) {
-        this.password = cifraPassword(password);
+        if (password != null && !password.isEmpty()) {
+            this.password = cifraPassword(password);
+        }
     }
 
     /** @return La data di nascita dell’utente */
@@ -96,7 +107,9 @@ public abstract class Utente {
 
     /** @param luogo Luogo di domicilio (verrà formattato automaticamente) */
     public void setLuogoDomicilio(String luogo) {
-        this.luogoDomicilio = formattaNome(luogo);
+        if (luogo != null && !luogo.isEmpty()) {
+            this.luogoDomicilio = formattaNome(luogo);
+        }
     }
 
     //endregion
@@ -112,6 +125,49 @@ public abstract class Utente {
     }
 
     /**
+     * Verifica che i dati siano valorizzati nel modo corretto
+     * @param nome Nome dell'utente
+     * @param cognome Cognome dell'utente
+     * @param username Username dell'utente
+     * @param password Password dell'utente
+     * @param luogoDomicilio Luogo del domicilio dell'utente
+     * @throws UtenteException Se i dati non sono valorizzati nel modo corretto.
+     */
+    private void validaAttributi(String nome, String cognome, String username, String password, String luogoDomicilio) {
+        StringBuilder errori = new StringBuilder();
+        boolean errore = false;
+        if (nome == null || nome.isEmpty()) {
+            String messaggio = "Il nome di un utente deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (cognome == null || cognome.isEmpty()) {
+            String messaggio = "Il cognome di un utente deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (username == null || username.isEmpty()) {
+            String messaggio = "L'username di un utente deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (password == null || password.isEmpty()) {
+            String messaggio = "La password di un utente deve essere valorizzata.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (luogoDomicilio == null || luogoDomicilio.isEmpty()) {
+            String messaggio = "Il luogo del domicilio di un utente deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+
+        if (errore) {
+            throw new UtenteException(errori.toString());
+        }
+    }
+
+    /**
      * Verifica che la password in chiaro corrisponda a quella salvata cifrata.
      *
      * @param password Password in chiaro da verificare
@@ -121,11 +177,8 @@ public abstract class Utente {
         return BCrypt.checkpw(password, this.password);
     }
 
-    /**
+    /*
      * Calcola l’hash BCrypt di una password in chiaro.
-     *
-     * @param password Password in chiaro da cifrare
-     * @return Stringa contenente l’hash della password
      */
     private String cifraPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
