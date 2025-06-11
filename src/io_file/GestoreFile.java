@@ -1,7 +1,9 @@
 package io_file;
 
+import Entita.Localita;
 import Entita.Ristorante;
 import Entita.Cliente;
+import Entita.TipoCucina;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -28,12 +30,19 @@ public class GestoreFile {
         CSVReader reader = new CSVReader(new FileReader(fileRistoranti.toFile()));
         List<String[]> righe = reader.readAll();
 
+        Localita localita;
+
         // Salta intestazione se presente
         for (int i = 1; i < righe.size(); i++) {
             String[] riga = righe.get(i);
             var nome = riga[0];
-            var citta = riga[4];
-            Ristorante r = new Ristorante(nome, citta);
+            localita = new Localita(riga[3], riga[4], riga[5], Double.parseDouble(riga[6]), Double.parseDouble(riga[7]));
+            TipoCucina t = TipoCucina.valueOf(riga[2]);
+            boolean delivery = riga[9].equalsIgnoreCase("si");
+            boolean prenotazione = riga[10].equalsIgnoreCase("si");
+            float prezzoMedio =  Float.parseFloat(riga[1]);
+            String descrizione = riga[8];
+            Ristorante r = new Ristorante(nome, localita, t, delivery, prenotazione, prezzoMedio, descrizione);
             lista.add(r);
         }
         reader.close();
@@ -49,11 +58,11 @@ public class GestoreFile {
                 nuovoRistorante.getNome(),
                 String.valueOf(nuovoRistorante.getPrezzoMedio()),
                 String.valueOf(nuovoRistorante.getTipoDiCucina()),
-                nuovoRistorante.getNazione(),
-                nuovoRistorante.getCitta(),
-                nuovoRistorante.getIndirizzo(),
-                String.valueOf(nuovoRistorante.getLatitudine()),
-                String.valueOf(nuovoRistorante.getLongitudine()),
+                nuovoRistorante.getLocalita().getNazione(),
+                nuovoRistorante.getLocalita().getCitta(),
+                nuovoRistorante.getLocalita().getIndirizzo(),
+                String.valueOf(nuovoRistorante.getLocalita().getLatitudine()),
+                String.valueOf(nuovoRistorante.getLocalita().getLongitudine()),
                 nuovoRistorante.getDescrizione(),
                 (nuovoRistorante.getDelivery() ? "Sì" : "No"),
                 (nuovoRistorante.getPrenotazione() ? "Sì" : "No")
