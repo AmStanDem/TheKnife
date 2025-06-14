@@ -96,4 +96,8 @@ public class Ristorante {
             System.out.println("\nNessuna recensione equivalente trovata; nessun effetto!");
     }
 
+    public int numeroRecenzioni(){
+        return listaRecensioni.size();
+    }
+
 }
