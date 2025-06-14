@@ -1,5 +1,7 @@
 package Entita;
 
+import java.util.LinkedList;
+
 /**
  * Questa classe rappresenta un ristorante nel sistema e contiene parametri essenziali affinchè la ricerca
  * dell'utente possa svolgersi in modo semplice ed efficace.
@@ -18,6 +20,7 @@ public class Ristorante {
     private float prezzoMedio;
     private String descrizione;
     private Ristoratore proprietario;
+    private LinkedList<Recensione> listaRecensioni;
 
 
     public Ristorante(String nome, Localita localita, TipoCucina tipoDiCucina, boolean delivery, boolean prenotazione, float prezzoMedio,  String descrizione, Ristoratore proprietario) {
@@ -29,6 +32,8 @@ public class Ristorante {
         this.prezzoMedio=prezzoMedio;
         this.descrizione = descrizione;
         this.proprietario =proprietario;
+        this.listaRecensioni = new LinkedList<>();
+
     }
 
     public Ristorante(String nome, Localita localita, TipoCucina tipoDiCucina, boolean delivery, boolean prenotazione, float prezzoMedio,  String descrizione) {
@@ -39,6 +44,7 @@ public class Ristorante {
         this.prenotazione=prenotazione;
         this.prezzoMedio=prezzoMedio;
         this.descrizione = descrizione;
+        this.listaRecensioni = new LinkedList<>();
     }
 
     public String getNome(){return nome;}
@@ -67,8 +73,27 @@ public class Ristorante {
         return this.proprietario.getUsername().equals(username);
     }
 
+    public void aggiungiRecensione(Recensione recensione){
+        if(listaRecensioni.isEmpty()){
+            listaRecensioni.add(recensione);
+            System.out.println("\nRecensione aggiunta con successo");
+        } else if(listaRecensioni.contains(recensione))
+            System.out.println("\nRecensione gia' presente; recensione non aggiunta!");
+        else {
+            listaRecensioni.add(recensione);
+            System.out.println("\nRecensione aggiunta con successo");
+        }
+    }
 
+    public LinkedList<Recensione> getListaRecensioni(){
+        return new LinkedList<>(listaRecensioni);
+    }
 
-
+    public void eliminaRecensione(Recensione recensione){
+        if(listaRecensioni.remove(recensione))
+            System.out.println("\nRecensione eliminata con successo");
+        else
+            System.out.println("\nNessuna recensione equivalente trovata; nessun effetto!");
+    }
 
 }
