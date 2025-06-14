@@ -38,6 +38,7 @@ public abstract class Utente {
      * @param password       Password in chiaro da cifrare
      * @param dataNascita    Data di nascita dell’utente
      * @param luogoDomicilio Luogo di domicilio (in chiaro)
+     * @throws UtenteException Se i dati inseriti sono invalidi.
      */
     public Utente(String nome, String cognome, String username, String password,
                   LocalDate dataNascita, String luogoDomicilio) {
