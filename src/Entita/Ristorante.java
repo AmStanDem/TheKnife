@@ -96,8 +96,20 @@ public class Ristorante {
             System.out.println("\nNessuna recensione equivalente trovata; nessun effetto!");
     }
 
-    public int numeroRecenzioni(){
+    public int numeroRecensioni(){
         return listaRecensioni.size();
+    }
+
+    public float getMediaStelle(){
+        float media = 0;
+        if(listaRecensioni.isEmpty()){
+            System.out.println("\nNessuna recensione trovata!");
+            return media;
+        } else {
+            for(Recensione r : listaRecensioni)
+                media=media+r.getStelle();
+            return media/this.numeroRecensioni();
+        }
     }
 
 }
