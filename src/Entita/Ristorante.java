@@ -1,5 +1,14 @@
 package Entita;
 
+/**
+ * Questa classe rappresenta un ristorante nel sistema e contiene parametri essenziali affinchè la ricerca
+ * dell'utente possa svolgersi in modo semplice ed efficace.
+ * (nome, localita, tipoDiCucina, delivery, prenotazione, prezzoMedio, descrizione).
+ *
+ * @author Marco Zaro
+ * @version 1.0
+ */
+
 public class Ristorante {
     private String nome;
     private Localita localita;
