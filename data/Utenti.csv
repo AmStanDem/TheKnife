@@ -1,3 +1,4 @@
-nome,cognome,username,password,data_nascita,luogo_domicilio,ruolo
-"Antonio","Pesavento","apesavento","$2a$10$addAbZQIQn.yKyRuJWKdHOdPRkHOWMAp2YdslqBLWbIsrGtDtr47K","2006-01-14","Varese","Cliente"
-"Alessandro","Tullo","atullo","$2a$10$8rno2LF3eC9tc5F0tsBZU.aANcIxUbDExoF55l.83mP8eB7Xufav6","2005-11-19","Cittiglio","Cliente"
+Nome,Cognome,Username,Password,DataNascita,LuogoDomicilio,Ruolo
+"Mario","Rossi","mario.rossi","$2a$10$F8VrMjrUcUWiqTW0s8XvSOzg3Mgr3cXLXaLAY4BQhywojWI2zO88O","1990-05-15","Roma","Cliente"
+"Giuseppe","Bianchi","giuseppe.bianchi","$2a$10$fVGjNZojGofGgDjd/7bLDuYorrv6Ur1R.DWmeIOYUDzuZsNhXYwa6","1985-08-20","Milano","Ristoratore"
+"Test","User","test.integration","$2a$10$Q8zEgtWDJgZZZAhclqtMX.ZJktBBlgGrhtW.pew1kpfGh2KAdF.T6","1995-01-01","Test City","Cliente"

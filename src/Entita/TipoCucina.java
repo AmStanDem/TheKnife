@@ -1,10 +1,15 @@
 package Entita;
 
 /**
- * Rappresenta le diverse tipologie di cucina (elenco esteso).
+ * Rappresenta le diverse tipologie di cucina.
+ * Enum semplificato con le tipologie più comuni e rappresentative.
  */
 public enum TipoCucina {
     ITALIANA("Italiana"),
+    PIZZERIA("Pizzeria"),
+    PESCE("Pesce"),
+    MODERNA("Moderna"),
+
     GIAPPONESE("Giapponese"),
     CINESE("Cinese"),
     INDIANA("Indiana"),
@@ -14,32 +19,14 @@ public enum TipoCucina {
     GRECA("Greca"),
     SPAGNOLA("Spagnola"),
     THAILANDESE("Thailandese"),
+
     MEDITERRANEA("Mediterranea"),
     VEGETARIANA("Vegetariana"),
     VEGANA("Vegana"),
     FUSION("Fusion"),
     ETNICA("Etnica"),
     INTERNAZIONALE("Internazionale"),
-    VIETNAMITA("Vietnamita"),
-    COREANA("Coreana"),
-    TURCA("Turca"),
-    LIBANESE("Libanese"),
-    MAROCCHINA("Marocchina"),
-    PERUVIANA("Peruviana"),
-    BRASILIANA("Brasiliana"),
-    ARGENTINA("Argentina"),
-    CUBANA("Cubana"),
-    ETIOPE("Etiope"),
-    NIGERIANA("Nigeriana"),
-    POLACCA("Polacca"),
-    UNGHERESE("Ungherese"),
-    RUSSA("Russa"),
-    SUD_EST_ASIATICA("Sud-Est Asiatica"),
-    CARAIBICA("Caraibica"),
-    AUSTRALIANA("Australiana"),
-    SVIZZERA("Svizzera"),
-    AUSTRIACA("Austriaca"),
-    BELGA("Belga");
+    PANINOTECA("Paninoteca");
 
     private final String nome;
 
@@ -55,7 +42,7 @@ public enum TipoCucina {
     public String getNome() {
         return nome;
     }
-/**/
+
     /**
      * Override del metodo toString per restituire il nome della tipologia di cucina.
      *
@@ -65,6 +52,4 @@ public enum TipoCucina {
     public String toString() {
         return nome;
     }
-
-
 }

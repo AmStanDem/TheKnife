@@ -48,6 +48,26 @@ public final class Recensione {
     }
 
     /**
+     * Crea una nuova recensione impostando i parametri.
+     *
+     * @param cliente Cliente che effettua la recensione
+     * @param ristorante Ristorante recensito
+     * @param stelle Punteggio attribuito al ristorante da 1 a 5
+     * @param messaggio Eventuale messaggio opzionale
+     * @param dataRecensione Data e ora in cui è stata effettuata la recensione
+     * @throws RecensioneException Se i parametri non sono validi
+     */
+    public Recensione(Cliente cliente, Ristorante ristorante, int stelle, String messaggio, LocalDateTime dataRecensione) {
+        validaAttributi(cliente, ristorante, stelle);
+
+        this.cliente = cliente;
+        this.ristorante = ristorante;
+        this.stelle = stelle;
+        this.messaggio = (messaggio != null) ? messaggio.trim() : "";
+        this.dataRecensione = dataRecensione;
+    }
+
+    /**
      * Costruttore per creare una recensione con solo stelle (senza messaggio).
      *
      * @param cliente Cliente che effettua la recensione
@@ -112,6 +132,10 @@ public final class Recensione {
             this.rispostaRistoratore = risposta.trim();
             this.dataRisposta = LocalDateTime.now();
         }
+    }
+
+    public void setDataRisposta(LocalDateTime dataRisposta) {
+        this.dataRisposta = dataRisposta;
     }
 
     /**
@@ -210,13 +234,12 @@ public final class Recensione {
        if (!(obj instanceof Recensione recensione)) return false;
 
        return Objects.equals(cliente, recensione.cliente) &&
-                Objects.equals(ristorante, recensione.ristorante) &&
-                Objects.equals(dataRecensione, recensione.dataRecensione);
+                Objects.equals(ristorante, recensione.ristorante);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cliente, ristorante, dataRecensione);
+        return Objects.hash(cliente, ristorante);
     }
 
 

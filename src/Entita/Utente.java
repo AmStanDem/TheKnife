@@ -97,6 +97,16 @@ public abstract class Utente {
         }
     }
 
+    /**
+     * Imposta la password già cifrate per l'utente.
+     * @param password Password cifrata
+     */
+    public void setPasswordCifrata(String password) {
+        if (password != null && !password.isEmpty()) {
+            this.password = password;
+        }
+    }
+
     /** @return La data di nascita dell’utente */
     public LocalDate getDataNascita() { return dataNascita; }
 
@@ -299,5 +309,11 @@ public abstract class Utente {
         System.out.println("\n➤ hashCode:");
         System.out.println("HashCode cliente: " + cliente.hashCode());
         System.out.println("HashCode altro:   " + altro.hashCode());
+
+        String password = "Ciao";
+
+        Utente u = new Ristoratore("A","A","A",password,null,"a");
+
+        System.out.println(u.verificaPassword(password));
     }
 }
