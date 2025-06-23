@@ -31,7 +31,31 @@ public class MenuIniziale extends Menu {
         }
     }
 
-    private void modalitaGuest() {
+    private void modalitaGuest(Scanner sc) {
+        System.out.println("\nSei ora in modalita' guest.\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
+        System.out.print("\nLocalita':");
+        String luogo=sc.nextLine();
+        // metodo fittizio della ricerca dei ristoranti...
+        int selezione = 0;
+        while(selezione!=2){
+            System.out.println("\nInserisci uno dei numeri per eseguire il comando:");
+            System.out.println(" 1. Inserisci una nuova localita'");
+            System.out.println(" 2. Esci dalla modalita' guest");
+            System.out.print("\nComando: ");
+            selezione = sc.nextInt();
+            switch(selezione){
+                case 1:
+                    System.out.println("\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
+                    System.out.print("\nLocalita':");
+                    luogo=sc.nextLine();
+                    // metodo fittizio della ricerca dei ristoranti...
+                    break;
+                case 2:
+                    System.out.println("\nSei uscito dalla modalita' guest.");
+                    break;
+                default:
+                    System.out.println("\nComando inserito non valido!");
+        }
     }
 
     public static void main(String[] args) {
