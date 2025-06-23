@@ -2,12 +2,17 @@ package vista;
 
 import java.time.temporal.ValueRange;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import servizi.GeocodingService;
 
 public class MenuIniziale extends Menu {
 
     @Override
-    public void mostra() {
+    public void mostra(){
         var sc = new Scanner(System.in);
+        BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.println("Menu Iniziale: ");
         System.out.println("1. Login");
@@ -23,7 +28,7 @@ public class MenuIniziale extends Menu {
             case 2:
                 break;
             case 3:
-                modalitaGuest();
+                modalitaGuest(sc, r);
                 break;
             case 4:
                 System.exit(0);
@@ -31,36 +36,54 @@ public class MenuIniziale extends Menu {
         }
     }
 
-    private void modalitaGuest(Scanner sc) {
+    public static void modalitaGuest(Scanner sc, BufferedReader r) {
         System.out.println("\nSei ora in modalita' guest.\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
         System.out.print("\nLocalita':");
-        String luogo=sc.nextLine();
+        String luogo;
         // metodo fittizio della ricerca dei ristoranti...
+        try {
+            luogo = r.readLine();
+            double[] coords = GeocodingService.geocodeAddress(luogo);
+            if (coords != null) {
+                System.out.println("Latitudine: " + coords[0]);
+                System.out.println("Longitudine: " + coords[1]);
+            } else
+                System.err.println("Geocoding fallito - indirizzo non trovato o errore di rete");
+        } catch (IOException e){}
         int selezione = 0;
-        while(selezione!=2){
+        while (selezione != 2) {
             System.out.println("\nInserisci uno dei numeri per eseguire il comando:");
             System.out.println(" 1. Inserisci una nuova localita'");
             System.out.println(" 2. Esci dalla modalita' guest");
             System.out.print("\nComando: ");
             selezione = sc.nextInt();
-            switch(selezione){
+            switch (selezione) {
                 case 1:
                     System.out.println("\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
                     System.out.print("\nLocalita':");
-                    luogo=sc.nextLine();
                     // metodo fittizio della ricerca dei ristoranti...
+                    try {
+                        luogo = r.readLine();
+                        double[] coords = GeocodingService.geocodeAddress(luogo);
+                        if (coords != null) {
+                            System.out.println("Latitudine: " + coords[0]);
+                            System.out.println("Longitudine: " + coords[1]);
+                        } else
+                            System.err.println("Geocoding fallito - indirizzo non trovato o errore di rete");
+                    } catch (IOException e){}
                     break;
                 case 2:
                     System.out.println("\nSei uscito dalla modalita' guest.");
                     break;
                 default:
                     System.out.println("\nComando inserito non valido!");
+            }
         }
     }
 
     public static void main(String[] args) {
-        MenuIniziale menu = new MenuIniziale();
-        menu.mostra();
+        MenuIniziale menuIniziale = new MenuIniziale();
+        menuIniziale.mostra();
     }
-
 }
+

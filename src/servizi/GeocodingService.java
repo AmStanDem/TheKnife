@@ -61,7 +61,7 @@ public class GeocodingService {
 
     // Esempio di utilizzo
     public static void main(String[] args) {
-        double[] coords = geocodeAddress("Via Roma 1, Milano");
+        double[] coords = geocodeAddress("Via Carlo Goldoni 4, Varese");
         if (coords != null) {
             System.out.println("Latitudine: " + coords[0]);
             System.out.println("Longitudine: " + coords[1]);
