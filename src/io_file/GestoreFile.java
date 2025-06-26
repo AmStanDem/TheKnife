@@ -34,10 +34,6 @@ public class GestoreFile {
     //endregion
 
     //region === INTESTAZIONI DEI FILE CSV ===
-    private static final String[] INTESTAZIONE_RISTORANTI = {
-            "Nome", "PrezzoMedio", "TipoCucina", "Nazione", "Città",
-            "Indirizzo", "Latitudine", "Longitudine", "Descrizione", "Delivery", "Prenotazione"
-    };
     private static final String[] INTESTAZIONE_RECENSIONI = {
             "Username", "Ristorante", "Nazione", "Città", "Indirizzo",
             "Latitudine", "Longitudine", "Stelle", "Messaggio", "Data", "Risposta", "DataRisposta"
@@ -95,7 +91,6 @@ public class GestoreFile {
     }
     //endregion
 
-    // Valori booleani come stringhe
     private static final String VALORE_SI = "Sì";
     private static final String VALORE_NO = "No";
 
@@ -137,9 +132,8 @@ public class GestoreFile {
     /**
      * Aggiunge un nuovo ristorante al file CSV, controllando che non esistano duplicati.
      * Un duplicato è definito come un ristorante con lo stesso nome e la stessa località.
-     *
      * @param ristorante Il ristorante da aggiungere
-     * @return true se il ristorante è stato aggiunto con successo, false se esiste già
+     * @return {@code true} se il ristorante è stato aggiunto con successo, {@code false} se esiste già
      * @throws IOException se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -210,127 +204,6 @@ public class GestoreFile {
     }
 
     /**
-     * Cerca un ristorante per nome, città e indirizzo (metodo di convenienza).
-     *
-     * @param nome Il nome del ristorante
-     * @param citta La città del ristorante
-     * @param indirizzo L'indirizzo del ristorante
-     * @return Il ristorante trovato o null se non esiste
-     * @throws IOException se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static Ristorante cercaRistorante(String nome, String citta, String indirizzo) throws IOException, CsvException {
-        try (CSVReader reader = new CSVReader(new FileReader(DATASET_RISTORANTI.toFile()))) {
-            List<String[]> righe = reader.readAll();
-
-            // Salta l'intestazione (prima riga)
-            for (int i = 1; i < righe.size(); i++) {
-                String[] riga = righe.get(i);
-
-                String nomeFile = riga[ColonneRistoranteCSV.NOME];
-                String cittaFile = riga[ColonneRistoranteCSV.CITTA];
-                String indirizzoFile = riga[ColonneRistoranteCSV.INDIRIZZO];
-
-                // Controlla se corrisponde al ristorante cercato
-                if (nomeFile.equals(nome) && cittaFile.equals(citta) && indirizzoFile.equals(indirizzo)) {
-                    return creaRistoranteDaRiga(riga);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Aggiorna un ristorante esistente nel file CSV.
-     *
-     * @param vecchioRistorante Il ristorante da sostituire (identificato per nome e località)
-     * @param nuovoRistorante Il nuovo ristorante con i dati aggiornati
-     * @return true se l'aggiornamento è avvenuto con successo, false se il ristorante non è stato trovato
-     * @throws IOException se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static boolean aggiornaRistorante(Ristorante vecchioRistorante, Ristorante nuovoRistorante)
-            throws IOException, CsvException {
-        LinkedList<Ristorante> tuttiRistoranti = caricaRistoranti();
-        boolean aggiornato = false;
-
-        // Trova e sostituisci il ristorante
-        for (int i = 0; i < tuttiRistoranti.size(); i++) {
-            Ristorante ristorante = tuttiRistoranti.get(i);
-            if (ristorante.getNome().equals(vecchioRistorante.getNome()) &&
-                    ristorante.getLocalita().equals(vecchioRistorante.getLocalita())) {
-                tuttiRistoranti.set(i, nuovoRistorante);
-                aggiornato = true;
-                break;
-            }
-        }
-
-        if (aggiornato) {
-            // Riscrivi tutto il file
-            riscriviFileRistoranti(tuttiRistoranti);
-        }
-
-        return aggiornato;
-    }
-
-    /**
-     * Elimina un ristorante dal file CSV.
-     *
-     * @param ristorante Il ristorante da eliminare
-     * @return true se l'eliminazione è avvenuta con successo, false se il ristorante non è stato trovato
-     * @throws IOException se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static boolean eliminaRistorante(Ristorante ristorante) throws IOException, CsvException {
-        LinkedList<Ristorante> tuttiRistoranti = caricaRistoranti();
-        boolean eliminato = false;
-
-        for (int i = 0; i < tuttiRistoranti.size(); i++) {
-            Ristorante r = tuttiRistoranti.get(i);
-            if (r.getNome().equals(ristorante.getNome()) && r.getLocalita().equals(ristorante.getLocalita())) {
-                tuttiRistoranti.remove(i);
-                eliminato = true;
-                break;
-            }
-        }
-
-        if (eliminato) {
-            riscriviFileRistoranti(tuttiRistoranti);
-        }
-
-        return eliminato;
-    }
-
-    /**
-     * Conta il numero totale di ristoranti nel database.
-     *
-     * @return Numero totale di ristoranti
-     * @throws IOException se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static int contaRistoranti() throws IOException, CsvException {
-        return caricaRistoranti().size();
-    }
-
-    /**
-     * Riscrive completamente il file dei ristoranti.
-     *
-     * @param ristoranti Lista dei ristoranti da scrivere
-     * @throws IOException se si verifica un errore di I/O
-     */
-    private static void riscriviFileRistoranti(LinkedList<Ristorante> ristoranti) throws IOException {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(DATASET_RISTORANTI.toFile()))) {
-            writer.writeNext(INTESTAZIONE_RISTORANTI);
-
-            for (Ristorante ristorante : ristoranti) {
-                String[] riga = creaRigaDaRistorante(ristorante);
-                writer.writeNext(riga);
-            }
-        }
-    }
-
-    /**
      * Crea un oggetto Ristorante da una riga del CSV.
      */
     private static Ristorante creaRistoranteDaRiga(String[] riga) {
@@ -373,6 +246,8 @@ public class GestoreFile {
     }
 
     //endregion
+
+    //region === OPERAZIONI GENERALI SUGLI UTENTI ===
 
     /**
      * Carica tutti gli utenti dal file CSV.
@@ -455,10 +330,6 @@ public class GestoreFile {
         return cercaUtente(username) != null;
     }
 
-    //endregion
-
-    //region === OPERAZIONI GENERALI SUGLI UTENTI ===
-
     /**
      * Verifica le credenziali di login di un utente.
      * La password viene verificata tramite BCrypt contro l'hash salvato.
@@ -496,7 +367,6 @@ public class GestoreFile {
 
             Utente utente;
 
-            // Factory pattern per creare il tipo corretto di utente
             switch (tipoUtente.toLowerCase()) {
                 case "cliente":
                     utente = new Cliente(nome, cognome, username, "temp", dataNascita, luogoDomicilio);
@@ -533,83 +403,8 @@ public class GestoreFile {
         };
     }
 
-    /**
-     * Cerca specificamente un cliente per username.
-     *
-     * @param username L'username del cliente da cercare
-     * @return Il cliente trovato o null
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static Cliente cercaCliente(String username) throws IOException, CsvException {
-        Utente utente = cercaUtente(username);
 
-        if (utente instanceof Cliente) {
-            return (Cliente) utente;
-        }
-
-        return null;
-    }
-
-    /**
-     * Cerca specificamente un ristoratore per username.
-     *
-     * @param username L'username del ristoratore da cercare
-     * @return Il ristoratore trovato o null
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static Ristoratore cercaRistoratore(String username) throws IOException, CsvException {
-        Utente utente = cercaUtente(username);
-
-        if (utente instanceof Ristoratore) {
-            return (Ristoratore) utente;
-        }
-
-        return null;
-    }
-
-    /**
-     * Carica tutti i clienti dal file CSV.
-     *
-     * @return Lista dei soli clienti
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static LinkedList<Cliente> caricaClienti() throws IOException, CsvException {
-        LinkedList<Cliente> clienti = new LinkedList<>();
-
-        for (Utente utente : caricaUtenti()) {
-            if (utente instanceof Cliente) {
-                clienti.add((Cliente) utente);
-            }
-        }
-
-        return clienti;
-    }
-
-    /**
-     * Carica tutti i ristoratori dal file CSV.
-     *
-     * @return Lista dei soli ristoratori
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static LinkedList<Ristoratore> caricaRistoratori() throws IOException, CsvException {
-        LinkedList<Ristoratore> ristoratori = new LinkedList<>();
-
-        for (Utente utente : caricaUtenti()) {
-            if (utente instanceof Ristoratore) {
-                ristoratori.add((Ristoratore) utente);
-            }
-        }
-
-        return ristoratori;
-    }
-
-    //endregion
-
-    //region === METODI SPECIFICI PER TIPOLOGIE DI UTENTI ===
+    //region === OPERAZIONI GENERALI SULLE RECENSIONI ===
 
     /**
      * Carica tutte le recensioni dal file CSV.
@@ -701,9 +496,6 @@ public class GestoreFile {
         return recensioniRistorante;
     }
 
-    //endregion
-
-    //region === OPERAZIONI GENERALI SULLE RECENSIONI ===
 
     /**
      * Aggiorna una recensione esistente nel file CSV
@@ -779,8 +571,8 @@ public class GestoreFile {
             LocalDateTime data = LocalDateTime.parse(riga[ColonneRecensioneCSV.DATA]);
 
             // Trova il cliente
-            Cliente cliente = cercaCliente(username);
-            if (cliente == null) {
+            Utente utente = cercaUtente(username);
+            if (!(utente instanceof Cliente cliente)) {
                 return null;
             }
 
@@ -853,6 +645,10 @@ public class GestoreFile {
             }
         }
     }
+
+    //endregion
+
+    //region === OPERAZIONI SUI PREFERITI ===
 
     /**
      * Carica tutti i ristoranti preferiti di un cliente specifico.
@@ -957,8 +753,6 @@ public class GestoreFile {
         return rimosso;
     }
 
-//region === OPERAZIONI SUI PREFERITI ===
-
     /**
      * Verifica se un ristorante è già nei preferiti di un cliente.
      *
@@ -1057,19 +851,14 @@ public class GestoreFile {
             double latitudine = Double.parseDouble(riga[ColonnePreferitiCSV.LATITUDINE]);
             double longitudine = Double.parseDouble(riga[ColonnePreferitiCSV.LONGITUDINE]);
 
-            // Crea la località del ristorante
             Localita localita = new Localita(nazione, citta, indirizzo, latitudine, longitudine);
 
-            // Trova il ristorante completo dal database dei ristoranti
             for (Ristorante r : caricaRistoranti()) {
                 if (r.getNome().equals(nomeRistorante) && r.getLocalita().equals(localita)) {
                     return r;
                 }
             }
-
-            // Se non trovato nel database completo, crea un ristorante "minimale"
-            // con solo le informazioni disponibili nei preferiti
-            return null; // O potresti decidere di creare un ristorante con dati parziali
+            return null;
 
         } catch (Exception e) {
             return null;
