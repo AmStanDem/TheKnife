@@ -63,6 +63,7 @@ public class GestoreFile {
         public static final int DESCRIZIONE = 8;
         public static final int DELIVERY = 9;
         public static final int PRENOTAZIONE = 10;
+        public static final int USERNAME = 11;
     }
 
     private static class ColonneRecensioneCSV {
@@ -205,25 +206,43 @@ public class GestoreFile {
 
     /**
      * Crea un oggetto Ristorante da una riga del CSV.
+     * Effettua il lookup del ristoratore tramite username.
+     *
+     * @param riga Array di stringhe rappresentante una riga del CSV
+     * @return Oggetto Ristorante o null se si verifica un errore
      */
     private static Ristorante creaRistoranteDaRiga(String[] riga) {
-        String nome = riga[ColonneRistoranteCSV.NOME];
-        float prezzoMedio = Float.parseFloat(riga[ColonneRistoranteCSV.PREZZO_MEDIO]);
-        TipoCucina tipoCucina = TipoCucina.valueOf(riga[ColonneRistoranteCSV.TIPO_CUCINA].toUpperCase());
+        try {
+            // Estrai i dati dalla riga
+            String nome = riga[ColonneRistoranteCSV.NOME];
+            String nazione = riga[ColonneRistoranteCSV.NAZIONE];
+            String citta = riga[ColonneRistoranteCSV.CITTA];
+            String indirizzo = riga[ColonneRistoranteCSV.INDIRIZZO];
+            double latitudine = Double.parseDouble(riga[ColonneRistoranteCSV.LATITUDINE]);
+            double longitudine = Double.parseDouble(riga[ColonneRistoranteCSV.LONGITUDINE]);
+            float prezzoMedio = Float.parseFloat(riga[ColonneRistoranteCSV.PREZZO_MEDIO]);
+            boolean delivery = Boolean.parseBoolean(riga[ColonneRistoranteCSV.DELIVERY]);
+            boolean prenotazione = Boolean.parseBoolean(riga[ColonneRistoranteCSV.PRENOTAZIONE]);
+            TipoCucina tipoCucina = TipoCucina.valueOf(riga[ColonneRistoranteCSV.TIPO_CUCINA]);
+            String descrizione = riga[ColonneRistoranteCSV.DESCRIZIONE];
+            String usernameProprietario = riga[ColonneRistoranteCSV.USERNAME];
 
-        Localita localita = new Localita(
-                riga[ColonneRistoranteCSV.NAZIONE],
-                riga[ColonneRistoranteCSV.CITTA],
-                riga[ColonneRistoranteCSV.INDIRIZZO],
-                Double.parseDouble(riga[ColonneRistoranteCSV.LATITUDINE]),
-                Double.parseDouble(riga[ColonneRistoranteCSV.LONGITUDINE])
-        );
+            // Crea la località
+            Localita localita = new Localita(nazione, citta, indirizzo, latitudine, longitudine);
 
-        String descrizione = riga[ColonneRistoranteCSV.DESCRIZIONE];
-        boolean delivery = riga[ColonneRistoranteCSV.DELIVERY].equalsIgnoreCase("sì");
-        boolean prenotazione = riga[ColonneRistoranteCSV.PRENOTAZIONE].equalsIgnoreCase("sì");
+            // Cerca il ristoratore tramite username
+            Utente utente = cercaUtente(usernameProprietario);
+            if (!(utente instanceof Ristoratore proprietario)) {
+                System.err.println("Ristoratore non trovato o non valido per username: " + usernameProprietario);
+                return null;
+            }
+            return new Ristorante(nome, localita, tipoCucina, delivery, prenotazione,
+                    prezzoMedio, descrizione, proprietario);
 
-        return new Ristorante(nome, localita, tipoCucina, delivery, prenotazione, prezzoMedio, descrizione);
+        } catch (Exception e) {
+            System.err.println("Errore nella creazione del ristorante dalla riga CSV: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -241,7 +260,8 @@ public class GestoreFile {
                 String.valueOf(ristorante.getLocalita().getLongitudine()),
                 ristorante.getDescrizione(),
                 ristorante.getDelivery() ? VALORE_SI : VALORE_NO,
-                ristorante.getPrenotazione() ? VALORE_SI : VALORE_NO
+                ristorante.getPrenotazione() ? VALORE_SI : VALORE_NO,
+                ristorante.getUsernameProprietario()
         };
     }
 
@@ -441,7 +461,6 @@ public class GestoreFile {
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static boolean aggiungiRecensione(Recensione recensione) throws IOException, CsvException {
-        // Controlla se esiste già una recensione dello stesso cliente per lo stesso ristorante
         Recensione recensioneEsistente = cercaRecensione(recensione.getCliente(), recensione.getRistorante());
 
         if (recensioneEsistente != null) {

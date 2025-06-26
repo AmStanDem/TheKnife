@@ -7,38 +7,213 @@ import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
- * Servizio per la gestione delle recensioni e delle operazioni a essi correlate.
- * Funge da intermediario tra la logica di business e la persistenza dei dati e tra ristoratori e clienti.
+ * Servizio per la gestione delle recensioni e delle operazioni correlate.
+ * Funge da intermediario tra la logica di business e la persistenza dei dati.
  * @author Thomas Riotto
  */
 public final class RecensioneService {
+
     /**
-     * Aggiunge una recensione a un ristorante.
-     * @param ristorante Ristorante su cui aggiungere la recensione.
+     * Aggiunge una recensione tramite un cliente.
+     * @param cliente Cliente che aggiunge la recensione.
+     * @param ristorante Ristorante da recensire.
      * @param recensione Recensione da aggiungere.
      * @return {@code true} se la recensione è stata aggiunta correttamente, {@code false} altrimenti.
-     * @throws IOException Se si verifica un errore durante l'accesso al file.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
      * @throws CsvException Se si verifica un errore durante la gestione del CSV.
      */
-    public static boolean aggiungiRecensione(Ristorante ristorante, Recensione recensione) throws IOException, CsvException {
+    public static boolean aggiungiRecensione(Cliente cliente, Ristorante ristorante, Recensione recensione)
+            throws IOException, CsvException {
+
+        // Prima persisti la recensione (GestoreFile effettua i controlli)
         if (!GestoreFile.aggiungiRecensione(recensione)) {
             return false;
         }
-        return ristorante.aggiungiRecensione(recensione);
-    }
 
-    public static boolean eliminaRecensione(Recensione recensione, Ristorante ristorante) throws IOException, CsvException {
-        if(!GestoreFile.eliminaRecensione(recensione)){
+        // Poi aggiorna lo stato in memoria
+        boolean aggiuntoInMemoria = cliente.aggiungiRecensione(ristorante, recensione);
+
+        // Se fallisce l'aggiornamento in memoria, effettua rollback della persistenza
+        if (!aggiuntoInMemoria) {
+            try {
+                GestoreFile.eliminaRecensione(recensione);
+            } catch (Exception e) {
+                System.err.println("Errore durante il rollback dell'aggiunta recensione: " + e.getMessage());
+            }
             return false;
         }
-        return ristorante.rimuoviRecensione(recensione);
+
+        return true;
     }
 
-    public static void visualizzaRecensioni(Ristorante ristorante){
-        for(Recensione recensione : ristorante.getListaRecensioni()){
-            System.out.println(recensione);
+    /**
+     * Elimina una recensione tramite un cliente.
+     * Prima rimuove dalla persistenza, poi aggiorna lo stato in memoria.
+     *
+     * @param cliente Cliente che elimina la recensione.
+     * @param ristorante Ristorante da cui eliminare la recensione.
+     * @return {@code true} se la recensione è stata eliminata correttamente, {@code false} altrimenti.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
+     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
+     */
+    public static boolean eliminaRecensione(Cliente cliente, Ristorante ristorante)
+            throws IOException, CsvException {
+
+        // Trova la recensione del cliente per questo ristorante
+        Recensione recensione = ristorante.trovaRecensioneCliente(cliente);
+        if (recensione == null) {
+            return false;
         }
+
+        // Prima rimuovi dalla persistenza (GestoreFile effettua i controlli)
+        if (!GestoreFile.eliminaRecensione(recensione)) {
+            return false;
+        }
+
+        // Poi aggiorna lo stato in memoria
+        boolean rimossoInMemoria = cliente.rimuoviRecensione(ristorante);
+
+        // Se fallisce l'aggiornamento in memoria, effettua rollback della persistenza
+        if (!rimossoInMemoria) {
+            try {
+                GestoreFile.aggiungiRecensione(recensione);
+            } catch (Exception e) {
+                System.err.println("Errore durante il rollback dell'eliminazione recensione: " + e.getMessage());
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Modifica una recensione tramite un cliente.
+     * Prima aggiorna la persistenza, poi aggiorna lo stato in memoria.
+     *
+     * @param cliente Cliente che modifica la recensione.
+     * @param ristorante Ristorante su cui modificare la recensione.
+     * @param nuovaRecensione Nuova recensione.
+     * @return {@code true} se la recensione è stata modificata correttamente, {@code false} altrimenti.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
+     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
+     */
+    public static boolean modificaRecensione(Cliente cliente, Ristorante ristorante, Recensione nuovaRecensione)
+            throws IOException, CsvException {
+
+        // Trova la recensione esistente
+        Recensione vecchiaRecensione = ristorante.trovaRecensioneCliente(cliente);
+        if (vecchiaRecensione == null) {
+            return false;
+        }
+
+        // Prima aggiorna la persistenza
+        // Elimina la vecchia recensione
+        if (!GestoreFile.eliminaRecensione(vecchiaRecensione)) {
+            return false;
+        }
+
+        // Aggiungi la nuova recensione
+        if (!GestoreFile.aggiungiRecensione(nuovaRecensione)) {
+            // Rollback: rimetti la vecchia recensione
+            try {
+                GestoreFile.aggiungiRecensione(vecchiaRecensione);
+            } catch (Exception e) {
+                System.err.println("Errore durante il rollback della modifica recensione: " + e.getMessage());
+            }
+            return false;
+        }
+
+        // Poi aggiorna lo stato in memoria
+        boolean modificatoInMemoria = cliente.modificaRecensione(ristorante, nuovaRecensione);
+
+        // Se fallisce l'aggiornamento in memoria, effettua rollback della persistenza
+        if (!modificatoInMemoria) {
+            try {
+                GestoreFile.eliminaRecensione(nuovaRecensione);
+                GestoreFile.aggiungiRecensione(vecchiaRecensione);
+            } catch (Exception e) {
+                System.err.println("Errore durante il rollback della modifica recensione: " + e.getMessage());
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Visualizza tutte le recensioni di un ristorante.
+     * Utilizza il metodo già implementato nella classe Ristorante.
+     *
+     * @param ristorante Ristorante di cui visualizzare le recensioni.
+     */
+    public static void visualizzaRecensioni(Ristorante ristorante) {
+        if (ristorante.getListaRecensioni().isEmpty()) {
+            System.out.println("Nessuna recensione trovata per il ristorante: " + ristorante.getNome());
+            return;
+        }
+
+        System.out.println("=== Recensioni per " + ristorante.getNome() + " ===");
+        for (Recensione recensione : ristorante.getListaRecensioni()) {
+            System.out.println(recensione);
+            System.out.println("-".repeat(50));
+        }
+    }
+
+    /**
+     * Visualizza le recensioni di un cliente.
+     * Utilizza il metodo già implementato nella classe Cliente.
+     *
+     * @param cliente Cliente di cui visualizzare le recensioni.
+     * @param ristoranti Lista di ristoranti su cui cercare le recensioni.
+     */
+    public static void visualizzaRecensioniCliente(Cliente cliente, ArrayList<Ristorante> ristoranti) {
+        System.out.println("=== Recensioni di " + cliente.getUsername() + " ===");
+        cliente.visualizzaRecensioni(ristoranti);
+    }
+
+    /**
+     * Verifica se un cliente può aggiungere una recensione per un ristorante.
+     * Utilizza il metodo già implementato nella classe Cliente.
+     *
+     * @param cliente Cliente da verificare.
+     * @param ristorante Ristorante da verificare.
+     * @return {@code true} se il cliente può aggiungere la recensione, {@code false} altrimenti.
+     */
+    public static boolean puoAggiungereRecensione(Cliente cliente, Ristorante ristorante) {
+        return !cliente.haRecensito(ristorante);
+    }
+
+    /**
+     * Ottiene le statistiche delle recensioni per un ristorante.
+     * Utilizza i metodi già implementati nella classe Ristorante.
+     *
+     * @param ristorante Ristorante di cui ottenere le statistiche.
+     * @return Stringa contenente le statistiche formattate.
+     */
+    public static String getStatisticheRecensioni(Ristorante ristorante) {
+        int numeroRecensioni = ristorante.getNumeroRecensioni();
+        if (numeroRecensioni == 0) {
+            return "Nessuna recensione presente per " + ristorante.getNome();
+        }
+
+        float mediaStelle = ristorante.getMediaStelle();
+
+        StringBuilder stats = new StringBuilder();
+        stats.append("=== Statistiche per ").append(ristorante.getNome()).append(" ===\n");
+        stats.append("Numero recensioni: ").append(numeroRecensioni).append("\n");
+        stats.append("Media stelle: ").append(String.format("%.2f", mediaStelle)).append("/5\n");
+
+        // Conta recensioni per numero di stelle
+        for (int i = 1; i <= 5; i++) {
+            int count = ristorante.getRecensioniPerStelle(i).size();
+            if (count > 0) {
+                stats.append(i).append(" ★: ").append(count).append(" recensioni\n");
+            }
+        }
+
+        return stats.toString();
     }
 }

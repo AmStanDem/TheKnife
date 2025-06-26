@@ -34,10 +34,6 @@ public class Ristoratore extends Utente {
         return ristoranti.add(ristorante);
     }
 
-    public boolean rimuoviRistorante(Ristorante ristorante) {
-        return ristoranti.remove(ristorante);
-    }
-
     public int getNumeroRistoranti() {
         return ristoranti.size();
     }
@@ -73,7 +69,7 @@ public class Ristoratore extends Utente {
 
         // Creo un ristorante
         Localita loc1 = new Localita("Italia", "Milano", "Via Roma 10", 45.46, 9.19);
-        Ristorante r1 = new Ristorante("La Trattoria", loc1, TipoCucina.ITALIANA, true, true, 35.0f, "Cucina tipica italiana");
+        Ristorante r1 = new Ristorante("La Trattoria", loc1, TipoCucina.ITALIANA, true, true, 35.0f, "Cucina tipica italiana", ristoratore);
 
         // Creo un cliente e due recensioni
         Cliente c1 = new Cliente("Luca", "Verdi", "lverdi", "pass", LocalDate.of(1995, 5, 12), "Como");

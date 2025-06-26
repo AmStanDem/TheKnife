@@ -257,7 +257,7 @@ public final class Recensione {
         // Assumendo che TipoCucina sia un enum con valore ITALIANA
         Ristorante ristorante1 = new Ristorante("La Tavola", localita,
                 TipoCucina.ITALIANA, true, true, 35.0f,
-                "Ristorante tradizionale italiano");
+                "Ristorante tradizionale italiano", null);
 
         // Test 1: Creazione recensione
         System.out.println("--- TEST 1: Creazione Recensione ---");

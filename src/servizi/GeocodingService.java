@@ -33,8 +33,8 @@ public final class GeocodingService {
      */
     public static double[] geocodeAddress(String address) {
         try {
-            String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8);
-            String url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodedAddress;
+            final String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8);
+            final String url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodedAddress;
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
@@ -42,16 +42,16 @@ public final class GeocodingService {
                     .GET()
                     .build();
 
-            HttpResponse<String> response = httpClient.send(request,
+            final HttpResponse<String> response = httpClient.send(request,
                     HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                JsonArray jsonArray = gson.fromJson(response.body(), JsonArray.class);
+                final JsonArray jsonArray = gson.fromJson(response.body(), JsonArray.class);
 
                 if (!jsonArray.isEmpty()) {
-                    JsonObject firstResult = jsonArray.get(0).getAsJsonObject();
-                    double lat = firstResult.get("lat").getAsDouble();
-                    double lng = firstResult.get("lon").getAsDouble();
+                    final JsonObject firstResult = jsonArray.get(0).getAsJsonObject();
+                    final double lat = firstResult.get("lat").getAsDouble();
+                    final double lng = firstResult.get("lon").getAsDouble();
 
                     return new double[]{lat, lng};
                 }
@@ -65,7 +65,7 @@ public final class GeocodingService {
     }
 
     private static double[] chiediCoordinateManuali() {
-        Scanner scanner = new Scanner(System.in);
+        final Scanner scanner = new Scanner(System.in);
         double latitudine = 0.0, longitudine = 0.0;
         boolean valido = false;
 
