@@ -8,11 +8,17 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class GeocodingService {
+/**
+ * Servizio per la geolocalizzazione di luoghi in coordinate geografiche.
+ * @author Thomas Riotto
+ */
+public final class GeocodingService {
 
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final Gson gson = new Gson();
@@ -21,10 +27,9 @@ public class GeocodingService {
     }
 
     /**
-     * Geocodifica un indirizzo e restituisce le coordinate come array di double.
-     *
+     * Effettua la geocodificazione di un indirizzo e restituisce le coordinate come array di double.
      * @param address L'indirizzo da geocodificare
-     * @return Array di double [latitudine, longitudine] o null se non trovato/errore
+     * @return Array di double [latitudine, longitudine]
      */
     public static double[] geocodeAddress(String address) {
         try {
@@ -52,21 +57,31 @@ public class GeocodingService {
                 }
             }
 
-            return null; // Errore HTTP o indirizzo non trovato
+            return chiediCoordinateManuali();
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            return null; // Errore durante la richiesta
+            return chiediCoordinateManuali();
         }
     }
 
-    // Esempio di utilizzo
-    public static void main(String[] args) {
-        double[] coords = geocodeAddress("Via Carlo Goldoni 4, Varese");
-        if (coords != null) {
-            System.out.println("Latitudine: " + coords[0]);
-            System.out.println("Longitudine: " + coords[1]);
-        } else {
-            System.err.println("Geocoding fallito - indirizzo non trovato o errore di rete");
+    private static double[] chiediCoordinateManuali() {
+        Scanner scanner = new Scanner(System.in);
+        double latitudine = 0.0, longitudine = 0.0;
+        boolean valido = false;
+
+        while (!valido) {
+            try {
+                System.out.print("Inserisci la latitudine: ");
+                latitudine = Double.parseDouble(scanner.nextLine().trim());
+                System.out.print("Inserisci la longitudine: ");
+                longitudine = Double.parseDouble(scanner.nextLine().trim());
+                valido = true;
+            } catch (NumberFormatException e) {
+                System.err.println("Valore non valido. Inserisci numeri decimali validi.");
+            }
         }
+
+        scanner.close();
+        return new double[]{latitudine, longitudine};
     }
 }
