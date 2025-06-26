@@ -28,4 +28,11 @@ public final class RecensioneService {
         }
         return ristorante.aggiungiRecensione(recensione);
     }
+
+    public static boolean eliminaRecensione(Recensione recensione, Ristorante ristorante) throws IOException, CsvException {
+        if(!GestoreFile.eliminaRecensione(recensione)){
+            return false;
+        }
+        return ristorante.rimuoviRecensione(recensione);
+    }
 }
