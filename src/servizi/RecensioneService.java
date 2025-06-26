@@ -29,18 +29,10 @@ public final class RecensioneService {
         return ristorante.aggiungiRecensione(recensione);
     }
 
-    /**
-     * Modifica una recensione di un ristorante.
-     * @param recensioneVecchia Recensione da modificare.
-     * @param recensioneNuova Recensione da aggiungere.
-     * @return {@code true} se la recensione è stata modificata correttamente, {@code false} altrimenti.
-     * @throws IOException Se si verifica un errore durante l'accesso al file.
-     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
-     */
-    public static boolean modificaRecensione(Ristorante ristorante, Recensione recensioneVecchia, Recensione recensioneNuova) throws IOException, CsvException {
-        if (!GestoreFile.aggiornaRecensione(recensioneVecchia, recensioneNuova)) {
+    public static boolean eliminaRecensione(Recensione recensione, Ristorante ristorante) throws IOException, CsvException {
+        if(!GestoreFile.eliminaRecensione(recensione)){
             return false;
         }
-        return ristorante.modificaRecensione(recensioneVecchia, recensioneNuova);
+        return ristorante.rimuoviRecensione(recensione);
     }
 }

@@ -533,15 +533,17 @@ public class GestoreFile {
      * Elimina una recensione dal file CSV
      *
      * @param recensione La recensione da eliminare
+     * @return
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static void eliminaRecensione(Recensione recensione) throws IOException, CsvException {
+    public static boolean eliminaRecensione(Recensione recensione) throws IOException, CsvException {
         LinkedList<Recensione> tutteRecensioni = caricaRecensioni();
         tutteRecensioni.removeIf(r -> r.equals(recensione));
 
         // Riscrivi tutto il file
         riscriviFileRecensioni(tutteRecensioni);
+        return true;
     }
 
     /**
