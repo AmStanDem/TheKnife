@@ -505,8 +505,17 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static void aggiornaRecensione(Recensione vecchiaRecensione, Recensione nuovaRecensione)
+    public static boolean aggiornaRecensione(Recensione vecchiaRecensione, Recensione nuovaRecensione)
             throws IOException, CsvException {
+
+        if (vecchiaRecensione == null) {
+            return false;
+        }
+
+        if (nuovaRecensione == null) {
+            return false;
+        }
+
         LinkedList<Recensione> tutteRecensioni = caricaRecensioni();
 
         // Trova e sostituisci la recensione
@@ -516,9 +525,8 @@ public class GestoreFile {
                 break;
             }
         }
-
-        // Riscrivi tutto il file
         riscriviFileRecensioni(tutteRecensioni);
+        return true;
     }
 
     /**
