@@ -19,4 +19,9 @@ public final class RistoranteService {
         }
         return ristoratore.aggiungiRistorante(ristorante);
     }
+
+    public static void visualizzaRsitorante(Ristorante ristorante){
+        System.out.println(ristorante);
+    }
+
 }

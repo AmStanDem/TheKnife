@@ -170,5 +170,4 @@ public class Ristorante {
         return media / getNumeroRecensioni();
 
     }
-
 }
