@@ -60,12 +60,13 @@ public class MenuIniziale extends Menu {
         boolean stato = true;
         do {
             nome = sc.nextLine();
-            for(int i= 0; i< nome.length();i++ ){
+            for (int i = 0; i < nome.length(); i++) {
                 char c = nome.charAt(i);
-                if(!Character.isLetter(c)){
-                    System.out.println("hai inserito un carattere che non e' una lettera:  "+ c + " in posizione " + (i+1)  );
+                if (!Character.isLetter(c)) {
+                    System.out.println("hai inserito un carattere che non e' una lettera:  " + c + " in posizione " + (i + 1));
                     stato = false;
-                };
+                }
+                ;
             }
 
         } while (nome.isBlank());
@@ -78,26 +79,78 @@ public class MenuIniziale extends Menu {
         String username = sc.nextLine();
 
         System.out.println("Inserisci il password del cliente");
-        String password = sc.nextLine();
+        String password;
+        do {
+            stato = true;
+            System.out.println("Inserisci la password del cliente:");
+            password = sc.nextLine();
 
-        System.out.println("Inserisci il data di nascita");
-        LocalDate dataDiNascita = LocalDate.parse(sc.nextLine());
+            if (password.isBlank()) {
+                System.out.println("La password non può essere vuota.");
+                stato = false;
+            }
 
-        System.out.println("Inserisci il luogo do di nascita");
-        String luogoDomicilio = sc.nextLine();
+            if (password.length() < 8 || password.length() > 16) {
+                System.out.println("La password deve essere lunga tra 8 e 16 caratteri.");
+                stato = false;
+            }
 
-        System.out.println("ti registri da cliente(1) o da ristoratore(2)");
+            boolean contieneLettera = false;
+            boolean contieneNumero = false;
+            boolean contieneSpeciale = false;
+            boolean contieneSpazio = false;
 
-        int selezione = sc.nextInt();
-        switch (selezione) {
 
-            case 1:
-                new Cliente(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
-                break;
-            case 2:
-                new Ristoratore(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
-                break;
+            for (char c : password.toCharArray()) {
+                if (Character.isLetter(c)) contieneLettera = true;
+                if (Character.isDigit(c)) contieneNumero = true;
+                if (!Character.isLetterOrDigit(c) && !Character.isWhitespace(c)) {
+                    contieneSpeciale = true;
+                    if (Character.isWhitespace(c)) contieneSpazio = true;
+                }
+
+                if (!contieneLettera) {
+                    System.out.println("La password deve contenere almeno una lettera.");
+                    stato = false;
+                }
+
+                if (!contieneNumero) {
+                    System.out.println("La password deve contenere almeno un numero.");
+                    stato = false;
+                }
+
+                if (!contieneSpeciale) {
+                    System.out.println("La password deve contenere almeno un carattere speciale.");
+                    stato = false;
+                }
+
+                if (contieneSpazio) {
+                    System.out.println("La password non deve contenere spazi.");
+                    stato = false;
+                }
+            }
+
         }
+            while (!stato) ;
+
+            System.out.println("Inserisci il data di nascita");
+            LocalDate dataDiNascita = LocalDate.parse(sc.nextLine());
+
+            System.out.println("Inserisci il luogo do di nascita");
+            String luogoDomicilio = sc.nextLine();
+
+            System.out.println("ti registri da cliente(1) o da ristoratore(2)");
+
+            int selezione = sc.nextInt();
+            switch (selezione) {
+
+                case 1:
+                    new Cliente(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
+                    break;
+                case 2:
+                    new Ristoratore(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
+                    break;
+            }
 
 
     }
