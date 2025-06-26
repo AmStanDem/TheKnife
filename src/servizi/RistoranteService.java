@@ -2,12 +2,22 @@ package servizi;
 import Entita.*;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
+/*
+* Servizio per la gestione dei ristoranti e delle loro informazioni.
+* Tramite l'inserimento dei filtri la ricerca del ristorante diviene più specifica affinchè l'utente possa tovare
+* in modo ancor più veloce i luoghi più pertinenti alle sue esigenze.
+* @author Marco Zaro
+*/
+
 public final class RistoranteService {
 
+
+    /*
+    * Aggiunta di un metodo che permette all'utente, tramite dei filtri, di avviare la ricerca del ristorante
+    */
     public static ArrayList<Ristorante> cercaRistorante(TipoCucina tipoCucina, Localita localita, Float prezzoMinimo, Float prezzoMassimo, Boolean delivery, Boolean prenotazione, Float mediaStelle) throws IOException, CsvException {
         var ristoranti = GestoreFile.caricaRistoranti();
         var risultato = new ArrayList<Ristorante>();
@@ -44,41 +54,45 @@ public final class RistoranteService {
         return ristorante.getTipoDiCucina().equals(tipoCucina);
     }
 
-    public static boolean filtroPrezzoMinimo(Ristorante ristorante, Float prezzoMinimo){
+    private static boolean filtroPrezzoMinimo(Ristorante ristorante, Float prezzoMinimo){
         if(prezzoMinimo==null){
             return true;
         }
         return ristorante.getPrezzoMedio()>prezzoMinimo;
     }
 
-    public static boolean filtroPrezzoMassimo(Ristorante ristorante, Float prezzoMassimo){
+    private static boolean filtroPrezzoMassimo(Ristorante ristorante, Float prezzoMassimo){
         if(prezzoMassimo==null){
             return true;
         }
         return ristorante.getPrezzoMedio()<prezzoMassimo;
     }
 
-    public static boolean filtroPrenotazione(Ristorante ristorante, Boolean prenotazione){
+    private static boolean filtroPrenotazione(Ristorante ristorante, Boolean prenotazione){
         if(prenotazione==null){
             return true;
         }
         return ristorante.getPrenotazione()==prenotazione;
     }
 
-    public static boolean filtroDelivery(Ristorante ristorante, Boolean delivery){
+    private static boolean filtroDelivery(Ristorante ristorante, Boolean delivery){
         if(delivery==null){
             return true;
         }
         return ristorante.getDelivery()==delivery;
     }
 
-    public static boolean filtroMediaStelle(Ristorante ristorante, Float mediaStelle){
+    private static boolean filtroMediaStelle(Ristorante ristorante, Float mediaStelle){
         if(mediaStelle==null){
             return true;
         }
         return ristorante.getMediaStelle()>=mediaStelle;
     }
 
+
+    /*
+    * Aggiunta di un metodo che permette al ristoratore di aggiungere la sua attività all'interno dell'applicazione
+    */
     public static boolean aggiungiRistorante(Ristoratore ristoratore, Ristorante ristorante) throws IOException, CsvException {
         if(ristoratore==null){
             return false;
@@ -92,6 +106,10 @@ public final class RistoranteService {
         return ristoratore.aggiungiRistorante(ristorante);
     }
 
+
+    /*
+    * Aggiunta di un metodo che permette all'utente di visualizzare le informazioni dei ristoranti
+    */
     public static void visualizzaRistorante(Ristorante ristorante){
         System.out.println(ristorante);
     }
