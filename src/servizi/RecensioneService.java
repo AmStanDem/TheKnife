@@ -35,4 +35,10 @@ public final class RecensioneService {
         }
         return ristorante.rimuoviRecensione(recensione);
     }
+
+    public static void visualizzaRecensioni(Ristorante ristorante){
+        for(Recensione recensione : ristorante.getListaRecensioni()){
+            System.out.println(recensione);
+        }
+    }
 }
