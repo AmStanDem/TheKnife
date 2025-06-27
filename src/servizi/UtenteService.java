@@ -7,8 +7,6 @@ import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servizio per la gestione degli utenti e delle operazioni a essi correlate.

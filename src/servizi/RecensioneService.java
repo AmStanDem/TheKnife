@@ -8,6 +8,7 @@ import io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Servizio per la gestione delle recensioni e delle operazioni correlate.
@@ -47,9 +48,12 @@ public final class RecensioneService {
         return cliente.aggiungiRecensione(ristorante, recensione);
     }
 
+    public static ArrayList<Recensione> getRecensioniCliente(Cliente cliente) throws IOException, CsvException {
+        return GestoreFile.caricaRecensioniCliente(cliente);
+    }
+
     /**
      * Elimina una recensione tramite un cliente.
-     * Prima rimuove dalla persistenza, poi aggiorna lo stato in memoria.
      *
      * @param cliente    Cliente che elimina la recensione.
      * @param ristorante Ristorante da cui eliminare la recensione.
@@ -75,7 +79,6 @@ public final class RecensioneService {
 
     /**
      * Modifica una recensione tramite un cliente.
-     * Prima aggiorna la persistenza, poi aggiorna lo stato in memoria.
      *
      * @param cliente         Cliente che modifica la recensione.
      * @param ristorante      Ristorante su cui modificare la recensione.
@@ -109,9 +112,10 @@ public final class RecensioneService {
         return cliente.modificaRecensione(ristorante, nuovaRecensione);
     }
 
+
+
     /**
      * Visualizza tutte le recensioni di un ristorante.
-     * Utilizza il metodo già implementato nella classe Ristorante.
      *
      * @param ristorante Ristorante di cui visualizzare le recensioni.
      */
@@ -129,20 +133,39 @@ public final class RecensioneService {
     }
 
     /**
+     * Visualizza tutte le recensioni di un ristorante.
+     *
+     * @param cliente cliente di cui visualizzare le recensioni.
+     * @param ristorante Ristorante di cui visualizzare le recensioni.
+     */
+    public static void visualizzaRecensione(Cliente cliente, Ristorante ristorante) {
+
+        System.out.println("=== Recensione per " + ristorante.getNome() +  " del cliente " + cliente +  " ===");
+        Recensione recensione = ristorante.trovaRecensioneCliente(cliente);
+
+        if (recensione == null) {
+            System.out.println("Nessuna recensione trovata.");
+            return;
+        }
+        System.out.println(recensione);
+    }
+
+    /**
      * Visualizza le recensioni di un cliente.
-     * Utilizza il metodo già implementato nella classe Cliente.
      *
      * @param cliente    Cliente di cui visualizzare le recensioni.
-     * @param ristoranti Lista di ristoranti su cui cercare le recensioni.
      */
-    public static void visualizzaRecensioniCliente(Cliente cliente, ArrayList<Ristorante> ristoranti) {
+    public static void visualizzaRecensioniCliente(Cliente cliente) throws IOException, CsvException {
         System.out.println("=== Recensioni di " + cliente.getUsername() + " ===");
-        cliente.visualizzaRecensioni(ristoranti);
+        var ristoranti = GestoreFile.caricaRistoranti();
+
+        for (Ristorante ristorante : ristoranti) {
+            visualizzaRecensione(cliente, ristorante);
+        }
     }
 
     /**
      * Verifica se un cliente può aggiungere una recensione per un ristorante.
-     * Utilizza il metodo già implementato nella classe Cliente.
      *
      * @param cliente    Cliente da verificare.
      * @param ristorante Ristorante da verificare.
@@ -154,7 +177,6 @@ public final class RecensioneService {
 
     /**
      * Ottiene le statistiche delle recensioni per un ristorante.
-     * Utilizza i metodi già implementati nella classe Ristorante.
      *
      * @param ristorante Ristorante di cui ottenere le statistiche.
      * @return Stringa contenente le statistiche formattate.

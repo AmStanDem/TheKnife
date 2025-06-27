@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -113,8 +114,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static LinkedList<Ristorante> caricaRistoranti() throws IOException, CsvException {
-        LinkedList<Ristorante> ristoranti = new LinkedList<>();
+    public static ArrayList<Ristorante> caricaRistoranti() throws IOException, CsvException {
+        ArrayList<Ristorante> ristoranti = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(DATASET_RISTORANTI.toFile()))) {
             List<String[]> righe = reader.readAll();
@@ -516,8 +517,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static LinkedList<Recensione> caricaRecensioniCliente(String username) throws IOException, CsvException {
-        LinkedList<Recensione> recensioniCliente = new LinkedList<>();
+    public static ArrayList<Recensione> caricaRecensioniCliente(String username) throws IOException, CsvException {
+        ArrayList<Recensione> recensioniCliente = new ArrayList<>();
 
         for (Recensione recensione : caricaRecensioni()) {
             if (recensione.appartienteA(username)) {
@@ -526,6 +527,17 @@ public class GestoreFile {
         }
 
         return recensioniCliente;
+    }
+
+    /**
+     * Carica le recensioni di un cliente specifico
+     *
+     * @return Lista delle recensioni del cliente
+     * @throws IOException  se si verifica un errore di I/O
+     * @throws CsvException se si verifica un errore nel parsing del CSV
+     */
+    public static ArrayList<Recensione> caricaRecensioniCliente(Cliente cliente) throws IOException, CsvException {
+        return caricaRecensioniCliente(cliente.getUsername());
     }
 
     /**

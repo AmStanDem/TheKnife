@@ -245,7 +245,6 @@ public class Ristorante {
 
     /**
      * Calcola la media delle stelle delle recensioni.
-     * CORRETTA: non stampa messaggi, gestisce correttamente il caso senza recensioni.
      *
      * @return Media delle stelle (0.0 se non ci sono recensioni)
      */
