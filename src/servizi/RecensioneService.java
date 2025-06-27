@@ -3,12 +3,12 @@ package servizi;
 import Entita.Cliente;
 import Entita.Recensione;
 import Entita.Ristorante;
+import Entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Servizio per la gestione delle recensioni e delle operazioni correlate.
@@ -112,25 +112,57 @@ public final class RecensioneService {
         return cliente.modificaRecensione(ristorante, nuovaRecensione);
     }
 
-
-
     /**
-     * Visualizza tutte le recensioni di un ristorante.
+     * Aggiunge una risposta del ristoratore a una recensione.
      *
-     * @param ristorante Ristorante di cui visualizzare le recensioni.
+     * @param ristoratore Ristoratore che risponde alla recensione.
+     * @param ristorante  Ristorante per cui è stata fatta la recensione.
+     * @param recensione  Recensione a cui rispondere.
+     * @param testoRisposta Testo della risposta del ristoratore.
+     * @return {@code true} se la risposta è stata aggiunta correttamente, {@code false} altrimenti.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
+     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
      */
-    public static void visualizzaRecensioni(Ristorante ristorante) {
-        if (ristorante.getListaRecensioni().isEmpty()) {
-            System.out.println("Nessuna recensione trovata per il ristorante: " + ristorante.getNome());
-            return;
+    public static boolean rispondiARecensione(Ristoratore ristoratore, Ristorante ristorante,
+                                              Recensione recensione, String testoRisposta)
+            throws IOException, CsvException {
+
+        if (ristoratore == null || ristorante == null || recensione == null ||
+                testoRisposta == null || testoRisposta.trim().isEmpty()) {
+            return false;
         }
 
-        System.out.println("=== Recensioni per " + ristorante.getNome() + " ===");
-        for (Recensione recensione : ristorante.getListaRecensioni()) {
-            System.out.println(recensione);
-            System.out.println("-".repeat(50));
+        if (!ristorante.appartieneA(ristoratore)) {
+            return false;
         }
+
+        if (!recensione.getRistorante().equals(ristorante)) {
+            return false;
+        }
+
+        if (recensione.haRisposta()) {
+            return false;
+        }
+        boolean rispostaAggiunta = recensione.aggiungiRisposta(testoRisposta.trim());
+
+        if (!rispostaAggiunta) {
+            return false;
+        }
+
+        if (!GestoreFile.eliminaRecensione(recensione)) {
+            recensione.modificaRisposta("");
+            return false;
+        }
+
+        if (!GestoreFile.aggiungiRecensione(recensione)) {
+            recensione.modificaRisposta("");
+            GestoreFile.aggiungiRecensione(recensione);
+            return false;
+        }
+
+        return true;
     }
+
 
     /**
      * Visualizza tutte le recensioni di un ristorante.
@@ -173,36 +205,5 @@ public final class RecensioneService {
      */
     public static boolean puoAggiungereRecensione(Cliente cliente, Ristorante ristorante) {
         return !cliente.haRecensito(ristorante);
-    }
-
-    /**
-     * Ottiene le statistiche delle recensioni per un ristorante.
-     *
-     * @param ristorante Ristorante di cui ottenere le statistiche.
-     * @return Stringa contenente le statistiche formattate.
-     */
-    public static String getStatisticheRecensioni(Ristorante ristorante) {
-        int numeroRecensioni = ristorante.getNumeroRecensioni();
-        if (numeroRecensioni == 0) {
-            return "Nessuna recensione presente per " + ristorante.getNome();
-        }
-
-        float mediaStelle = ristorante.getMediaStelle();
-
-        StringBuilder stats = new StringBuilder();
-        stats.append("=== Statistiche per ").append(ristorante.getNome()).append(" ===\n");
-        stats.append("Numero recensioni: ").append(numeroRecensioni).append("\n");
-        stats.append("Media stelle: ").append(String.format("%.2f", mediaStelle)).append("/5\n");
-
-        // Conta recensioni per numero di stelle
-        for (int i = 1; i <= 5; i++) {
-            int count = ristorante.getRecensioniPerStelle(i).size();
-            if (count > 0) {
-                stats.append(i).append(" ★: ").append(count).append(" recensioni\n");
-            }
-        }
-
-        return stats.toString();
-
     }
 }

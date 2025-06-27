@@ -6,18 +6,25 @@ import java.util.Scanner;
 
 import Entita.*;
 import com.opencsv.exceptions.CsvException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
 import servizi.RistoranteService;
 import servizi.UtenteService;
 
+/**
+ * Menu con le operazioni disponibili per un cliente.
+ */
 public class MenuCliente extends MenuIniziale {
 
     private final Scanner scanner;
     private final Cliente cliente;
 
+    /**
+     * Crea un nuovo menu cliente
+     * @param scanner I/O su terminale.
+     * @param cliente Cliente registrato.
+     * @throws IllegalArgumentException se i parametri sono invalidi.
+     */
     public MenuCliente(Scanner scanner, Cliente cliente) {
         validaAttributi(scanner, cliente);
         this.scanner = scanner;
@@ -36,12 +43,12 @@ public class MenuCliente extends MenuIniziale {
         }
 
         if (cliente == null) {
-            String messaggio = "Il nome di un cliente deve essere valorizzato.\n";
+            String messaggio = "Il cliente deve essere valorizzato.\n";
             errori.append(messaggio);
             errore = true;
         }
         if (errore) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(errori.toString());
         }
     }
 
@@ -54,6 +61,9 @@ public class MenuCliente extends MenuIniziale {
         }
     }
 
+    /**
+     * Mostra il contenuto effettivo del menu.
+     */
     @Override
     public void mostra() {
         System.out.println("Benvenuto " + cliente);

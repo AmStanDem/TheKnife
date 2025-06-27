@@ -21,12 +21,12 @@ import java.util.Objects;
  * @version 1.0
  */
 public abstract class Utente {
-    protected String nome;
-    protected String cognome;
-    protected String username;
-    protected String password;
-    protected LocalDate dataNascita;
-    protected String luogoDomicilio;
+    private String nome;
+    private String cognome;
+    private String username;
+    private String password;
+    private LocalDate dataNascita;
+    private String luogoDomicilio;
 
     /**
      * Crea un nuovo utente impostando i dati anagrafici e cifrando la password.
