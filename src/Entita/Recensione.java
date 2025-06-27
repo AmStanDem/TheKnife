@@ -31,10 +31,10 @@ public final class Recensione {
     /**
      * Crea una nuova recensione impostando i parametri.
      *
-     * @param cliente Cliente che effettua la recensione
+     * @param cliente    Cliente che effettua la recensione
      * @param ristorante Ristorante recensito
-     * @param stelle Punteggio attribuito al ristorante da 1 a 5
-     * @param messaggio Eventuale messaggio opzionale
+     * @param stelle     Punteggio attribuito al ristorante da 1 a 5
+     * @param messaggio  Eventuale messaggio opzionale
      * @throws RecensioneException Se i parametri non sono validi
      */
     public Recensione(Cliente cliente, Ristorante ristorante, int stelle, String messaggio) {
@@ -50,10 +50,10 @@ public final class Recensione {
     /**
      * Crea una nuova recensione impostando i parametri.
      *
-     * @param cliente Cliente che effettua la recensione
-     * @param ristorante Ristorante recensito
-     * @param stelle Punteggio attribuito al ristorante da 1 a 5
-     * @param messaggio Eventuale messaggio opzionale
+     * @param cliente        Cliente che effettua la recensione
+     * @param ristorante     Ristorante recensito
+     * @param stelle         Punteggio attribuito al ristorante da 1 a 5
+     * @param messaggio      Eventuale messaggio opzionale
      * @param dataRecensione Data e ora in cui è stata effettuata la recensione
      * @throws RecensioneException Se i parametri non sono validi
      */
@@ -70,9 +70,9 @@ public final class Recensione {
     /**
      * Costruttore per creare una recensione con solo stelle (senza messaggio).
      *
-     * @param cliente Cliente che effettua la recensione
+     * @param cliente    Cliente che effettua la recensione
      * @param ristorante Ristorante recensito
-     * @param stelle Punteggio attribuito al ristorante da 1 a 5
+     * @param stelle     Punteggio attribuito al ristorante da 1 a 5
      * @throws RecensioneException Se i parametri non sono validi
      */
     public Recensione(Cliente cliente, Ristorante ristorante, int stelle) {
@@ -80,26 +80,55 @@ public final class Recensione {
     }
 
     // Getter methods
-    /** @return Il cliente della recensione. */
-    public Cliente getCliente() { return cliente; }
 
-    /** @return La data della recensione. */
-    public LocalDateTime getDataRecensione() { return dataRecensione; }
+    /**
+     * @return Il cliente della recensione.
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
 
-    /** @return La data della risposta del ristoratore. */
-    public LocalDateTime getDataRisposta() { return dataRisposta; }
+    /**
+     * @return La data della recensione.
+     */
+    public LocalDateTime getDataRecensione() {
+        return dataRecensione;
+    }
 
-    /** @return Il messaggio della recensione. */
-    public String getMessaggio() { return messaggio; }
+    /**
+     * @return La data della risposta del ristoratore.
+     */
+    public LocalDateTime getDataRisposta() {
+        return dataRisposta;
+    }
 
-    /** @return La risposta del ristoratore. */
-    public String getRispostaRistoratore() { return rispostaRistoratore; }
+    /**
+     * @return Il messaggio della recensione.
+     */
+    public String getMessaggio() {
+        return messaggio;
+    }
 
-    /** @return Il ristorante recensito */
-    public Ristorante getRistorante() { return ristorante; }
+    /**
+     * @return La risposta del ristoratore.
+     */
+    public String getRispostaRistoratore() {
+        return rispostaRistoratore;
+    }
 
-    /** @return Il numero di stelle della recensione, da 1 a 5. */
-    public int getStelle() { return stelle; }
+    /**
+     * @return Il ristorante recensito
+     */
+    public Ristorante getRistorante() {
+        return ristorante;
+    }
+
+    /**
+     * @return Il numero di stelle della recensione, da 1 a 5.
+     */
+    public int getStelle() {
+        return stelle;
+    }
 
     /**
      * Modifica il numero di stelle se compreso tra 1 e 5.
@@ -163,9 +192,9 @@ public final class Recensione {
     /**
      * Verifica che i dati siano valorizzati nel modo corretto.
      *
-     * @param cliente Il cliente che effettua la recensione
+     * @param cliente    Il cliente che effettua la recensione
      * @param ristorante Il ristorante recensito
-     * @param stelle Il numero di stelle
+     * @param stelle     Il numero di stelle
      * @throws RecensioneException Se i dati inseriti non sono valorizzati correttamente
      */
     private void validaAttributi(Cliente cliente, Ristorante ristorante, int stelle) {
@@ -231,9 +260,9 @@ public final class Recensione {
 
     @Override
     public boolean equals(Object obj) {
-       if (!(obj instanceof Recensione recensione)) return false;
+        if (!(obj instanceof Recensione recensione)) return false;
 
-       return Objects.equals(cliente, recensione.cliente) &&
+        return Objects.equals(cliente, recensione.cliente) &&
                 Objects.equals(ristorante, recensione.ristorante);
     }
 

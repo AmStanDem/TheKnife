@@ -131,11 +131,44 @@ public class GestoreFile {
     }
 
     /**
+     * Carica tutti i ristoranti di un ristoratore dal file CSV.
+     *
+     * @param username Username del ristoratore
+     * @return Lista dei ristoranti caricati
+     * @throws IOException  se si verifica un errore di I/O
+     * @throws CsvException se si verifica un errore nel parsing del CSV
+     */
+    public static LinkedList<Ristorante> caricaRistoranti(String username) throws IOException, CsvException {
+
+        if (username == null) {
+            return null;
+        }
+
+        LinkedList<Ristorante> ristoranti = new LinkedList<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(DATASET_RISTORANTI.toFile()))) {
+            List<String[]> righe = reader.readAll();
+
+            // Salta l'intestazione (prima riga)
+            for (int i = 1; i < righe.size(); i++) {
+                String[] riga = righe.get(i);
+                if (username.equals(riga[ColonneRistoranteCSV.USERNAME])) {
+                    Ristorante ristorante = creaRistoranteDaRiga(riga);
+                    ristoranti.add(ristorante);
+                }
+            }
+        }
+
+        return ristoranti;
+    }
+
+    /**
      * Aggiunge un nuovo ristorante al file CSV, controllando che non esistano duplicati.
      * Un duplicato è definito come un ristorante con lo stesso nome e la stessa località.
+     *
      * @param ristorante Il ristorante da aggiungere
      * @return {@code true} se il ristorante è stato aggiunto con successo, {@code false} se esiste già
-     * @throws IOException se si verifica un errore di I/O
+     * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static boolean aggiungiRistorante(Ristorante ristorante) throws IOException, CsvException {
@@ -154,10 +187,10 @@ public class GestoreFile {
     /**
      * Cerca un ristorante specifico per nome e località.
      *
-     * @param nome Il nome del ristorante da cercare
+     * @param nome     Il nome del ristorante da cercare
      * @param localita La località del ristorante da cercare
      * @return Il ristorante trovato o null se non esiste
-     * @throws IOException se si verifica un errore di I/O
+     * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static Ristorante cercaRistorante(String nome, Localita localita) throws IOException, CsvException {
@@ -194,10 +227,10 @@ public class GestoreFile {
     /**
      * Verifica se esiste già un ristorante con il dato nome e località.
      *
-     * @param nome Il nome del ristorante da verificare
+     * @param nome     Il nome del ristorante da verificare
      * @param localita La località del ristorante da verificare
      * @return true se il ristorante esiste, false altrimenti
-     * @throws IOException se si verifica un errore di I/O
+     * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static boolean esisteRistorante(String nome, Localita localita) throws IOException, CsvException {
@@ -354,7 +387,7 @@ public class GestoreFile {
      * Verifica le credenziali di login di un utente.
      * La password viene verificata tramite BCrypt contro l'hash salvato.
      *
-     * @param username       L'username dell'utente
+     * @param username L'username dell'utente
      * @param password La password in chiaro da verificare
      * @return I dati dell'utenti se esso esiste, altrimenti null
      * @throws IOException  se si verifica un errore di I/O
@@ -897,7 +930,7 @@ public class GestoreFile {
     /**
      * Converte i dati di un preferito in un array di stringhe per il CSV.
      *
-     * @param cliente Il cliente proprietario del preferito
+     * @param cliente    Il cliente proprietario del preferito
      * @param ristorante Il ristorante preferito
      * @return Array di stringhe rappresentante la riga CSV
      */

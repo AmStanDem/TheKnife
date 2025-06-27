@@ -9,42 +9,137 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 import Entita.Cliente;
+import Entita.Utente;
 import Entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
+import servizi.UtenteService;
 
 import static io_file.GestoreFile.esisteUtente;
+import static servizi.UtenteService.autenticaUtente;
 
 public class MenuIniziale extends Menu {
+    //campi
+    private RegistrazioneService registrazioneService;
+    private Scanner sc;
+    //costruttore
+    public MenuIniziale() {
+       this.sc = new Scanner(System.in);
+       this.registrazioneService = new RegistrazioneService(sc);
+    }
 
     @Override
     public void mostra(){
         var sc = new Scanner(System.in);
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+        int selezione;
+        do {
+            selezione = 0;
+            System.out.println("Menu Iniziale: ");
+            System.out.println("1. Login");
+            System.out.println("2. Registrazione");
+            System.out.println("3. Guest");
+            System.out.println("4. Esci");
 
-        System.out.println("Menu Iniziale: ");
-        System.out.println("1. Login");
-        System.out.println("2. Registrazione");
-        System.out.println("3. Guest");
-        System.out.println("4. Esci");
+            selezione = sc.nextInt();
 
-        int selezione = sc.nextInt();
+            switch (selezione) {
+                case 1:
+                    login(sc);
+                    break;
+                case 2:
+                    registrazione(sc);
+                    break;
+                case 3:
+                    modalitaGuest(sc, r);
+                    break;
+                case 4:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Scelta non valida, riprova");
+            }
+        } while(selezione != 4);
 
-        switch (selezione) {
-            case 1:
-                break;
-            case 2:
-                registrazione(sc);
-                break;
-            case 3:
-                modalitaGuest(sc, r);
-                break;
-            case 4:
-                System.exit(0);
-                break;
+    }
+    
+    
+    public static Utente login(Scanner sc) {
+        String username,password;
+        final String stop="STOP";
+        boolean corretto;
+        
+        /*
+            Controllo dell'username inserito dall'utente
+         */
+        do {
+            corretto = true;
+            System.out.print("\nInserisci l'username per fare il login:  ");
+            username = sc.next().strip();
+
+            if(username.equals(stop)){
+                System.out.println("\nInserito STOP; Interruzione del login.\n");
+                return null;
+            }
+
+            if(username.isBlank()) {
+                System.out.println("\nL'username non puo' essere vuoto!");
+                corretto = false;
+            }
+
+            try {
+                if(corretto && !esisteUtente(username)){
+                    System.out.println("\nNon esiste utente con questo username.");
+                    corretto = false;
+                }
+            } catch (IOException | CsvException e) {
+                throw new RuntimeException(e);
+            }
+        } while(!corretto);
+        
+        /*
+            Controllo della password inserita dall'utente
+         */
+        do {
+            corretto = true;
+            System.out.print("\nStai facendo il login con l'username "+username+"\nInserisci la password:  ");
+            password = sc.next().strip();
+
+            if(password.equals(stop)){
+                System.out.println("\nInserito STOP; Interruzione del login.n\n");
+                return null;
+            }
+
+            if(password.isBlank()){
+                System.out.println("\nLa password non puo' essere vuota!");
+                corretto = false;
+            }
+
+            try {
+                if(corretto && autenticaUtente(username, password) == null) {
+                    System.out.println("\nPassword errata!");
+                    corretto = false;
+                }
+            } catch (IOException | CsvException e) {
+                throw new RuntimeException(e);
+            }
+        } while(!corretto);
+        try {
+            return autenticaUtente(username, password);
+        } catch (IOException | CsvException e) {
+            throw new RuntimeException(e);
         }
     }
 
+    private void registrazione() throws IOException, CsvException {
+        Utente nuovoUtente = registrazioneService.registraUtente();
+        if (nuovoUtente != null && !registrazioneService.STOP.equals(nuovoUtente.getUsername())) {
+            System.out.println(" Registrazione completata con successo!");
+            System.out.println("Benvenuto, " + nuovoUtente.getUsername() + "!");
+        } else {
+            System.out.println(" Registrazione annullata.");
+        }
+    }
 
     public static void registrazione(Scanner sc) {
         /*
@@ -55,23 +150,37 @@ public class MenuIniziale extends Menu {
         dataNascita – Data di nascita dell’utente
         luogoDomicilio – Luogo di domicilio (in chiaro)
         * */
-
+        
+        /*
+            _____________________________________________________________________________________________
+            Variabili varie
+         */
         String nome,cognome,username,password,luogoDomicilio,via,civico,citta,anno,mese,giorno;
         final String stop="STOP";
         LocalDate dataDiNascita;
         int i,selezione, aaaa=0, mm=0 ,gg=0; // TMCH
         char c;
         boolean stato,bisestile=false;
-
+        
+        // Inizio
+        System.out.println("\nBenvenuto nella registrazione utente.\nIn ogni momento puoi digitare STOP per" +
+                " interrompere il processo.");
+        
+        /*
+            _____________________________________________________________________________________________
+            Inserimento del nome nella registrazione e controllo dei parametri
+         */
         System.out.println("\nInserisci il nome del cliente");
         do {
 
             stato=true;
             System.out.print("Il nome deve essere composto da solo lettere: ");
-            nome = sc.nextLine().strip();
+            nome = sc.next().strip(); // Input
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà;
+            // Nessun dato rimarrà salvato e tutte le informazioni precedentemente inserite saranno scartate
             if(nome.equals(stop)) {
-                System.out.println("\nInserito STOP; interruzione della registrazione.\n");
+                System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                 return;
             }
 
@@ -90,16 +199,21 @@ public class MenuIniziale extends Menu {
             }
 
         } while (!stato);
-
+        
+        /*
+            _____________________________________________________________________________________________
+            Inserimento del cognome nella registrazione e controllo dei parametri
+         */
         System.out.println("\nInserisci il cognome del cliente");
         do {
             stato=true;
 
             System.out.print("Il cognome deve essere composto da solo lettere: ");
-            cognome = sc.nextLine().strip();
+            cognome = sc.next().strip();
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if(cognome.equals(stop)) {
-                System.out.println("\nInserito STOP; interruzione della registrazione.\n");
+                System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                 return;
             }
 
@@ -119,15 +233,20 @@ public class MenuIniziale extends Menu {
 
         } while (!stato);
 
+        /*
+            _____________________________________________________________________________________________
+            Inserimento dell'username nella registrazione e controllo dei parametri
+         */
         System.out.println("Inserisci l'username del cliente");
         do {
             stato=true;
 
             System.out.print("L'username deve essere composto da caratteri alfanumerici e lungo da 3 a 16 caratteri: ");
-            username = sc.nextLine().strip();
+            username = sc.next().strip(); // Input
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if(username.equals(stop)) {
-                System.out.println("\nInserito STOP; interruzione della registrazione.\n");
+                System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                 return;
             }
 
@@ -136,19 +255,23 @@ public class MenuIniziale extends Menu {
                 stato = false;
             }
 
+            // L'username deve essere lungo almeno 2 caratteri e massimo 16 caratteri
             if(stato && (username.length()<2||username.length()>16)){
                 System.out.println("\nL'username inserito non rispetta i caratteri di lunghezza");
                 stato = false;
             }
 
+            // L'username deve avere solo caratteri alfanumerici e underscore
             for(i=0; stato && i<username.length(); i++){
                 c=username.charAt(i);
-                if(!Character.isLetter(c)&&!Character.isDigit(c)&&c!='_'){
+                if(!Character.isLetterOrDigit(c)&&c!='_'){
                     System.out.println("\nHai inserito un carattere che non e' alfanumerico: "+ c + " in posizione " + (i+1));
                     stato = false;
                     break;
                 }
             }
+
+            // Ricerca di un username già esistente
             try {
                 if(stato && esisteUtente(username)){
                     System.out.println("\nL'username inserito è gia' utilizzato!");
@@ -158,15 +281,20 @@ public class MenuIniziale extends Menu {
                 throw new RuntimeException(e);
             }
 
-        } while(username.isBlank() || !stato);
+        } while(!stato);
 
+        /*
+            _____________________________________________________________________________________________
+            Inserimento della password nella registrazione e controllo dei parametri
+         */
         System.out.println("Inserisci la password del cliente");
         do {
             stato = true;
 
             System.out.println("Inserisci la password del cliente:");
-            password = sc.nextLine().strip();
+            password = sc.next().strip();
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if (password.equals(stop)) {
                 System.out.println("\nInserito STOP; interruzione della registrazione.\n");
                 return;
@@ -182,6 +310,10 @@ public class MenuIniziale extends Menu {
                 stato = false;
             }
 
+            /*
+                La password deve contenere almeno una lettera, un numero, un carattere speciale e
+                non contenere spazi, altrimenti verrà rifiutata
+             */
             if (stato) {
                 boolean contieneLettera = false;
                 boolean contieneNumero = false;
@@ -213,18 +345,30 @@ public class MenuIniziale extends Menu {
                         System.out.println("La password non deve contenere spazi.");
                         stato = false;
                     }
+
+                    if(!stato)
+                        break;
                 }
             }
 
         }while (!stato);
 
+        /*
+            _____________________________________________________________________________________________
+            Inserimento della data di nascita nella registrazione
+         */
         System.out.println("Inserisci la data di nascita in numero a cifre");
+
+        /*
+            Inserimento dell'anno
+         */
         do {
             stato=true;
 
             System.out.print("Inserisci l'anno di nascita: ");
-            anno = sc.nextLine().strip();
+            anno = sc.next().strip();
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if(anno.equals(stop)){
                 System.out.println("\nInserito STOP; interruzione della registrazione.\n");
                 return;
@@ -235,6 +379,7 @@ public class MenuIniziale extends Menu {
                 stato = false;
             }
 
+            // Controllo per caratteri non numerici
             for(i=0; stato && i<anno.length() ; i++){
                 c=anno.charAt(i);
 
@@ -245,6 +390,7 @@ public class MenuIniziale extends Menu {
                 }
             }
 
+            // Controllo di validità età e se l'anno è bisestile
             if(stato){
                 aaaa = Integer.parseInt(anno);
 
@@ -258,11 +404,15 @@ public class MenuIniziale extends Menu {
 
         }while(!stato);
 
+        /*
+            Inserimento del mese di nascita
+         */
         do {
             stato=true;
             System.out.print("Inserisci il mese di nascita: ");
-            mese = sc.nextLine().strip();
+            mese = sc.next().strip();
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if(mese.equals(stop)){
                 System.out.println("\nInserito STOP; interruzione della registrazione.\n");
                 return;
@@ -273,6 +423,7 @@ public class MenuIniziale extends Menu {
                 stato = false;
             }
 
+            // Controllo di caratteri non numerici
             for(i=0; stato && i<mese.length() ; i++){
                 c=mese.charAt(i);
                 if(!Character.isDigit(c)) {
@@ -282,6 +433,7 @@ public class MenuIniziale extends Menu {
                 }
             }
 
+            // Controllo di validità del mese
             if(stato){
                 mm = Integer.parseInt(mese);
 
@@ -293,11 +445,15 @@ public class MenuIniziale extends Menu {
 
         } while(!stato);
 
+        /*
+            Inserimento del giorno di nascita
+         */
         do {
             stato = true;
             System.out.print("Inserisci il giorno di nascita: ");
-            giorno = sc.nextLine().strip();
+            giorno = sc.next().strip();
 
+            // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
             if(giorno.equals(stop)){
                 System.out.println("\nInserito STOP; interruzione della registrazione.\n");
                 return;
@@ -308,6 +464,7 @@ public class MenuIniziale extends Menu {
                 stato = false;
             }
 
+            // Controllo di caratteri non numerici
             for(i=0; stato && i<giorno.length() ; i++){
                 c=giorno.charAt(i);
                 if(!Character.isDigit(c)) {
@@ -317,6 +474,7 @@ public class MenuIniziale extends Menu {
                 }
             }
 
+            // Controllo della validità del giorno di nascita in base al mese e se l'anno è bisestile
             if(stato){
                 gg = Integer.parseInt(giorno);
 
@@ -324,29 +482,40 @@ public class MenuIniziale extends Menu {
                     System.out.println("\nIl giorno inserito e' invalido!");
                     stato = false;
                 } else if((mm==4 || mm==6 || mm == 9 || mm == 11) && gg > 30){
-                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di nascita ha solo 30 giorni!");
+                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di nascita ha solo 30 giorni!");   // Mese di 30 giorni
                     stato = false;
                 } else if(mm==2 && bisestile && gg > 29){
-                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di febbraio bisestile ha solo 29 giorni!");
+                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di febbraio bisestile ha solo 29 giorni!"); // Febbraio bisestile, 29 giorni
                     stato = false;
                 } else if(mm==2 && !bisestile && gg > 28){
-                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di febbraio ha solo 28 giorni!");
+                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di febbraio ha solo 28 giorni!");  // Febbraio non bisestile, 28 giorni
                     stato = false;
                 } else if(gg > 31){
-                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di nascita ha solo 31 giorni!");
+                    System.out.println("\nE' stata inserita la data '"+gg+"', ma il mese di nascita ha solo 31 giorni!");   // Mese di 31 giorni
                     stato = false;
                 }
             }
 
         } while(!stato);
+        // Costruzione della data di nascita in formato LocalDate dopo tutti i controlli
         dataDiNascita = LocalDate.of(aaaa,mm,gg);
 
+
+        /*
+            _____________________________________________________________________________________________
+            Inserimento del luogo di domicilio nella registrazione e controllo dei parametri
+         */
         System.out.println("Inserisci il luogo di domicilio");
+
+        /*
+            Inserimento della via di domicilio, senza numero civico
+         */
         do {
             do {
                 System.out.print("\nInserisci la via di domicilio, senza numero civico e attenzione agli spazi: ");
-                via = sc.nextLine().strip();
+                via = sc.next().strip();
 
+                // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
                 if(via.equals(stop)){
                     System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                     return;
@@ -357,12 +526,18 @@ public class MenuIniziale extends Menu {
 
             } while (via.isBlank());
 
-
+            /*
+                Inserimento del numero civico
+                Sono ammessi numeri civici misti (Es. 1A, 5B, ecc...), ma in caso ci sia un numero misto
+                "irregolare", cioè con numeri anche dopo la lettera (Es. 15E9), sarà richiesta la conferma
+                dell'utente
+             */
             System.out.print("\nInserisci il numero civico (non obbligatorio): ");
             do{
                 stato = true;
-                civico = sc.nextLine();
+                civico = sc.next();
 
+                // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
                 if(civico.equals(stop)){
                     System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                     return;
@@ -371,6 +546,7 @@ public class MenuIniziale extends Menu {
                 if(civico.isBlank())
                     break;
 
+                // Il civico è in stringa per permettere l'inserimento di numeri civici misti
                 StringBuilder numero = new StringBuilder();
                 boolean civicoStrano = false;
                 for(i=0; i < civico.length() ; i++){
@@ -386,22 +562,27 @@ public class MenuIniziale extends Menu {
                         }
                     } else {
                         System.out.println("\nHai inserito un carattere anomalo: "+ c +" in posizione "+ (i+1));
-                        stato = false;
+                        stato = false; // Il numero civico non permette caratteri al di fuori di lettere e numeri
                     }
                 }
 
-                if(stato && !numero.toString().isBlank() && Integer.parseInt(numero.toString())==0){
-                    System.out.println("\nIl numero civico inserito non puo' essere zero!");
+                // Controllo che il numero civico costruito non sia zero o inesistente
+                if(stato && numero.toString().isBlank()){
+                    System.out.println("\nIl numero civico non puo' non avere numeri!");
+                    stato = false;
+                } else if(stato && Integer.parseInt(numero.toString())==0){
+                    System.out.println("\nIl numero civico non puo' essere zero!");
                     stato = false;
                 }
 
+                // Richiesta di conferma all'utente in caso il numero civico sia irregolare
                 if(stato && civicoStrano){
                     System.out.println("\nIl numero civico che hai inserito sembra anomalo.\nSe sei sicuro di averlo" +
                             " scritto correttamente, scrivi 1, altrimenti reinseriscilo scrivendo 2.\n\n" +
                             "Civico inserito: "+civico);
                     do {
                         System.out.println("\nSelezione: ");
-                        selezione = sc.nextInt();
+                        selezione = sc.nextInt(); // Scelta
                         switch(selezione){
                             case 1:
                                 System.out.println("\nNumero civico confermato.");
@@ -419,8 +600,9 @@ public class MenuIniziale extends Menu {
 
             do {
                 System.out.print("\nInserisci la citta' di domicilio: ");
-                citta = sc.nextLine().strip();
+                citta = sc.next().strip();
 
+                // Se l'utente scrive STOP nel campo input, la registrazione si interromperà
                 if(citta.equals(stop)){
                     System.out.println("\nInserito STOP; Interruzione della registrazione.\n");
                     return;
@@ -431,8 +613,10 @@ public class MenuIniziale extends Menu {
 
             } while(citta.isBlank());
 
-
+            // Costruzione del luogo di domicilio così che GeocodingService lo capisca
             luogoDomicilio = (via+" "+civico+", "+citta).strip();
+
+            // Conferma del luogo di domicilio da parte dell'utente
             System.out.println("\nIl luogo di domicilio inserito e':  "+luogoDomicilio+"\nRitieni sia corretto?");
 
             do {
@@ -457,17 +641,21 @@ public class MenuIniziale extends Menu {
 
         } while(!stato);
 
+        /*
+            Registrazione finale dell'utente
+         */
         System.out.println("\nTi registri da cliente o da ristoratore?\nInserisci 1 se cliente, 2 se ristoratore");
+        Utente utente;
         do {
             System.out.println("Selezione: ");
             selezione = sc.nextInt();
             switch (selezione) {
 
                 case 1:
-                    new Cliente(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
+                    utente = new Cliente(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
                     break;
                 case 2:
-                    new Ristoratore(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
+                    utente = new Ristoratore(nome, cognome, username, password, dataDiNascita, luogoDomicilio);
                     break;
                 default:
                     System.out.println("\nComando di selezione non valido!");

@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 
 /**
  * Servizio per la geolocalizzazione di luoghi in coordinate geografiche.
+ *
  * @author Thomas Riotto
  */
 public final class GeocodingService {
@@ -28,15 +29,16 @@ public final class GeocodingService {
 
     /**
      * Effettua la geocodificazione di un indirizzo e restituisce le coordinate come array di double.
+     *
      * @param address L'indirizzo da geocodificare
-     * @return Array di double [latitudine, longitudine]
+     * @return Array di double [latitudine, longitudine] o null se si è verificato un errore.
      */
     public static double[] geocodeAddress(String address) {
         try {
             final String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8);
             final String url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodedAddress;
 
-            HttpRequest request = HttpRequest.newBuilder()
+            final HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
                     .header("User-Agent", "TheKnife/1.0")
                     .GET()
@@ -57,20 +59,21 @@ public final class GeocodingService {
                 }
             }
 
-            return chiediCoordinateManuali();
+            return null;
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            return chiediCoordinateManuali();
+            return null;
         }
     }
 
-    private static double[] chiediCoordinateManuali() {
+    public static double[] chiediCoordinateManuali() {
         final Scanner scanner = new Scanner(System.in);
         double latitudine = 0.0, longitudine = 0.0;
         boolean valido = false;
 
         while (!valido) {
             try {
+                System.out.println("Url con: https://www.where-am-i.net/");
                 System.out.print("Inserisci la latitudine: ");
                 latitudine = Double.parseDouble(scanner.nextLine().trim());
                 System.out.print("Inserisci la longitudine: ");

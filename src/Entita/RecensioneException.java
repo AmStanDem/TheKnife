@@ -9,12 +9,12 @@ package Entita;
  */
 public class RecensioneException extends RuntimeException {
 
-  /**
-   * Costruisce una nuova RecensioneException con il messaggio specificato.
-   *
-   * @param message il messaggio di errore dettagliato
-   */
-  public RecensioneException(String message) {
-    super(message);
-  }
+    /**
+     * Costruisce una nuova RecensioneException con il messaggio specificato.
+     *
+     * @param message il messaggio di errore dettagliato
+     */
+    public RecensioneException(String message) {
+        super(message);
+    }
 }

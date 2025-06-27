@@ -3,6 +3,8 @@ package Entita;
 /**
  * Rappresenta le diverse tipologie di cucina.
  * Enum semplificato con le tipologie più comuni e rappresentative.
+ *
+ * @author Alessandro Tullo
  */
 public enum TipoCucina {
     ITALIANA("Italiana"),

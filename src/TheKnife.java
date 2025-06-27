@@ -7,7 +7,7 @@ public class TheKnife {
 }
 
 /*cercaRistoranti*/
-public static LinkedList<Ritorante> cercaRistorante(boolean delivery, boolean prenotazione, float prezzoMinimo, float prezzoMassimo, float prezoMedio, String tipoDiCucina, double mediaStelle){
+/*public static LinkedList<Ritorante> cercaRistorante(boolean delivery, boolean prenotazione, float prezzoMinimo, float prezzoMassimo, float prezoMedio, String tipoDiCucina, double mediaStelle){
     var ristoranti = GestoreFile.caricaRistoranti();
     var risultati = new ArrayList<Ristorante>();
     for(Ristorante ristorante : ristoranti){
@@ -33,6 +33,5 @@ public static LinkedList<Ritorante> cercaRistorante(boolean delivery, boolean pr
         }
 
 
-        risultato.add(ristorante);
-    }
-}
+        risultato.add(ristorante);*/
+

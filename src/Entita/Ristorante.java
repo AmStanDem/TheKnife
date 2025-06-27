@@ -1,5 +1,6 @@
 package Entita;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class Ristorante {
     private float prezzoMedio;
     private String descrizione;
     private Ristoratore proprietario;
-    private LinkedList<Recensione> listaRecensioni;
+    private List<Recensione> listaRecensioni;
 
     /**
      * Costruttore completo con proprietario.
@@ -29,15 +30,8 @@ public class Ristorante {
     public Ristorante(String nome, Localita localita, TipoCucina tipoDiCucina,
                       boolean delivery, boolean prenotazione, float prezzoMedio,
                       String descrizione, Ristoratore proprietario) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("Il nome del ristorante non può essere vuoto");
-        }
-        if (localita == null) {
-            throw new IllegalArgumentException("La località non può essere null");
-        }
-        if (prezzoMedio < 0) {
-            throw new IllegalArgumentException("Il prezzo medio non può essere negativo");
-        }
+
+        validaAttributi(nome, localita, prezzoMedio);
 
         this.nome = nome.trim();
         this.localita = localita;
@@ -51,14 +45,37 @@ public class Ristorante {
     }
 
     // Getters
-    public String getNome() { return nome; }
-    public Localita getLocalita() { return localita; }
-    public TipoCucina getTipoDiCucina() { return tipoDiCucina; }
-    public boolean getDelivery() { return delivery; }
-    public boolean getPrenotazione() { return prenotazione; }
-    public float getPrezzoMedio() { return prezzoMedio; }
-    public String getDescrizione() { return descrizione; }
-    public Ristoratore getProprietario() { return proprietario; }
+    public String getNome() {
+        return nome;
+    }
+
+    public Localita getLocalita() {
+        return localita;
+    }
+
+    public TipoCucina getTipoDiCucina() {
+        return tipoDiCucina;
+    }
+
+    public boolean getDelivery() {
+        return delivery;
+    }
+
+    public boolean getPrenotazione() {
+        return prenotazione;
+    }
+
+    public float getPrezzoMedio() {
+        return prezzoMedio;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public Ristoratore getProprietario() {
+        return proprietario;
+    }
 
     public void setProprietario(Ristoratore proprietario) {
         this.proprietario = proprietario;
@@ -78,6 +95,7 @@ public class Ristorante {
 
     /**
      * Aggiunge una recensione al ristorante.
+     *
      * @param recensione Recensione da aggiungere
      * @return {@code true} se aggiunta con successo, {@code false} altrimenti
      */
@@ -100,10 +118,8 @@ public class Ristorante {
 
     /**
      * Modifica una recensione esistente.
-     * CORRETTA: gestisce correttamente la sostituzione.
-     *
      * @param recensioneVecchia Recensione da sostituire
-     * @param recensioneNuova Nuova recensione
+     * @param recensioneNuova   Nuova recensione
      * @return true se modificata con successo, false altrimenti
      */
     public boolean modificaRecensione(Recensione recensioneVecchia, Recensione recensioneNuova) {
@@ -244,6 +260,30 @@ public class Ristorante {
         }
 
         return somma / listaRecensioni.size();
+    }
+
+    private void validaAttributi(String nome, Localita localita, float prezzoMedio) {
+        StringBuilder errori = new StringBuilder();
+        boolean errore = false;
+        if (nome == null || nome.isEmpty()) {
+            String messaggio = "Il nome di un ristorante deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (localita == null) {
+            String messaggio = "Il luogo di un ristorante deve essere valorizzato.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+        if (prezzoMedio <= 0) {
+            String messaggio = "Il prezzo medio di un ristorante non può essere negativo.\n";
+            errori.append(messaggio);
+            errore = true;
+        }
+
+        if (errore) {
+            throw new IllegalArgumentException(errori.toString());
+        }
     }
 
     @Override
