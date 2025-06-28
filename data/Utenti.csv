@@ -2,3 +2,4 @@ Nome,Cognome,Username,Password,DataNascita,LuogoDomicilio,Ruolo
 "Mario","Rossi","mario.rossi","$2a$10$F8VrMjrUcUWiqTW0s8XvSOzg3Mgr3cXLXaLAY4BQhywojWI2zO88O","1990-05-15","Roma","Cliente"
 "Giuseppe","Bianchi","giuseppe.bianchi","$2a$10$fVGjNZojGofGgDjd/7bLDuYorrv6Ur1R.DWmeIOYUDzuZsNhXYwa6","1985-08-20","Milano","Ristoratore"
 "Test","User","test.integration","$2a$10$Q8zEgtWDJgZZZAhclqtMX.ZJktBBlgGrhtW.pew1kpfGh2KAdF.T6","1995-01-01","Test City","Cliente"
+"Antonio","Pesavento","apesavento","$2a$10$6cc4DjtjH6wGI/G9rQ2QCO7cK7ttxVkUv1Ef2UN4lutRirunsURry","2006-01-14","Via Carlo Goldoni 4, Varese","Cliente"

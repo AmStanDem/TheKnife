@@ -103,6 +103,21 @@ public final class Cliente extends Utente {
     }
 
     /**
+     * Consente la visualizzazione delle proprie recensioni su dei ristoranti.
+     *
+     * @param ristoranti I ristoranti su cui effettuare la visualizzazione delle recensioni.
+     */
+    public void visualizzaRecensioni(ArrayList<Ristorante> ristoranti) {
+        ArrayList<Recensione> listaRecensioni = getRecensioni(ristoranti);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Recensione recensione : listaRecensioni) {
+            stringBuilder.append(recensione).append("\n");
+        }
+        System.out.println(stringBuilder.toString());
+    }
+
+    /**
      * Aggiunge una recensione a un ristorante.
      *
      * @param ristorante Il ristorante da recensire.

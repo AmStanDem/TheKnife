@@ -206,6 +206,7 @@ public final class RistoranteService {
             return false;
         }
 
+        // Verifica autorizzazione
         if (!ristorante.getProprietario().equals(ristoratore)) {
             return false;
         }
@@ -216,9 +217,9 @@ public final class RistoranteService {
         return ristoratore.aggiungiRistorante(ristorante);
     }
 
+
     /**
-     * Permette all'utente di visualizzare le informazioni dei ristoranti
-     * @param ristorante Ristorante su cui visualizzare le informazioni.
+     * Aggiunta di un metodo che permette all'utente di visualizzare le informazioni dei ristoranti
      */
     public static void visualizzaRistorante(Ristorante ristorante) {
         System.out.println(ristorante);

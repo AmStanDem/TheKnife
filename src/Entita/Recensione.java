@@ -156,13 +156,11 @@ public final class Recensione {
      *
      * @param risposta La risposta del ristoratore
      */
-    public boolean aggiungiRisposta(String risposta) {
+    public void aggiungiRisposta(String risposta) {
         if (rispostaRistoratore == null && risposta != null && !risposta.trim().isEmpty()) {
             this.rispostaRistoratore = risposta.trim();
             this.dataRisposta = LocalDateTime.now();
-            return true;
         }
-        return false;
     }
 
     public void setDataRisposta(LocalDateTime dataRisposta) {
@@ -185,7 +183,7 @@ public final class Recensione {
      * @param nuovaRisposta la nuova risposta del ristoratore
      */
     public void modificaRisposta(String nuovaRisposta) {
-        if (rispostaRistoratore != null && nuovaRisposta != null) {
+        if (rispostaRistoratore != null && nuovaRisposta != null && !nuovaRisposta.trim().isEmpty()) {
             this.rispostaRistoratore = nuovaRisposta.trim();
             this.dataRisposta = LocalDateTime.now();
         }

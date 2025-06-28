@@ -110,13 +110,14 @@ public class Ristorante {
         }
 
         boolean aggiunta = listaRecensioni.add(recensione);
-        System.out.println("Recensione aggiunta con successo per: " + nome);
+        if (aggiunta) {
+            System.out.println("Recensione aggiunta con successo per: " + nome);
+        }
         return aggiunta;
     }
 
     /**
      * Modifica una recensione esistente.
-     *
      * @param recensioneVecchia Recensione da sostituire
      * @param recensioneNuova   Nuova recensione
      * @return true se modificata con successo, false altrimenti
@@ -244,6 +245,7 @@ public class Ristorante {
 
     /**
      * Calcola la media delle stelle delle recensioni.
+     * CORRETTA: non stampa messaggi, gestisce correttamente il caso senza recensioni.
      *
      * @return Media delle stelle (0.0 se non ci sono recensioni)
      */

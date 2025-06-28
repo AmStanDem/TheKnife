@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,8 +113,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static ArrayList<Ristorante> caricaRistoranti() throws IOException, CsvException {
-        ArrayList<Ristorante> ristoranti = new ArrayList<>();
+    public static LinkedList<Ristorante> caricaRistoranti() throws IOException, CsvException {
+        LinkedList<Ristorante> ristoranti = new LinkedList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(DATASET_RISTORANTI.toFile()))) {
             List<String[]> righe = reader.readAll();
@@ -139,13 +138,13 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static ArrayList<Ristorante> caricaRistoranti(String username) throws IOException, CsvException {
+    public static LinkedList<Ristorante> caricaRistoranti(String username) throws IOException, CsvException {
 
         if (username == null) {
             return null;
         }
 
-        ArrayList<Ristorante> ristoranti = new ArrayList<>();
+        LinkedList<Ristorante> ristoranti = new LinkedList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(DATASET_RISTORANTI.toFile()))) {
             List<String[]> righe = reader.readAll();
@@ -517,8 +516,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static ArrayList<Recensione> caricaRecensioniCliente(String username) throws IOException, CsvException {
-        ArrayList<Recensione> recensioniCliente = new ArrayList<>();
+    public static LinkedList<Recensione> caricaRecensioniCliente(String username) throws IOException, CsvException {
+        LinkedList<Recensione> recensioniCliente = new LinkedList<>();
 
         for (Recensione recensione : caricaRecensioni()) {
             if (recensione.appartienteA(username)) {
@@ -527,17 +526,6 @@ public class GestoreFile {
         }
 
         return recensioniCliente;
-    }
-
-    /**
-     * Carica le recensioni di un cliente specifico
-     *
-     * @return Lista delle recensioni del cliente
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static ArrayList<Recensione> caricaRecensioniCliente(Cliente cliente) throws IOException, CsvException {
-        return caricaRecensioniCliente(cliente.getUsername());
     }
 
     /**
@@ -732,8 +720,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static ArrayList<Ristorante> caricaPreferiti(String username) throws IOException, CsvException {
-        ArrayList<Ristorante> ristoranti = new ArrayList<>();
+    public static LinkedList<Ristorante> caricaPreferiti(String username) throws IOException, CsvException {
+        LinkedList<Ristorante> ristoranti = new LinkedList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(DATASET_PREFERITI.toFile()))) {
             List<String[]> righe = reader.readAll();
@@ -874,7 +862,7 @@ public class GestoreFile {
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static Ristorante cercaPreferito(Cliente cliente, Ristorante ristorante) throws IOException, CsvException {
-        ArrayList<Ristorante> preferiti = caricaPreferiti(cliente.getUsername());
+        LinkedList<Ristorante> preferiti = caricaPreferiti(cliente.getUsername());
 
         for (Ristorante r : preferiti) {
             if (r.equals(ristorante)) {

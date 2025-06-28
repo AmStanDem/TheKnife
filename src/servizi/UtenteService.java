@@ -2,12 +2,13 @@ package servizi;
 
 import Entita.Cliente;
 import Entita.Ristorante;
-import Entita.Ristoratore;
 import Entita.Utente;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servizio per la gestione degli utenti e delle operazioni a essi correlate.
@@ -52,30 +53,7 @@ public final class UtenteService {
             return null;
         }
 
-        Utente utente = GestoreFile.verificaLogin(username.trim(), password);
-
-        return switch (utente) {
-            case null -> null;
-            case Cliente c -> new Cliente(
-                    c.getNome(),
-                    c.getCognome(),
-                    c.getUsername(),
-                    c.getPassword(),
-                    c.getDataNascita(),
-                    c.getLuogoDomicilio(),
-                    GestoreFile.caricaPreferiti(c.getUsername())
-            );
-            case Ristoratore r -> new Ristoratore(
-                    r.getNome(),
-                    r.getCognome(),
-                    r.getUsername(),
-                    r.getPassword(),
-                    r.getDataNascita(),
-                    r.getLuogoDomicilio(),
-                    GestoreFile.caricaRistoranti(r.getUsername())
-            );
-            default -> utente;
-        };
+        return GestoreFile.verificaLogin(username.trim(), password);
     }
 
     /**

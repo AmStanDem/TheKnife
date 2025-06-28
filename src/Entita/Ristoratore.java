@@ -98,6 +98,63 @@ public class Ristoratore extends Utente {
     }
 
     /**
+     * Risponde a una recensione specifica lasciata da un cliente per uno dei ristoranti del ristoratore.
+     * Il ristoratore può rispondere solo una volta per ogni recensione.
+     * Utilizza nome e località per identificare univocamente il ristorante.
+     *
+     * @param nomeRistorante  Il nome del ristorante per cui si vuole rispondere alla recensione
+     * @param localita        La località del ristorante per disambiguare ristoranti con stesso nome
+     * @param usernameCliente Lo username del cliente che ha lasciato la recensione
+     * @param risposta        Il testo della risposta del ristoratore
+     * @return true se la risposta è stata aggiunta con successo, false altrimenti
+     */
+    public boolean rispondiARecensione(String nomeRistorante, Localita localita, String usernameCliente, String risposta) {
+        Ristorante ristorante = trovaRistorante(nomeRistorante, localita);
+        if (ristorante == null) {
+            return false;
+        }
+
+        List<Recensione> recensioni = ristorante.getListaRecensioni();
+        for (Recensione rec : recensioni) {
+            if (rec.appartienteA(usernameCliente)) {
+                if (rec.haRisposta()) {
+                    return false;
+                }
+                rec.aggiungiRisposta(risposta);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Modifica una risposta esistente a una recensione.
+     * Permette al ristoratore di cambiare il testo di una risposta già fornita.
+     * Utilizza nome e località per identificare univocamente il ristorante.
+     *
+     * @param nomeRistorante  Il nome del ristorante
+     * @param localita        La località del ristorante per disambiguare ristoranti con stesso nome
+     * @param usernameCliente Lo username del cliente che ha lasciato la recensione
+     * @param nuovaRisposta   Il nuovo testo della risposta
+     * @return true se la risposta è stata modificata con successo, false altrimenti
+     */
+    public boolean modificaRisposta(String nomeRistorante, Localita localita, String usernameCliente, String nuovaRisposta) {
+        Ristorante ristorante = trovaRistorante(nomeRistorante, localita);
+        if (ristorante == null) {
+            return false;
+        }
+
+        List<Recensione> recensioni = ristorante.getListaRecensioni();
+        for (Recensione rec : recensioni) {
+            if (rec.appartienteA(usernameCliente) && rec.haRisposta()) {
+                rec.modificaRisposta(nuovaRisposta);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Visualizza un riepilogo delle recensioni per tutti i ristoranti del ristoratore.
      * Mostra il numero totale di recensioni ricevute e la media complessiva delle stelle.
      * Se non ci sono recensioni, viene mostrato un messaggio appropriato.

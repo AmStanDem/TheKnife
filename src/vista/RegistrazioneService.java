@@ -15,7 +15,7 @@ import static io_file.GestoreFile.esisteUtente;
 
 public class RegistrazioneService {
     private Scanner sc;
-    public final String STOP = "STOP";
+    public String STOP = "STOP";
 
     public RegistrazioneService(Scanner sc) {
         this.sc = sc;
@@ -23,16 +23,16 @@ public class RegistrazioneService {
 
     public Utente registraUtente() throws IOException, CsvException {
         String nome = chiediNome("nome");
-        if (STOP.equals(nome)) return null;
+        if (nome == null) return null;
 
         String cognome = chiediNome("cognome");
-        if (STOP.equals(cognome)) return null;
+        if (cognome == null) return null;
 
         String username = chiediUsername();
-        if (STOP.equals(username)) return null;
+        if (username == null) return null;
 
         String password = chiediPassword();
-        if (STOP.equals(password)) return null;
+        if (password == null) return null;
 
         LocalDate dataNascita = chiediDataNascita();
         if (dataNascita == null) return null;
@@ -52,7 +52,7 @@ public class RegistrazioneService {
             System.out.println("Inserisci il " + campo + ": ");
             String input = sc.nextLine().strip();
 
-            if (input.equals(STOP)) return STOP;
+            if (input.equalsIgnoreCase(STOP)) return null;
 
             if (input.isBlank()) {
                 System.out.println("Il " + campo + " non può essere vuoto");
@@ -80,7 +80,7 @@ public class RegistrazioneService {
             System.out.println("Inserisci username: ");
             String input = sc.nextLine().strip();
 
-            if (input.equals(STOP)) return STOP;
+            if (input.equalsIgnoreCase(STOP)) return null;
 
             if (input.length() < 3 || input.length() > 16) {
                 System.out.println("Deve avere tra 3 e 16 caratteri");
@@ -114,14 +114,13 @@ public class RegistrazioneService {
             System.out.println("Inserisci password: ");
             String p = sc.nextLine().strip();
 
-            if (p.equals(STOP)) return STOP;
+            if (p.equalsIgnoreCase(STOP)) return null;
 
             if (p.length() < 8 || p.length() > 16) {
                 System.out.println("Password deve avere tra 8 e 16 caratteri");
-                continue;
             }
 
-            boolean contieneLettera = false, contieneNumero = false, contieneSpazio = false, contieneSimbolo = false;
+            boolean contieneLettera = false, contieneNumero = false, contieneSpazio = false, contieneSimbolo = false, corretto = true;
 
             for (char c : p.toCharArray()) {
                 if (Character.isLetter(c)) contieneLettera = true;
@@ -132,13 +131,16 @@ public class RegistrazioneService {
 
             if (contieneSpazio) {
                 System.out.println("La password non deve contenere spazi.");
-                continue;
+                corretto = false;
             }
 
             if (!contieneLettera || !contieneNumero || !contieneSimbolo) {
-                System.out.println("Deve contenere almeno una lettera, un numero e un simbolo.");
-                continue;
+                System.out.println("La password deve contenere almeno una lettera, un numero e un simbolo.");
+                corretto = false;
             }
+
+            if(!corretto)
+                continue;
 
             return p;
         }
@@ -237,7 +239,7 @@ public class RegistrazioneService {
         return LocalDate.of(aaaa, mm, gg);
     }
 
-    private String chiediDomicilio() {
+    public String chiediDomicilio() {
         String via, civico, citta, luogoDomicilio;
         int i;
         char c;
@@ -260,6 +262,12 @@ public class RegistrazioneService {
             if (citta.equalsIgnoreCase(STOP)) return null;
         } while (citta.isBlank());
 
+        /*
+         * String domicilioIntermedio = via + (civico.isEmpty() ? "" : " " + civico);
+         * luogoDomicilio = (domicilioIntermedio + ", " + citta).strip();
+         */
+
+
         luogoDomicilio = (via + " " + civico + ", " + citta).strip();
         System.out.println("Hai inserito: " + luogoDomicilio);
 
@@ -272,6 +280,7 @@ public class RegistrazioneService {
 
         return luogoDomicilio;
     }
+
 
     private int chiediRuolo() {
         while (true) {
