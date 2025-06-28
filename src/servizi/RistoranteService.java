@@ -218,6 +218,12 @@ public final class RistoranteService {
     }
 
 
+    public static ArrayList<Recensione> getRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
+        ArrayList<Recensione> recensioni = GestoreFile.caricaRecensioniRistorante(ristorante);
+        ristorante.setRecensioni(recensioni);
+        return recensioni;
+    }
+
     /**
      * Aggiunta di un metodo che permette all'utente di visualizzare le informazioni dei ristoranti
      */

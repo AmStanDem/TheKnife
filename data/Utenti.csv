@@ -1,1 +1,3 @@
 Nome,Cognome,Username,Password,DataNascita,LuogoDomicilio,Ruolo
+"Ristoratore","Ristoratore","ristoratore","$2a$10$L8kMF5invC8dCvaWbpTuI.RsBzVniIfaQVzNIib7RQ5JE83pAxla.","1980-12-01","Via Roma 1, Milano","Ristoratore"
+"Cliente","Cliente","cliente01","$2a$10$8xQcADqSo3m2RbzoGx44nuQi/9rOb77m9wxgIT3Q9LD5RxMfuhy6m","1980-01-01","Viale Milano 115, Gallarate","Cliente"

@@ -517,7 +517,10 @@ public class MenuCliente extends Menu {
                 nuovoTesto = recensioneDaModificare.getMessaggio();
             }
 
-            Recensione recensione = new Recensione(cliente, recensioneDaModificare.getRistorante(), nuoveStelle, nuovoTesto);
+            Ristorante ristorante = recensioneDaModificare.getRistorante();
+            RecensioneService.caricaRecensioniRistorante(ristorante);
+
+            Recensione recensione = new Recensione(cliente, ristorante, nuoveStelle, nuovoTesto);
 
             // Aggiornamento della recensione
             boolean successo = RecensioneService.modificaRecensione(
@@ -585,6 +588,9 @@ public class MenuCliente extends Menu {
                 return;
             }
 
+            Ristorante ristorante = recensioneDaRimuovere.getRistorante();
+            RecensioneService.caricaRecensioniRistorante(ristorante);
+
             // Rimozione della recensione
             boolean successo = RecensioneService.eliminaRecensione(
                     cliente, recensioneDaRimuovere.getRistorante()
@@ -601,9 +607,6 @@ public class MenuCliente extends Menu {
         }
     }
 
-    /**
-     * Aggiunge una recensione dai risultati di ricerca
-     */
     private void aggiungiRecensioneDaRisultati(ArrayList<Ristorante> risultati) {
         System.out.println("=== AGGIUNGI RECENSIONE ===");
 
@@ -616,7 +619,7 @@ public class MenuCliente extends Menu {
 
         try {
             // Verifica se l'utente ha già recensito questo ristorante
-            if (RecensioneService.puoAggiungereRecensione(cliente, ristoranteSelezionato)) {
+            if (!RecensioneService.puoAggiungereRecensione(cliente, ristoranteSelezionato)) {
                 System.out.println("Hai già recensito questo ristorante. Usa l'opzione 'Modifica recensione' per modificarla.");
                 return;
             }

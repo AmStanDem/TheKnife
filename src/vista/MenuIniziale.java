@@ -5,10 +5,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import Entita.Cliente;
-import Entita.Localita;
-import Entita.Utente;
-import Entita.Ristoratore;
+import Entita.*;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
 import servizi.RistoranteService;
@@ -156,15 +153,16 @@ public class MenuIniziale extends Menu {
             try {
                 UtenteService.registraUtente(nuovoUtente);
             } catch (IOException | CsvException e) {
-                System.out.println("Errore durante il salvataggio dell'utente.");
-                e.printStackTrace();
+                System.err.println("Errore durante il salvataggio dell'utente.");
                 return;
             }
             if (nuovoUtente instanceof Cliente cliente) {
                 MenuCliente menuCliente = new MenuCliente(scanner, cliente);
+                menuCliente.mostra();
             }
             else if (nuovoUtente instanceof Ristoratore ristoratore) {
                 MenuRistoratore menuRistoratore = new MenuRistoratore(scanner, ristoratore);
+                menuRistoratore.mostra();
             }
         }
     }
@@ -180,9 +178,13 @@ public class MenuIniziale extends Menu {
         double[] coords = GeocodingService.geocodeAddress(luogo);
         Localita localita = new Localita(coords[0], coords[1]);
         try {
-            RistoranteService.cercaRistorante(localita, 10.0);
+            var ristorantiVicini = RistoranteService.cercaRistorante(localita, 10.0);
+
+            for (Ristorante ristorante : ristorantiVicini) {
+                System.out.println(ristorante);
+            }
         } catch (IOException | CsvException e) {
-            throw new RuntimeException(e);
+            System.err.println("Errore durante la ricerca dei ristoranti");
         }
         int selezione;
         do {

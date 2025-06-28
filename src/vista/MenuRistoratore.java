@@ -108,7 +108,7 @@ public class MenuRistoratore extends Menu {
             System.out.print("Indirizzo: ");
             String indirizzo = scanner.nextLine().trim();
 
-            double[] coords = GeocodingService.geocodeAddress(indirizzo);
+            double[] coords = GeocodingService.geocodeAddress(nazione + " " + citta + " " + indirizzo);
             double latitudine, longitudine;
 
             if (coords == null) {

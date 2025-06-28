@@ -9,6 +9,9 @@ import io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
+import static servizi.RistoranteService.getRecensioniRistorante;
 
 /**
  * Servizio per la gestione delle recensioni e delle operazioni correlate.
@@ -50,6 +53,20 @@ public final class RecensioneService {
 
     public static ArrayList<Recensione> getRecensioniCliente(Cliente cliente) throws IOException, CsvException {
         return GestoreFile.caricaRecensioniCliente(cliente);
+    }
+
+    public static void caricaRecensioniPerTuttiRistoranti(ArrayList<Ristorante> ristoranti)
+            throws IOException, CsvException {
+
+        for (Ristorante ristorante : ristoranti) {
+            ArrayList<Recensione> recensioni = getRecensioniRistorante(ristorante);
+        }
+    }
+
+    public static void caricaRecensioniRistorante(Ristorante ristorante)
+            throws IOException, CsvException {
+
+        getRecensioniRistorante(ristorante);
     }
 
     /**
@@ -105,7 +122,7 @@ public final class RecensioneService {
         if (vecchiaRecensione == null) {
             return false;
         }
-        if (!GestoreFile.eliminaRecensione(vecchiaRecensione)) {
+        if(!GestoreFile.aggiornaRecensione(vecchiaRecensione,  nuovaRecensione)) {
             return false;
         }
 
@@ -189,10 +206,10 @@ public final class RecensioneService {
      */
     public static void visualizzaRecensioniCliente(Cliente cliente) throws IOException, CsvException {
         System.out.println("=== Recensioni di " + cliente.getUsername() + " ===");
-        var ristoranti = GestoreFile.caricaRistoranti();
+        var recensioni = GestoreFile.caricaRecensioniCliente(cliente);
 
-        for (Ristorante ristorante : ristoranti) {
-            visualizzaRecensione(cliente, ristorante);
+        for (Recensione recensione : recensioni) {
+            System.out.println(recensione);
         }
     }
 

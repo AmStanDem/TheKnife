@@ -541,8 +541,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static LinkedList<Recensione> caricaRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
-        LinkedList<Recensione> recensioniRistorante = new LinkedList<>();
+    public static ArrayList<Recensione> caricaRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
+        ArrayList<Recensione> recensioniRistorante = new ArrayList<>();
 
         for (Recensione recensione : caricaRecensioni()) {
             if (recensione.getRistorante().equals(ristorante)) {

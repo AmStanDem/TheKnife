@@ -25,7 +25,7 @@ public class Ristorante {
     private List<Recensione> recensioni;
 
     /**
-     * Costruttore completo con proprietario.
+     * Costruttore
      */
     public Ristorante(String nome, Localita localita, TipoCucina tipoDiCucina,
                       boolean delivery, boolean prenotazione, float prezzoMedio,
@@ -41,7 +41,7 @@ public class Ristorante {
         this.prezzoMedio = prezzoMedio;
         this.descrizione = descrizione != null ? descrizione.trim() : "";
         this.proprietario = proprietario;
-        this.recensioni = new LinkedList<>();
+        this.recensioni = new ArrayList<>();
     }
 
     // Getters
@@ -162,6 +162,14 @@ public class Ristorante {
      */
     public LinkedList<Recensione> getRecensioni() {
         return new LinkedList<>(recensioni);
+    }
+
+    /**
+     * Imposta le recensioni
+     * @param recensioni Le recensioni
+     */
+    public void setRecensioni(List<Recensione> recensioni) {
+        this.recensioni = new ArrayList<>(recensioni);
     }
 
     /**

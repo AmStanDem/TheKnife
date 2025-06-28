@@ -8,6 +8,7 @@ import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Servizio per la gestione degli utenti e delle operazioni a essi correlate.
@@ -56,24 +57,51 @@ public final class UtenteService {
 
         return switch (utente) {
             case null -> null;
-            case Cliente c -> new Cliente(
-                    c.getNome(),
-                    c.getCognome(),
-                    c.getUsername(),
-                    c.getPassword(),
-                    c.getDataNascita(),
-                    c.getLuogoDomicilio(),
-                    GestoreFile.caricaPreferiti(c.getUsername())
-            );
-            case Ristoratore r -> new Ristoratore(
-                    r.getNome(),
-                    r.getCognome(),
-                    r.getUsername(),
-                    r.getPassword(),
-                    r.getDataNascita(),
-                    r.getLuogoDomicilio(),
-                    GestoreFile.caricaRistoranti(r.getUsername())
-            );
+
+            case Cliente c -> {
+                // Anche per i clienti potresti voler caricare le recensioni dei preferiti
+                ArrayList<Ristorante> preferiti = GestoreFile.caricaPreferiti(c.getUsername());
+
+                // Opzionale: carica le recensioni anche per i preferiti del cliente
+                if (!preferiti.isEmpty()) {
+                    try {
+                        RecensioneService.caricaRecensioniPerTuttiRistoranti(preferiti);
+                    } catch (IOException | CsvException e) {
+                        System.err.println("Errore nel caricamento delle recensioni dei preferiti: " + e.getMessage());
+                    }
+                }
+
+                yield new Cliente(
+                        c.getNome(),
+                        c.getCognome(),
+                        c.getUsername(),
+                        c.getPassword(),
+                        c.getDataNascita(),
+                        c.getLuogoDomicilio(),
+                        preferiti
+                );
+            }
+
+            case Ristoratore r -> {
+                // Carica i ristoranti del ristoratore
+                ArrayList<Ristorante> ristoranti = GestoreFile.caricaRistoranti(r.getUsername());
+
+                // Carica le recensioni per tutti i suoi ristoranti
+                if (!ristoranti.isEmpty()) {
+                    RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
+                }
+
+                yield new Ristoratore(
+                        r.getNome(),
+                        r.getCognome(),
+                        r.getUsername(),
+                        r.getPassword(),
+                        r.getDataNascita(),
+                        r.getLuogoDomicilio(),
+                        ristoranti
+                );
+            }
+
             default -> utente;
         };
     }
