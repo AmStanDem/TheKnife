@@ -3,6 +3,7 @@ package servizi;
 import Entita.Cliente;
 import Entita.Recensione;
 import Entita.Ristorante;
+import Entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
@@ -47,9 +48,12 @@ public final class RecensioneService {
         return cliente.aggiungiRecensione(ristorante, recensione);
     }
 
+    public static ArrayList<Recensione> getRecensioniCliente(Cliente cliente) throws IOException, CsvException {
+        return GestoreFile.caricaRecensioniCliente(cliente);
+    }
+
     /**
      * Elimina una recensione tramite un cliente.
-     * Prima rimuove dalla persistenza, poi aggiorna lo stato in memoria.
      *
      * @param cliente    Cliente che elimina la recensione.
      * @param ristorante Ristorante da cui eliminare la recensione.
@@ -75,7 +79,6 @@ public final class RecensioneService {
 
     /**
      * Modifica una recensione tramite un cliente.
-     * Prima aggiorna la persistenza, poi aggiorna lo stato in memoria.
      *
      * @param cliente         Cliente che modifica la recensione.
      * @param ristorante      Ristorante su cui modificare la recensione.
@@ -110,39 +113,91 @@ public final class RecensioneService {
     }
 
     /**
-     * Visualizza tutte le recensioni di un ristorante.
-     * Utilizza il metodo già implementato nella classe Ristorante.
+     * Aggiunge una risposta del ristoratore a una recensione.
      *
-     * @param ristorante Ristorante di cui visualizzare le recensioni.
+     * @param ristoratore Ristoratore che risponde alla recensione.
+     * @param ristorante  Ristorante per cui è stata fatta la recensione.
+     * @param recensione  Recensione a cui rispondere.
+     * @param testoRisposta Testo della risposta del ristoratore.
+     * @return {@code true} se la risposta è stata aggiunta correttamente, {@code false} altrimenti.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
+     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
      */
-    public static void visualizzaRecensioni(Ristorante ristorante) {
-        if (ristorante.getListaRecensioni().isEmpty()) {
-            System.out.println("Nessuna recensione trovata per il ristorante: " + ristorante.getNome());
-            return;
+    public static boolean rispondiARecensione(Ristoratore ristoratore, Ristorante ristorante,
+                                              Recensione recensione, String testoRisposta)
+            throws IOException, CsvException {
+
+        if (ristoratore == null || ristorante == null || recensione == null ||
+                testoRisposta == null || testoRisposta.trim().isEmpty()) {
+            return false;
         }
 
-        System.out.println("=== Recensioni per " + ristorante.getNome() + " ===");
-        for (Recensione recensione : ristorante.getListaRecensioni()) {
-            System.out.println(recensione);
-            System.out.println("-".repeat(50));
+        if (!ristorante.appartieneA(ristoratore)) {
+            return false;
         }
+
+        if (!recensione.getRistorante().equals(ristorante)) {
+            return false;
+        }
+
+        if (recensione.haRisposta()) {
+            return false;
+        }
+        boolean rispostaAggiunta = recensione.aggiungiRisposta(testoRisposta.trim());
+
+        if (!rispostaAggiunta) {
+            return false;
+        }
+
+        if (!GestoreFile.eliminaRecensione(recensione)) {
+            recensione.modificaRisposta("");
+            return false;
+        }
+
+        if (!GestoreFile.aggiungiRecensione(recensione)) {
+            recensione.modificaRisposta("");
+            GestoreFile.aggiungiRecensione(recensione);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Visualizza tutte le recensioni di un ristorante.
+     *
+     * @param cliente cliente di cui visualizzare le recensioni.
+     * @param ristorante Ristorante di cui visualizzare le recensioni.
+     */
+    public static void visualizzaRecensione(Cliente cliente, Ristorante ristorante) {
+
+        System.out.println("=== Recensione per " + ristorante.getNome() +  " del cliente " + cliente +  " ===");
+        Recensione recensione = ristorante.trovaRecensioneCliente(cliente);
+
+        if (recensione == null) {
+            System.out.println("Nessuna recensione trovata.");
+            return;
+        }
+        System.out.println(recensione);
     }
 
     /**
      * Visualizza le recensioni di un cliente.
-     * Utilizza il metodo già implementato nella classe Cliente.
      *
      * @param cliente    Cliente di cui visualizzare le recensioni.
-     * @param ristoranti Lista di ristoranti su cui cercare le recensioni.
      */
-    public static void visualizzaRecensioniCliente(Cliente cliente, ArrayList<Ristorante> ristoranti) {
+    public static void visualizzaRecensioniCliente(Cliente cliente) throws IOException, CsvException {
         System.out.println("=== Recensioni di " + cliente.getUsername() + " ===");
-        cliente.visualizzaRecensioni(ristoranti);
+        var ristoranti = GestoreFile.caricaRistoranti();
+
+        for (Ristorante ristorante : ristoranti) {
+            visualizzaRecensione(cliente, ristorante);
+        }
     }
 
     /**
      * Verifica se un cliente può aggiungere una recensione per un ristorante.
-     * Utilizza il metodo già implementato nella classe Cliente.
      *
      * @param cliente    Cliente da verificare.
      * @param ristorante Ristorante da verificare.
@@ -150,37 +205,5 @@ public final class RecensioneService {
      */
     public static boolean puoAggiungereRecensione(Cliente cliente, Ristorante ristorante) {
         return !cliente.haRecensito(ristorante);
-    }
-
-    /**
-     * Ottiene le statistiche delle recensioni per un ristorante.
-     * Utilizza i metodi già implementati nella classe Ristorante.
-     *
-     * @param ristorante Ristorante di cui ottenere le statistiche.
-     * @return Stringa contenente le statistiche formattate.
-     */
-    public static String getStatisticheRecensioni(Ristorante ristorante) {
-        int numeroRecensioni = ristorante.getNumeroRecensioni();
-        if (numeroRecensioni == 0) {
-            return "Nessuna recensione presente per " + ristorante.getNome();
-        }
-
-        float mediaStelle = ristorante.getMediaStelle();
-
-        StringBuilder stats = new StringBuilder();
-        stats.append("=== Statistiche per ").append(ristorante.getNome()).append(" ===\n");
-        stats.append("Numero recensioni: ").append(numeroRecensioni).append("\n");
-        stats.append("Media stelle: ").append(String.format("%.2f", mediaStelle)).append("/5\n");
-
-        // Conta recensioni per numero di stelle
-        for (int i = 1; i <= 5; i++) {
-            int count = ristorante.getRecensioniPerStelle(i).size();
-            if (count > 0) {
-                stats.append(i).append(" ★: ").append(count).append(" recensioni\n");
-            }
-        }
-
-        return stats.toString();
-
     }
 }
