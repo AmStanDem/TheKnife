@@ -47,7 +47,15 @@ public class MenuIniziale extends Menu {
 
             switch (selezione) {
                 case 1:
-                    login(sc);
+                    Utente utente = login(sc);
+                    if (utente != null) {
+                        if (utente instanceof Cliente cliente) {
+                            MenuCliente menuCliente = new MenuCliente(sc, cliente);
+                        }
+                        else if (utente instanceof Ristoratore ristoratore) {
+                            MenuRistoratore menuRistoratore = new  MenuRistoratore(sc, ristoratore);
+                        }
+                    }
                     break;
                 case 2:
                     try {
@@ -152,6 +160,13 @@ public class MenuIniziale extends Menu {
             } catch (IOException | CsvException e) {
                 System.out.println("Errore durante il salvataggio dell'utente.");
                 e.printStackTrace();
+                return;
+            }
+            if (nuovoUtente instanceof Cliente cliente) {
+                MenuCliente menuCliente = new MenuCliente(sc, cliente);
+            }
+            else if (nuovoUtente instanceof Ristoratore ristoratore) {
+                MenuRistoratore menuRistoratore = new MenuRistoratore(sc, ristoratore);
             }
         }
     }

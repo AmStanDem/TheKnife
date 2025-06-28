@@ -238,13 +238,6 @@ public class GestoreFile {
         return cercaRistorante(nome, localita) != null;
     }
 
-    /**
-     * Crea un oggetto Ristorante da una riga del CSV.
-     * Effettua il lookup del ristoratore tramite username.
-     *
-     * @param riga Array di stringhe rappresentante una riga del CSV
-     * @return Oggetto Ristorante o null se si verifica un errore
-     */
     private static Ristorante creaRistoranteDaRiga(String[] riga) {
         try {
             // Estrai i dati dalla riga
@@ -257,7 +250,7 @@ public class GestoreFile {
             float prezzoMedio = Float.parseFloat(riga[ColonneRistoranteCSV.PREZZO_MEDIO]);
             boolean delivery = Boolean.parseBoolean(riga[ColonneRistoranteCSV.DELIVERY]);
             boolean prenotazione = Boolean.parseBoolean(riga[ColonneRistoranteCSV.PRENOTAZIONE]);
-            TipoCucina tipoCucina = TipoCucina.valueOf(riga[ColonneRistoranteCSV.TIPO_CUCINA]);
+            TipoCucina tipoCucina = TipoCucina.valueOf(riga[ColonneRistoranteCSV.TIPO_CUCINA].toUpperCase());
             String descrizione = riga[ColonneRistoranteCSV.DESCRIZIONE];
             String usernameProprietario = riga[ColonneRistoranteCSV.USERNAME];
 

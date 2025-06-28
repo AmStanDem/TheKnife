@@ -28,6 +28,7 @@ public class MenuRistoratore extends MenuIniziale {
         validaAttributi(scanner, ristoratore);
         this.scanner = scanner;
         this.ristoratore = ristoratore;
+        mostra();
     }
 
     private void validaAttributi(Scanner scanner, Ristoratore ristoratore) {
