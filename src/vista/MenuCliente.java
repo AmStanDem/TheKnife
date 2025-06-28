@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import Entita.*;
 import com.opencsv.exceptions.CsvException;
+import io_file.GestoreFile;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
 import servizi.RistoranteService;

@@ -12,6 +12,7 @@ import Entita.Cliente;
 import Entita.Utente;
 import Entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
+import io_file.GestoreFile;
 import servizi.GeocodingService;
 import servizi.UtenteService;
 
@@ -175,7 +176,7 @@ public class MenuIniziale extends Menu {
 
             stato=true;
             System.out.print("Il nome deve essere composto da solo lettere: ");
-            nome = sc.next().strip(); // Input
+            nome = sc.next().trim(); // Input
 
             // Se l'utente scrive STOP nel campo input, la registrazione si interromperà;
             // Nessun dato rimarrà salvato e tutte le informazioni precedentemente inserite saranno scartate
@@ -645,7 +646,7 @@ public class MenuIniziale extends Menu {
             Registrazione finale dell'utente
          */
         System.out.println("\nTi registri da cliente o da ristoratore?\nInserisci 1 se cliente, 2 se ristoratore");
-        Utente utente;
+        Utente utente = null;
         do {
             System.out.println("Selezione: ");
             selezione = sc.nextInt();
@@ -661,6 +662,13 @@ public class MenuIniziale extends Menu {
                     System.out.println("\nComando di selezione non valido!");
             }
         } while(selezione < 1 || selezione > 2);
+
+        try {
+            UtenteService.registraUtente(utente);
+        }
+        catch(Exception e) {
+            System.out.println("\nComando di selezione non valido!");
+        }
     }
 
     public static void modalitaGuest(Scanner sc, BufferedReader r) {

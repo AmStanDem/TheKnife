@@ -216,7 +216,6 @@ public final class RistoranteService {
         return ristoratore.aggiungiRistorante(ristorante);
     }
 
-
     /**
      * Permette all'utente di visualizzare le informazioni dei ristoranti
      * @param ristorante Ristorante su cui visualizzare le informazioni.
