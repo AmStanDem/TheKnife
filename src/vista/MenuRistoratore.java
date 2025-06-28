@@ -14,7 +14,7 @@ import java.util.Scanner;
 /**
  * Menu con le operazioni disponibili per un ristoratore.
  */
-public class MenuRistoratore extends MenuIniziale {
+public class MenuRistoratore extends Menu {
     private final Scanner scanner;
     private final Ristoratore ristoratore;
 
@@ -28,7 +28,6 @@ public class MenuRistoratore extends MenuIniziale {
         validaAttributi(scanner, ristoratore);
         this.scanner = scanner;
         this.ristoratore = ristoratore;
-        mostra();
     }
 
     private void validaAttributi(Scanner scanner, Ristoratore ristoratore) {
@@ -56,6 +55,7 @@ public class MenuRistoratore extends MenuIniziale {
      */
     @Override
     public void mostra() {
+        System.out.println("\n=== MENU RISTORATORE ===");
         System.out.println("Benvenuto " + ristoratore);
 
         int opzione;
@@ -79,7 +79,7 @@ public class MenuRistoratore extends MenuIniziale {
                     visualizzaRecensioni();
                     break;
                 case 4:
-                    System.out.println("Arrivederci.");
+                    System.out.println("Logout effettuato. Tornando al menu principale...");
                     break;
             }
         } while (opzione != 4);
@@ -89,9 +89,8 @@ public class MenuRistoratore extends MenuIniziale {
         System.out.println("\n=== AGGIUNGI NUOVO RISTORANTE ===");
 
         try {
-            // Inserimento nome ristorante
             System.out.print("Nome del ristorante: ");
-            scanner.nextLine(); // Consuma il newline precedente
+            scanner.nextLine();
             String nome = scanner.nextLine().trim();
 
             if (nome.isEmpty()) {
@@ -99,8 +98,7 @@ public class MenuRistoratore extends MenuIniziale {
                 return;
             }
 
-            // Inserimento località
-            System.out.println("\n--- INFORMAZIONI LOCALITÀ ---");
+            System.out.println("\n=== INFORMAZIONI LOCALITÀ ===");
             System.out.print("Nazione: ");
             String nazione = scanner.nextLine().trim();
 
@@ -125,11 +123,9 @@ public class MenuRistoratore extends MenuIniziale {
                 longitudine = coords[1];
             }
 
-            // Crea l'oggetto Localita (assumendo che esista il costruttore)
             Localita localita = new Localita(nazione, citta, indirizzo, latitudine, longitudine);
 
-            // Inserimento tipo di cucina
-            System.out.println("\n--- TIPO DI CUCINA ---");
+            System.out.println("\n=== TIPO DI CUCINA ===");
             System.out.println("Tipi di cucina disponibili:");
             TipoCucina[] tipiCucina = TipoCucina.values();
             for (int i = 0; i < tipiCucina.length; i++) {
@@ -156,7 +152,7 @@ public class MenuRistoratore extends MenuIniziale {
             }
 
             // Inserimento servizi
-            System.out.println("\n--- SERVIZI DISPONIBILI ---");
+            System.out.println("\n=== SERVIZI DISPONIBILI ===");
             System.out.print("Servizio delivery disponibile? (s/n): ");
             String inputDelivery = scanner.next().toLowerCase();
             boolean delivery = inputDelivery.equals("s") || inputDelivery.equals("si") || inputDelivery.equals("sì");
@@ -165,9 +161,8 @@ public class MenuRistoratore extends MenuIniziale {
             String inputPrenotazione = scanner.next().toLowerCase();
             boolean prenotazione = inputPrenotazione.equals("s") || inputPrenotazione.equals("si") || inputPrenotazione.equals("sì");
 
-            // Inserimento descrizione (opzionale)
             System.out.print("\nDescrizione del ristorante (opzionale): ");
-            scanner.nextLine(); // Consuma il newline
+            scanner.nextLine();
             String descrizione = scanner.nextLine().trim();
 
             // Crea il nuovo ristorante
@@ -199,8 +194,6 @@ public class MenuRistoratore extends MenuIniziale {
     private void visualizzaRecensioni() {
         System.out.println("\n=== RECENSIONI DEI TUOI RISTORANTI ===");
 
-        // Ottieni la lista dei ristoranti del ristoratore
-        // Assumendo che esista un metodo per ottenere i ristoranti del ristoratore
         List<Ristorante> ristoranti = ristoratore.getRistoranti();
 
         if (ristoranti == null || ristoranti.isEmpty()) {
@@ -208,10 +201,9 @@ public class MenuRistoratore extends MenuIniziale {
             return;
         }
 
-        // Filtra solo i ristoranti che hanno recensioni
         List<Ristorante> ristorantiConRecensioni = new ArrayList<>();
         for (Ristorante ristorante : ristoranti) {
-            if (ristorante.getNumeroRecensioni() > 0) {
+            if (ristorante.haRecensioni()) {
                 ristorantiConRecensioni.add(ristorante);
             }
         }
@@ -221,7 +213,6 @@ public class MenuRistoratore extends MenuIniziale {
             return;
         }
 
-        // Mostra menu di selezione ristorante
         System.out.println("Seleziona il ristorante di cui visualizzare le recensioni:");
         for (int i = 0; i < ristorantiConRecensioni.size(); i++) {
             Ristorante r = ristorantiConRecensioni.get(i);
@@ -268,7 +259,7 @@ public class MenuRistoratore extends MenuIniziale {
 
             switch (opzione) {
                 case 1:
-                    mostraRecensioni(ristorante.getListaRecensioni());
+                    mostraRecensioni(ristorante.getRecensioni());
                     break;
                 case 2:
                     mostraRecensioni(ristorante.getRecensioniSenzaRisposta());
@@ -388,28 +379,6 @@ public class MenuRistoratore extends MenuIniziale {
      * Formatta una recensione per la visualizzazione.
      */
     private String formatRecensione(Recensione recensione) {
-        StringBuilder sb = new StringBuilder();
-
-        // Intestazione con stelle e cliente
-        sb.append("★".repeat(recensione.getStelle()));
-        sb.append("☆".repeat(5 - recensione.getStelle()));
-        sb.append(String.format(" (%d/5) - %s%n",
-                recensione.getStelle(), recensione.getCliente().getNome()));
-
-        if (recensione.getDataRecensione() != null) {
-            sb.append("Data: ").append(recensione.getDataRecensione()).append("\n");
-        }
-
-        // Testo recensione
-        sb.append("Recensione: ").append(recensione.getMessaggio()).append("\n");
-
-        // Risposta del ristoratore se presente
-        if (recensione.haRisposta()) {
-            sb.append("Risposta del ristoratore: ").append(recensione.getRispostaRistoratore());
-        } else {
-            sb.append("❌ Nessuna risposta");
-        }
-
-        return sb.toString();
+        return recensione.toString();
     }
 }

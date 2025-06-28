@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import Entita.*;
 import com.opencsv.exceptions.CsvException;
-import io_file.GestoreFile;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
 import servizi.RistoranteService;
@@ -15,7 +14,7 @@ import servizi.UtenteService;
 /**
  * Menu con le operazioni disponibili per un cliente.
  */
-public class MenuCliente extends MenuIniziale {
+public class MenuCliente extends Menu {
 
     private final Scanner scanner;
     private final Cliente cliente;
@@ -30,7 +29,6 @@ public class MenuCliente extends MenuIniziale {
         validaAttributi(scanner, cliente);
         this.scanner = scanner;
         this.cliente = cliente;
-        mostra();
     }
 
     private void validaAttributi(Scanner scanner, Cliente cliente) {

@@ -22,7 +22,7 @@ public class Ristorante {
     private float prezzoMedio;
     private String descrizione;
     private Ristoratore proprietario;
-    private List<Recensione> listaRecensioni;
+    private List<Recensione> recensioni;
 
     /**
      * Costruttore completo con proprietario.
@@ -41,7 +41,7 @@ public class Ristorante {
         this.prezzoMedio = prezzoMedio;
         this.descrizione = descrizione != null ? descrizione.trim() : "";
         this.proprietario = proprietario;
-        this.listaRecensioni = new LinkedList<>();
+        this.recensioni = new LinkedList<>();
     }
 
     // Getters
@@ -109,7 +109,7 @@ public class Ristorante {
             return false; // Cliente ha già recensito questo ristorante
         }
 
-        boolean aggiunta = listaRecensioni.add(recensione);
+        boolean aggiunta = recensioni.add(recensione);
         if (aggiunta) {
             System.out.println("Recensione aggiunta con successo per: " + nome);
         }
@@ -128,13 +128,13 @@ public class Ristorante {
         }
 
         // Trova l'indice della recensione vecchia
-        int indice = listaRecensioni.indexOf(recensioneVecchia);
+        int indice = recensioni.indexOf(recensioneVecchia);
         if (indice == -1) {
             return false; // Recensione non trovata
         }
 
         // Sostituisce la recensione
-        listaRecensioni.set(indice, recensioneNuova);
+        recensioni.set(indice, recensioneNuova);
         System.out.println("Recensione modificata con successo per: " + nome);
         return true;
     }
@@ -150,7 +150,7 @@ public class Ristorante {
             return false;
         }
 
-        boolean rimossa = listaRecensioni.remove(recensione);
+        boolean rimossa = recensioni.remove(recensione);
         if (rimossa) {
             System.out.println("Recensione rimossa con successo per: " + nome);
         }
@@ -160,8 +160,8 @@ public class Ristorante {
     /**
      * Ritorna una copia della lista delle recensioni per evitare modifiche esterne.
      */
-    public LinkedList<Recensione> getListaRecensioni() {
-        return new LinkedList<>(listaRecensioni);
+    public LinkedList<Recensione> getRecensioni() {
+        return new LinkedList<>(recensioni);
     }
 
     /**
@@ -175,12 +175,7 @@ public class Ristorante {
             return null;
         }
 
-        for (Recensione recensione : listaRecensioni) {
-            if (recensione.getCliente().equals(cliente)) {
-                return recensione;
-            }
-        }
-        return null;
+        return trovaRecensioneCliente(cliente.getUsername());
     }
 
     /**
@@ -194,7 +189,7 @@ public class Ristorante {
             return null;
         }
 
-        for (Recensione recensione : listaRecensioni) {
+        for (Recensione recensione : recensioni) {
             if (recensione.getCliente().getUsername().equals(username.trim())) {
                 return recensione;
             }
@@ -208,7 +203,7 @@ public class Ristorante {
      */
     public ArrayList<Recensione> getRecensioniSenzaRisposta() {
         ArrayList<Recensione> recensioniSenzaRisposta = new ArrayList<>();
-        for (Recensione recensione : listaRecensioni) {
+        for (Recensione recensione : recensioni) {
             if (!recensione.haRisposta()) {
                 recensioniSenzaRisposta.add(recensione);
             }
@@ -228,7 +223,7 @@ public class Ristorante {
         }
 
         ArrayList<Recensione> recensioniPerStelle = new ArrayList<>();
-        for (Recensione recensione : listaRecensioni) {
+        for (Recensione recensione : recensioni) {
             if (recensione.getStelle() == stelle) {
                 recensioniPerStelle.add(recensione);
             }
@@ -238,9 +233,18 @@ public class Ristorante {
 
     /**
      * Ritorna il numero totale di recensioni.
+     * @return Il numero totale di recensioni.
      */
     public int getNumeroRecensioni() {
-        return listaRecensioni.size();
+        return recensioni.size();
+    }
+
+    /**
+     * Restituisce {@code true} se il ristorante ha recensioni, {@code false} altrimenti.
+     * @return {@code true} se il ristorante ha recensioni, {@code false} altrimenti.
+     */
+    public boolean haRecensioni() {
+        return !recensioni.isEmpty();
     }
 
     /**
@@ -250,16 +254,16 @@ public class Ristorante {
      * @return Media delle stelle (0.0 se non ci sono recensioni)
      */
     public float getMediaStelle() {
-        if (listaRecensioni.isEmpty()) {
+        if (recensioni.isEmpty()) {
             return 0.0f;
         }
 
         float somma = 0;
-        for (Recensione recensione : listaRecensioni) {
+        for (Recensione recensione : recensioni) {
             somma += recensione.getStelle();
         }
 
-        return somma / listaRecensioni.size();
+        return somma / recensioni.size();
     }
 
     private void validaAttributi(String nome, Localita localita, float prezzoMedio) {

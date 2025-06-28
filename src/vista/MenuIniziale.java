@@ -1,8 +1,5 @@
 package vista;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-// import java.time.temporal.ValueRange;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,38 +19,40 @@ import static servizi.UtenteService.autenticaUtente;
 
 public class MenuIniziale extends Menu {
     //campi
-    private RegistrazioneService registrazioneService;
-    private Scanner sc;
+    private final RegistrazioneService registrazioneService;
+    private final Scanner scanner;
     //costruttore
-    public MenuIniziale() {
-       this.sc = new Scanner(System.in);
-       this.registrazioneService = new RegistrazioneService(sc);
+    public MenuIniziale(Scanner scanner) {
+       this.scanner = scanner;
+       this.registrazioneService = new RegistrazioneService(scanner);
     }
 
     @Override
     public void mostra(){
-        var sc = new Scanner(System.in);
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         int selezione;
+        stampaBanner();
         do {
-            selezione = 0;
-            System.out.println("Menu Iniziale: ");
+            System.out.println("=== MENU INIZIALE ===");
             System.out.println("1. Login");
             System.out.println("2. Registrazione");
             System.out.println("3. Guest");
             System.out.println("4. Esci");
+            System.out.println("Inserisci pure la funzionalità che desideri: ");
 
-            selezione = sc.nextInt();
+            selezione = scanner.nextInt();
 
             switch (selezione) {
                 case 1:
-                    Utente utente = login(sc);
+                    Utente utente = login(scanner);
                     if (utente != null) {
                         if (utente instanceof Cliente cliente) {
-                            MenuCliente menuCliente = new MenuCliente(sc, cliente);
+                            MenuCliente menuCliente = new MenuCliente(scanner, cliente);
+                            menuCliente.mostra();
                         }
                         else if (utente instanceof Ristoratore ristoratore) {
-                            MenuRistoratore menuRistoratore = new  MenuRistoratore(sc, ristoratore);
+                            MenuRistoratore menuRistoratore = new MenuRistoratore(scanner, ristoratore);
+                            menuRistoratore.mostra();
                         }
                     }
                     break;
@@ -61,15 +60,14 @@ public class MenuIniziale extends Menu {
                     try {
                         registrazione();
                     } catch (IOException | CsvException e) {
-                        System.out.println("Errore durante la registrazione.");
-                        e.printStackTrace();
+                        System.err.println("Errore durante la registrazione.");
                     }
                     break;
                 case 3:
-                    modalitaGuest(sc, r);
+                    modalitaGuest(scanner, r);
                     break;
                 case 4:
-                    System.exit(0);
+                    System.out.println("Arrivederci.");
                     break;
                 default:
                     System.out.println("Scelta non valida, riprova");
@@ -163,10 +161,10 @@ public class MenuIniziale extends Menu {
                 return;
             }
             if (nuovoUtente instanceof Cliente cliente) {
-                MenuCliente menuCliente = new MenuCliente(sc, cliente);
+                MenuCliente menuCliente = new MenuCliente(scanner, cliente);
             }
             else if (nuovoUtente instanceof Ristoratore ristoratore) {
-                MenuRistoratore menuRistoratore = new MenuRistoratore(sc, ristoratore);
+                MenuRistoratore menuRistoratore = new MenuRistoratore(scanner, ristoratore);
             }
         }
     }
@@ -204,7 +202,7 @@ public class MenuIniziale extends Menu {
                     }
                     coords = GeocodingService.geocodeAddress(luogo);
                     localita = new Localita(coords[0], coords[1]);
-                    
+
                     break;
                 case 2:
                     System.out.println("\nSei uscito dalla modalita' guest.");
@@ -215,10 +213,4 @@ public class MenuIniziale extends Menu {
         } while(selezione != 2);
 
     }
-
-    public static void main(String[] args) {
-        MenuIniziale menuIniziale = new MenuIniziale();
-        menuIniziale.mostra();
-    }
 }
-

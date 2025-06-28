@@ -114,7 +114,7 @@ public class Ristoratore extends Utente {
             return false;
         }
 
-        List<Recensione> recensioni = ristorante.getListaRecensioni();
+        List<Recensione> recensioni = ristorante.getRecensioni();
         for (Recensione rec : recensioni) {
             if (rec.appartienteA(usernameCliente)) {
                 if (rec.haRisposta()) {
@@ -144,7 +144,7 @@ public class Ristoratore extends Utente {
             return false;
         }
 
-        List<Recensione> recensioni = ristorante.getListaRecensioni();
+        List<Recensione> recensioni = ristorante.getRecensioni();
         for (Recensione rec : recensioni) {
             if (rec.appartienteA(usernameCliente) && rec.haRisposta()) {
                 rec.modificaRisposta(nuovaRisposta);
