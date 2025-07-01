@@ -13,8 +13,9 @@ import java.util.Scanner;
 
 /**
  * Menu con le operazioni disponibili per un ristoratore.
+ * @author Alessandro Tullo
  */
-public class MenuRistoratore extends Menu {
+public final class MenuRistoratore extends Menu {
     private final Scanner scanner;
     private final Ristoratore ristoratore;
 

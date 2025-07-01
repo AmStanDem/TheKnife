@@ -1,5 +1,10 @@
 package vista;
 
+
+/**
+ * Classe astratta di un Menu
+ * @author Thomas Riotto
+ */
 public abstract class Menu {
 
     protected static void stampaBanner() {

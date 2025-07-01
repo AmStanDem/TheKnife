@@ -241,8 +241,6 @@ public class RegistrazioneService {
 
     public String chiediDomicilio() {
         String via, civico, citta, luogoDomicilio;
-        int i;
-        char c;
 
         System.out.println("Inserisci il tuo domicilio");
 
@@ -262,13 +260,7 @@ public class RegistrazioneService {
             if (citta.equalsIgnoreCase(STOP)) return null;
         } while (citta.isBlank());
 
-        /*
-         * String domicilioIntermedio = via + (civico.isEmpty() ? "" : " " + civico);
-         * luogoDomicilio = (domicilioIntermedio + ", " + citta).strip();
-         */
-
-
-        luogoDomicilio = (via + " " + civico + ", " + citta).strip();
+        luogoDomicilio = (via + (civico.isEmpty() ? "" : " " + civico) + ", " + citta).strip();
         System.out.println("Hai inserito: " + luogoDomicilio);
 
         try {

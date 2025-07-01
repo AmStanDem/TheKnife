@@ -14,11 +14,19 @@ import servizi.UtenteService;
 import static io_file.GestoreFile.esisteUtente;
 import static servizi.UtenteService.autenticaUtente;
 
-public class MenuIniziale extends Menu {
-    //campi
+/**
+ * Menù iniziale all'avvio del programma.
+ * @author Antonio Pesavento
+ */
+public final class MenuIniziale extends Menu {
+
     private final RegistrazioneService registrazioneService;
     private final Scanner scanner;
-    //costruttore
+
+    /**
+     * Crea un nuovo menù iniziale.
+     * @param scanner I/O su terminale.
+     */
     public MenuIniziale(Scanner scanner) {
        this.scanner = scanner;
        this.registrazioneService = new RegistrazioneService(scanner);
@@ -87,7 +95,7 @@ public class MenuIniziale extends Menu {
             System.out.print("\nInserisci l'username per fare il login:  ");
             username = sc.next().strip();
 
-            if(username.equals(stop)){
+            if(username.equalsIgnoreCase(stop)){
                 System.out.println("\nInserito STOP; Interruzione del login.\n");
                 return null;
             }
@@ -115,7 +123,7 @@ public class MenuIniziale extends Menu {
             System.out.print("\nStai facendo il login con l'username "+username+"\nInserisci la password:  ");
             password = sc.next().strip();
 
-            if(password.equals(stop)){
+            if(password.equalsIgnoreCase(stop)){
                 System.out.println("\nInserito STOP; Interruzione del login.n\n");
                 return null;
             }
@@ -143,7 +151,7 @@ public class MenuIniziale extends Menu {
 
     private void registrazione() throws IOException, CsvException {
         Utente nuovoUtente = registrazioneService.registraUtente();
-        if (nuovoUtente != null && !registrazioneService.STOP.equals(nuovoUtente.getUsername())) {
+        if (nuovoUtente != null) {
             System.out.println(" Registrazione completata con successo!");
             System.out.println("Benvenuto, " + nuovoUtente.getUsername() + "!");
         } else {

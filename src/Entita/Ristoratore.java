@@ -187,47 +187,4 @@ public class Ristoratore extends Utente {
         }
         return null;
     }
-
-    /**
-     * Metodo main per testare la funzionalità della classe Ristoratore.
-     * Crea un ristoratore di esempio, aggiunge un ristorante con recensioni
-     * e dimostra l'uso delle principali funzionalità.
-     *
-     * @param args Argomenti della linea di comando (non utilizzati)
-     */
-    public static void main(String[] args) {
-        // Creo un ristoratore
-        Ristoratore ristoratore = new Ristoratore(
-                "Mario",
-                "Rossi",
-                "mrossi",
-                "password123",
-                LocalDate.of(1980, 3, 15),
-                "Milano"
-        );
-
-        // Creo un ristorante
-        Localita loc1 = new Localita("Italia", "Milano", "Via Roma 10", 45.46, 9.19);
-        Ristorante r1 = new Ristorante("La Trattoria", loc1, TipoCucina.ITALIANA, true, true, 35.0f, "Cucina tipica italiana", ristoratore);
-
-        // Creo un cliente e due recensioni
-        Cliente c1 = new Cliente("Luca", "Verdi", "lverdi", "pass", LocalDate.of(1995, 5, 12), "Como");
-        Cliente c2 = new Cliente("Anna", "Bianchi", "abianchi", "pass", LocalDate.of(1992, 7, 25), "Varese");
-
-        Recensione rec1 = new Recensione(c1, r1, 4, "Buono!");
-        Recensione rec2 = new Recensione(c2, r1, 5, "Eccellente!");
-
-        // Aggiungo recensioni al ristorante
-        r1.aggiungiRecensione(rec1);
-        r1.aggiungiRecensione(rec2);
-
-        // Aggiungo il ristorante al ristoratore
-        ristoratore.aggiungiRistorante(r1);
-
-        // Stampo tipo utente
-        System.out.println("Tipo utente: " + ristoratore.getTipoUtente());
-
-        // Visualizzo riepilogo recensioni
-        ristoratore.visualizzaRiepilogo();
-    }
 }

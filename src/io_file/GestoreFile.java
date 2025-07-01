@@ -297,31 +297,6 @@ public class GestoreFile {
     //region === OPERAZIONI GENERALI SUGLI UTENTI ===
 
     /**
-     * Carica tutti gli utenti dal file CSV.
-     *
-     * @return Lista degli utenti caricati (clienti e ristoratori)
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static LinkedList<Utente> caricaUtenti() throws IOException, CsvException {
-        LinkedList<Utente> utenti = new LinkedList<>();
-
-        try (CSVReader reader = new CSVReader(new FileReader(DATASET_UTENTI.toFile()))) {
-            List<String[]> righe = reader.readAll();
-
-            // Salta l'intestazione (prima riga)
-            for (int i = 1; i < righe.size(); i++) {
-                String[] riga = righe.get(i);
-                Utente utente = creaUtenteDaRiga(riga);
-                if (utente != null) {
-                    utenti.add(utente);
-                }
-            }
-        }
-        return utenti;
-    }
-
-    /**
      * Aggiunge un nuovo utente al file CSV.
      * Funziona sia per clienti che per ristoratori.
      *
@@ -875,32 +850,6 @@ public class GestoreFile {
             }
         }
         return null;
-    }
-
-    /**
-     * Conta il numero di preferiti di un cliente.
-     *
-     * @param username Username del cliente
-     * @return Numero di ristoranti preferiti
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static int contaPreferiti(String username) throws IOException, CsvException {
-        int contatore = 0;
-
-        try (CSVReader reader = new CSVReader(new FileReader(DATASET_PREFERITI.toFile()))) {
-            List<String[]> righe = reader.readAll();
-
-            // Salta l'intestazione (prima riga)
-            for (int i = 1; i < righe.size(); i++) {
-                String[] riga = righe.get(i);
-                if (riga[ColonnePreferitiCSV.USERNAME].equals(username)) {
-                    contatore++;
-                }
-            }
-        }
-
-        return contatore;
     }
 
     /**

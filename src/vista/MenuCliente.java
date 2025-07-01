@@ -2,6 +2,7 @@ package vista;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import Entita.*;
@@ -13,11 +14,13 @@ import servizi.UtenteService;
 
 /**
  * Menu con le operazioni disponibili per un cliente.
+ * @author Marco Zaro
  */
-public class MenuCliente extends Menu {
+public final class MenuCliente extends Menu {
 
     private final Scanner scanner;
     private final Cliente cliente;
+    private String input, stop = "stop";
 
     /**
      * Crea un nuovo menu cliente
@@ -82,8 +85,16 @@ public class MenuCliente extends Menu {
             System.out.println("10. Uscire dall'app.");
 
             System.out.println("Inserisci una opzione: ");
-            opzione = scanner.nextInt();
-
+            //il while è per InputMismatchException
+            while(true) {
+                String input = scanner.nextLine().trim();
+                try {
+                    opzione = Integer.parseInt(input);
+                    break;
+                } catch (NumberFormatException e ){
+                    System.out.println(" Input non valido. usa solo numeri");
+                }
+            }
             switch (opzione) {
                 case 1:
                     visualizzaRistorantiVicini();
@@ -145,20 +156,45 @@ public class MenuCliente extends Menu {
             scanner.nextLine();
 
             TipoCucina tipoCucina = selezionaTipoCucina();
+            if(input.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
 
             double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
             Localita localita = new Localita(coords[0], coords[1]);
 
             Double raggioKm = inserisciRaggio();
+            if(raggioKm == null) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
 
             Float[] prezzi = inserisciFasciaPrezzo();
+            if(prezzi == null) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
             Float prezzoMinimo = prezzi[0];
             Float prezzoMassimo = prezzi[1];
 
             Boolean delivery = inserisciServizio("delivery");
+            if(input.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
+
             Boolean prenotazione = inserisciServizio("prenotazione online");
+            if(input.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
 
             Float mediaStelle = inserisciMediaStelle();
+            if(input.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
+                return;
+            }
 
             System.out.println("\nRicerca in corso...");
             var ristoranti = RistoranteService.cercaRistorante(
@@ -196,10 +232,10 @@ public class MenuCliente extends Menu {
         }
         System.out.println("0. Qualsiasi tipo");
 
-        System.out.print("Scelta: ");
-        String input = scanner.nextLine().trim();
+        System.out.print("\nScelta: ");
+        input = scanner.nextLine().trim();
 
-        if (input.isEmpty() || input.equals("0")) {
+        if (input.isBlank() || input.equals("0") || input.equalsIgnoreCase(stop)) {
             return null;
         }
 
@@ -218,25 +254,28 @@ public class MenuCliente extends Menu {
     }
 
     private Double inserisciRaggio() {
-        System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
-        String input = scanner.nextLine().trim();
+            System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
+            String input = scanner.nextLine().trim();
 
-        if (input.isEmpty()) {
-            return 10.0;
-        }
+            if (input.equalsIgnoreCase(stop))
+                return null;
 
-        try {
-            double raggio = Double.parseDouble(input);
-            if (raggio > 0) {
-                return raggio;
-            } else {
-                System.out.println("Raggio non valido, utilizzato default 10km.");
+            if (input.isEmpty()) {
                 return 10.0;
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Input non valido, utilizzato default 10km.");
-            return 10.0;
-        }
+
+            try {
+                double raggio = Double.parseDouble(input);
+                if (raggio > 0) {
+                    return raggio;
+                } else {
+                    System.out.println("Raggio non valido, utilizzato default 10km.");
+                    return 10.0;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Input non valido, utilizzato default 10km.");
+                return 10.0;
+            }
     }
 
     private Float[] inserisciFasciaPrezzo() {
@@ -244,6 +283,9 @@ public class MenuCliente extends Menu {
 
         System.out.print("Prezzo minimo in € (premi INVIO per saltare): ");
         String minInput = scanner.nextLine().trim();
+        if(minInput.equalsIgnoreCase(stop))
+            return null;
+
         Float prezzoMinimo = null;
 
         if (!minInput.isEmpty()) {
@@ -261,6 +303,9 @@ public class MenuCliente extends Menu {
 
         System.out.print("Prezzo massimo in € (premi INVIO per saltare): ");
         String maxInput = scanner.nextLine().trim();
+        if(maxInput.equalsIgnoreCase(stop))
+            return null;
+
         Float prezzoMassimo = null;
 
         if (!maxInput.isEmpty()) {
@@ -292,7 +337,7 @@ public class MenuCliente extends Menu {
         System.out.println("3. Indifferente (default)");
 
         System.out.print("Scelta: ");
-        String input = scanner.nextLine().trim();
+        input = scanner.nextLine().trim();
 
         return switch (input) {
             case "1" -> true;
@@ -303,9 +348,12 @@ public class MenuCliente extends Menu {
 
     private Float inserisciMediaStelle() {
         System.out.print("\nMedia stelle minima (1.0-5.0, premi INVIO per saltare): ");
-        String input = scanner.nextLine().trim();
+        input = scanner.nextLine().trim();
 
-        if (input.isEmpty()) {
+        if(input.equalsIgnoreCase(stop))
+            return null;
+
+        if (input.isBlank()) {
             return null;
         }
 
@@ -335,7 +383,7 @@ public class MenuCliente extends Menu {
             System.out.println("4. Torna al menu principale");
 
             System.out.print("Scelta: ");
-            scelta = scanner.nextInt();
+            scelta = leggiIntero(scanner);
             scanner.nextLine();
 
             switch (scelta) {
@@ -391,7 +439,7 @@ public class MenuCliente extends Menu {
         System.out.print("\nSeleziona un ristorante (1-" + risultati.size() + "): ");
 
         try {
-            int scelta = scanner.nextInt() - 1;
+            int scelta = leggiIntero(scanner) - 1;
             scanner.nextLine();
 
             if (scelta >= 0 && scelta < risultati.size()) {
@@ -413,7 +461,7 @@ public class MenuCliente extends Menu {
         do {
             visualizzaPreferiti();
             System.out.println("Inserisci il numero del ristorante che vuoi rimuovere dai preferiti: ");
-            indice = scanner.nextInt() - 1;
+            indice = leggiIntero(scanner) - 1;
         } while (indice < 0 || indice > cliente.getPreferiti().size());
 
         Ristorante preferitoDaEliminare = cliente.getPreferiti().get(indice);
@@ -475,7 +523,7 @@ public class MenuCliente extends Menu {
             System.out.print("\nSeleziona la recensione da modificare (1-" + recensioni.size() + "): ");
             int indice;
             try {
-                indice = scanner.nextInt() - 1;
+                indice = leggiIntero(scanner) - 1;
                 scanner.nextLine(); // Consuma il newline
 
                 if (indice < 0 || indice >= recensioni.size()) {
@@ -492,8 +540,12 @@ public class MenuCliente extends Menu {
 
             // Modifica delle stelle
             System.out.println("\nStelle attuali: " + recensioneDaModificare.getStelle());
-            System.out.print("Inserisci le nuove stelle (1-5, premi INVIO per mantenere le attuali): ");
+            System.out.print("Inserisci le nuove stelle (1-5, STOP per interrompere, premi INVIO per mantenere le attuali, ): ");
             String inputStelle = scanner.nextLine().trim();
+            if(inputStelle.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della modifica recensione\n");
+                return;
+            }
 
             int nuoveStelle = recensioneDaModificare.getStelle();
             if (!inputStelle.isEmpty()) {
@@ -510,8 +562,12 @@ public class MenuCliente extends Menu {
 
             // Modifica del testo
             System.out.println("Testo attuale: \"" + recensioneDaModificare.getMessaggio() + "\"");
-            System.out.print("Inserisci il nuovo testo (premi INVIO per mantenere l'attuale): ");
+            System.out.print("Inserisci il nuovo testo (STOP per interrompere, premi INVIO per mantenere l'attuale): ");
             String nuovoTesto = scanner.nextLine();
+            if(nuovoTesto.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Interruzione della modifica recensione\n");
+                return;
+            }
 
             if (nuovoTesto.isEmpty()) {
                 nuovoTesto = recensioneDaModificare.getMessaggio();
@@ -564,7 +620,7 @@ public class MenuCliente extends Menu {
             System.out.print("\nSeleziona la recensione da rimuovere (1-" + recensioni.size() + "): ");
             int indice;
             try {
-                indice = scanner.nextInt() - 1;
+                indice = leggiIntero(scanner) - 1;
                 scanner.nextLine();
 
                 if (indice < 0 || indice >= recensioni.size()) {
@@ -628,7 +684,7 @@ public class MenuCliente extends Menu {
             System.out.print("Inserisci il numero di stelle (1-5): ");
             int stelle;
             try {
-                stelle = scanner.nextInt();
+                stelle = leggiIntero(scanner);
                 scanner.nextLine(); // Consuma il newline
 
                 if (stelle < 1 || stelle > 5) {
@@ -663,4 +719,16 @@ public class MenuCliente extends Menu {
         }
     }
 
+    public static int leggiIntero(Scanner sc){
+        int risultato;
+        while(true) {
+            String input = sc.nextLine().trim();
+            try {
+                risultato = Integer.parseInt(input);
+                return risultato;
+            } catch (NoSuchElementException e) {
+                    System.out.println("Input non valido. Scrivi ");
+            }
+        }
+    }
 }
