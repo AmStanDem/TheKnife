@@ -4,7 +4,6 @@ import Entita.Cliente;
 import Entita.Ristoratore;
 import Entita.Utente;
 import com.opencsv.exceptions.CsvException;
-import servizi.GeocodingService;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,8 +13,8 @@ import java.util.Scanner;
 import static io_file.GestoreFile.esisteUtente;
 
 public class RegistrazioneService {
-    private Scanner sc;
-    public String STOP = "STOP";
+    private final Scanner sc;
+    public final String STOP = "STOP";
 
     public RegistrazioneService(Scanner sc) {
         this.sc = sc;
@@ -41,16 +40,23 @@ public class RegistrazioneService {
         if (domicilio == null) return null;
 
         int ruolo = chiediRuolo();
-        if (ruolo == 1)
-            return new Cliente(nome, cognome, username, password, dataNascita, domicilio);
-        else
-            return new Ristoratore(nome, cognome, username, password, dataNascita, domicilio);
+        switch (ruolo) {
+            case 1 -> {
+                return new Cliente(nome, cognome, username, password, dataNascita, domicilio);
+            }
+            case 2 -> {
+                return new Ristoratore(nome, cognome, username, password, dataNascita, domicilio);
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     private String chiediNome(String campo) {
         while (true) {
             System.out.println("Inserisci il " + campo + ": ");
-            String input = sc.nextLine().strip();
+            String input = sc.next().strip();
 
             if (input.equalsIgnoreCase(STOP)) return null;
 
@@ -78,7 +84,7 @@ public class RegistrazioneService {
     private String chiediUsername() throws IOException, CsvException {
         while (true) {
             System.out.println("Inserisci username: ");
-            String input = sc.nextLine().strip();
+            String input = sc.next().strip();
 
             if (input.equalsIgnoreCase(STOP)) return null;
 
@@ -148,10 +154,10 @@ public class RegistrazioneService {
 
     private LocalDate chiediDataNascita() {
         String anno, mese, giorno;
-        int aaaa = 0, mm = 0, gg = 0;
+        int aaaa, mm ,gg;
         char c;
         int i;
-        boolean bisestile = false;
+        boolean bisestile;
 
         do {
             System.out.print("Inserisci l'anno di nascita: ");
@@ -163,8 +169,7 @@ public class RegistrazioneService {
             }
 
             if (anno.isBlank()) {
-                System.out.println("L'anno non può essere vuoto.");
-                continue;
+                return null;
             }
 
             boolean valido = true;
@@ -195,7 +200,7 @@ public class RegistrazioneService {
             mese = sc.nextLine().strip();
 
             if (mese.equalsIgnoreCase(STOP)) return null;
-            if (mese.isBlank()) continue;
+            if (mese.isBlank()) return null;
 
             try {
                 mm = Integer.parseInt(mese);
@@ -214,7 +219,7 @@ public class RegistrazioneService {
             giorno = sc.nextLine().strip();
 
             if (giorno.equalsIgnoreCase(STOP)) return null;
-            if (giorno.isBlank()) continue;
+            if (giorno.isBlank()) return null;
 
             try {
                 gg = Integer.parseInt(giorno);
@@ -262,13 +267,6 @@ public class RegistrazioneService {
 
         luogoDomicilio = (via + (civico.isEmpty() ? "" : " " + civico) + ", " + citta).strip();
         System.out.println("Hai inserito: " + luogoDomicilio);
-
-        try {
-            double[] coords = GeocodingService.geocodeAddress(luogoDomicilio);
-            System.out.println("Latitudine: " + coords[0] + ", Longitudine: " + coords[1]);
-        } catch (Exception e) {
-            System.out.println("Errore durante la geocodifica.");
-        }
 
         return luogoDomicilio;
     }

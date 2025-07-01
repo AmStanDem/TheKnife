@@ -113,16 +113,10 @@ public final class MenuRistoratore extends Menu {
             double latitudine, longitudine;
 
             if (coords == null) {
-                System.out.print("Latitudine: ");
-                latitudine = scanner.nextDouble();
-
-                System.out.print("Longitudine: ");
-                longitudine = scanner.nextDouble();
+                coords = GeocodingService.chiediCoordinateManuali(scanner);
             }
-            else {
-                latitudine = coords[0];
-                longitudine = coords[1];
-            }
+            latitudine = coords[0];
+            longitudine = coords[1];
 
             Localita localita = new Localita(nazione, citta, indirizzo, latitudine, longitudine);
 

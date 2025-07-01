@@ -27,7 +27,7 @@ public final class UtenteService {
      *
      * @param utente L'utente da registrare.
      * @return {@code true} se la registrazione è avvenuta con successo, {@code false} altrimenti.
-     * @throws IOException  Se si verifica un errore durante l'accesso ai file.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
      * @throws CsvException Se si verifica un errore durante la gestione del CSV.
      */
     public static boolean registraUtente(Utente utente) throws IOException, CsvException {
@@ -59,10 +59,8 @@ public final class UtenteService {
             case null -> null;
 
             case Cliente c -> {
-                // Anche per i clienti potresti voler caricare le recensioni dei preferiti
                 ArrayList<Ristorante> preferiti = GestoreFile.caricaPreferiti(c.getUsername());
 
-                // Opzionale: carica le recensioni anche per i preferiti del cliente
                 if (!preferiti.isEmpty()) {
                     try {
                         RecensioneService.caricaRecensioniPerTuttiRistoranti(preferiti);

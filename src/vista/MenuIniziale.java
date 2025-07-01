@@ -1,13 +1,13 @@
 package vista;
 
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
 
 import Entita.*;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
+import servizi.RecensioneService;
 import servizi.RistoranteService;
 import servizi.UtenteService;
 
@@ -34,7 +34,6 @@ public final class MenuIniziale extends Menu {
 
     @Override
     public void mostra(){
-        BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         int selezione;
         stampaBanner();
         do {
@@ -46,10 +45,11 @@ public final class MenuIniziale extends Menu {
             System.out.println("Inserisci pure la funzionalità che desideri: ");
 
             selezione = scanner.nextInt();
+            scanner.nextLine();
 
             switch (selezione) {
                 case 1:
-                    Utente utente = login(scanner);
+                    Utente utente = login();
                     if (utente != null) {
                         if (utente instanceof Cliente cliente) {
                             MenuCliente menuCliente = new MenuCliente(scanner, cliente);
@@ -69,7 +69,7 @@ public final class MenuIniziale extends Menu {
                     }
                     break;
                 case 3:
-                    modalitaGuest(scanner, r);
+                    modalitaGuest();
                     break;
                 case 4:
                     System.out.println("Arrivederci.");
@@ -82,7 +82,7 @@ public final class MenuIniziale extends Menu {
     }
     
     
-    public static Utente login(Scanner sc) {
+    private Utente login() {
         String username,password;
         final String stop="STOP";
         boolean corretto;
@@ -93,7 +93,7 @@ public final class MenuIniziale extends Menu {
         do {
             corretto = true;
             System.out.print("\nInserisci l'username per fare il login:  ");
-            username = sc.next().strip();
+            username = scanner.nextLine().strip();
 
             if(username.equalsIgnoreCase(stop)){
                 System.out.println("\nInserito STOP; Interruzione del login.\n");
@@ -121,7 +121,7 @@ public final class MenuIniziale extends Menu {
         do {
             corretto = true;
             System.out.print("\nStai facendo il login con l'username "+username+"\nInserisci la password:  ");
-            password = sc.next().strip();
+            password = scanner.nextLine().strip();
 
             if(password.equalsIgnoreCase(stop)){
                 System.out.println("\nInserito STOP; Interruzione del login.n\n");
@@ -151,76 +151,128 @@ public final class MenuIniziale extends Menu {
 
     private void registrazione() throws IOException, CsvException {
         Utente nuovoUtente = registrazioneService.registraUtente();
-        if (nuovoUtente != null) {
-            System.out.println(" Registrazione completata con successo!");
-            System.out.println("Benvenuto, " + nuovoUtente.getUsername() + "!");
-        } else {
-            System.out.println(" Registrazione annullata.");
+        if (nuovoUtente == null) {
+            System.out.println("Registrazione annullata.");
+            return;
         }
-        if (nuovoUtente != null) {
-            try {
-                UtenteService.registraUtente(nuovoUtente);
-            } catch (IOException | CsvException e) {
-                System.err.println("Errore durante il salvataggio dell'utente.");
-                return;
-            }
-            if (nuovoUtente instanceof Cliente cliente) {
-                MenuCliente menuCliente = new MenuCliente(scanner, cliente);
-                menuCliente.mostra();
-            }
-            else if (nuovoUtente instanceof Ristoratore ristoratore) {
-                MenuRistoratore menuRistoratore = new MenuRistoratore(scanner, ristoratore);
-                menuRistoratore.mostra();
-            }
+        try {
+            UtenteService.registraUtente(nuovoUtente);
+        } catch (IOException | CsvException e) {
+            System.err.println("Errore durante il salvataggio dell'utente.");
+            return;
+        }
+        System.out.println("Registrazione completata con successo!");
+        if (nuovoUtente instanceof Cliente cliente) {
+            MenuCliente menuCliente = new MenuCliente(scanner, cliente);
+            menuCliente.mostra();
+        }
+        else if (nuovoUtente instanceof Ristoratore ristoratore) {
+            MenuRistoratore menuRistoratore = new MenuRistoratore(scanner, ristoratore);
+            menuRistoratore.mostra();
         }
     }
 
-    public void modalitaGuest(Scanner sc, BufferedReader r) {
-
-        System.out.println("\nSei ora in modalita' guest.\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
+    /**
+     * Modalità guest: ricerca vicini, ricerca avanzata, cambia località, recensioni anonime.
+     */
+    public void modalitaGuest() {
+        // inizializzazione località
+        System.out.println("\nSei ora in modalità guest.");
         String luogo = registrazioneService.chiediDomicilio();
-        if(luogo == null) {
-            System.out.print("\nOperazione interrotta con STOP");
+        if (luogo == null) {
+            System.out.println("Operazione interrotta con STOP");
             return;
         }
         double[] coords = GeocodingService.geocodeAddress(luogo);
+        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
         Localita localita = new Localita(coords[0], coords[1]);
-        try {
-            var ristorantiVicini = RistoranteService.cercaRistorante(localita, 10.0);
 
-            for (Ristorante ristorante : ristorantiVicini) {
-                System.out.println(ristorante);
-            }
-        } catch (IOException | CsvException e) {
-            System.err.println("Errore durante la ricerca dei ristoranti");
-        }
-        int selezione;
+        ArrayList<Ristorante> ultimiRisultati = new ArrayList<>();
+        int scelta;
         do {
-            System.out.println("\nInserisci uno dei numeri per eseguire il comando:");
-            System.out.println(" 1. Inserisci una nuova localita'");
-            System.out.println(" 2. Esci dalla modalita' guest");
-            System.out.print("\nComando: ");
-            selezione = sc.nextInt();
-            switch (selezione) {
-                case 1:
-                    System.out.println("\nInserisci la tua localita', cosi' da consigliarti i ristoranti nelle vicinanze:");
-                    System.out.print("\nLocalita':");
+            System.out.println("\n--- MENU GUEST ---");
+            System.out.println("1. Visualizza ristoranti vicini");
+            System.out.println("2. Cerca ristorante (ricerca avanzata)");
+            System.out.println("3. Cambia località");
+            System.out.println("4. Visualizza recensioni ristorante");
+            System.out.println("5. Esci modalità guest");
+            System.out.print("Comando: ");
+            scelta = leggiIntero();
+
+            switch (scelta) {
+                case 1 -> {
+                    try {
+                        ultimiRisultati = RistoranteService.cercaRistorante(localita, 10.0);
+                        if (ultimiRisultati.isEmpty()) System.out.println("Nessun ristorante entro 10 km.");
+                        else {
+                            RecensioneService.caricaRecensioniPerTuttiRistoranti(ultimiRisultati);
+                            ultimiRisultati.forEach(System.out::println);
+                        }
+                    }
+                    catch (IOException | CsvException e) {
+                        System.err.println("Errore durante la ricerca dei ristoranti.");
+                    }
+                }
+                case 2 -> {
+                    try {
+                        ArrayList<Ristorante> ris = RistoranteService.ricercaAvanzata(scanner, localita, "stop");
+                        if (ris.isEmpty()) System.out.println("Nessun ristorante trovato.");
+                        else {
+                            ultimiRisultati = ris;
+                            RecensioneService.caricaRecensioniPerTuttiRistoranti(ultimiRisultati);
+                            System.out.println("Risultati:");
+                            for (int i = 0; i < ris.size(); i++) {
+                                System.out.printf("%d. %s%n", i+1, ris.get(i).getNome());
+                            }
+                        }
+                    } catch (IOException | CsvException e) {
+                        System.err.println("Errore nella ricerca avanzata.");
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Nuova località: ");
                     luogo = registrazioneService.chiediDomicilio();
-                    if(luogo == null) {
-                        System.out.print("\nOperazione interrotta con STOP");
+                    if (luogo == null) {
+                        System.out.println("Operazione interrotta con STOP");
                         return;
                     }
                     coords = GeocodingService.geocodeAddress(luogo);
+                    if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
                     localita = new Localita(coords[0], coords[1]);
-
-                    break;
-                case 2:
-                    System.out.println("\nSei uscito dalla modalita' guest.");
-                    break;
-                default:
-                    System.out.println("\nComando inserito non valido!");
+                }
+                case 4 -> {
+                    if (ultimiRisultati.isEmpty()) {
+                        System.out.println("Prima effettua una ricerca o mostra vicini.");
+                    } else {
+                        System.out.print("Seleziona ristorante (1-" + ultimiRisultati.size() + "): ");
+                        int idx = leggiIntero() - 1;
+                        if (idx < 0 || idx >= ultimiRisultati.size()) {
+                            System.out.println("Scelta non valida.");
+                        } else {
+                            try {
+                                RecensioneService.visualizzaRecensioniAnonime(ultimiRisultati.get(idx));
+                            }
+                            catch (IOException | CsvException e) {
+                                System.err.println("Errore durante la visualizzazione delle recensioni in forma anonima.");
+                            }
+                        }
+                    }
+                }
+                case 5 -> System.out.println("Sei uscito dalla modalità guest.");
+                default -> System.out.println("Comando non valido.");
             }
-        } while(selezione != 2);
+        } while (scelta != 5);
+    }
 
+    // legge un intero consumando sempre la riga completa
+    private int leggiIntero() {
+        while (true) {
+            String line = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.print("Input non valido. Inserisci un numero: ");
+            }
+        }
     }
 }

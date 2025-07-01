@@ -15,27 +15,27 @@ public final class Localita {
     /**
      * Nazione in cui si trova la località (es. "Italia").
      */
-    private String nazione;
+    private final String nazione;
 
     /**
      * Città associata alla località (es. "Milano").
      */
-    private String citta;
+    private final String citta;
 
     /**
      * Indirizzo specifico della località (es. "Via Roma 12").
      */
-    private String indirizzo;
+    private final String indirizzo;
 
     /**
      * Coordinata geografica nord-sud della località, espressa in gradi decimali.
      */
-    private double latitudine;
+    private final double latitudine;
 
     /**
      * Coordinata geografica est-ovest della località, espressa in gradi decimali.
      */
-    private double longitudine;
+    private final double longitudine;
 
     /**
      * Raggio medio della Terra in chilometri, utilizzato per il calcolo delle distanze geografiche.
@@ -67,6 +67,9 @@ public final class Localita {
      * @param longitudine La longitudine della località.
      */
     public Localita(double latitudine, double longitudine) {
+        this.nazione = "";
+        this.citta = "";
+        this.indirizzo = "";
         this.latitudine = latitudine;
         this.longitudine = longitudine;
     }
@@ -79,7 +82,7 @@ public final class Localita {
      * @return distanza in chilometri, o -1 se una delle coordinate non è disponibile
      */
     public double calcolaDistanza(Localita altra) {
-        if (!hasCoordinate() || !altra.hasCoordinate()) {
+        if (!haCoordinate() || !altra.haCoordinate()) {
             return -1;
         }
 
@@ -109,7 +112,7 @@ public final class Localita {
      * @return {@code true} se latitudine e longitudine sono diverse da zero.
      */
 
-    public boolean hasCoordinate() {
+    public boolean haCoordinate() {
         return latitudine != 0.0 && longitudine != 0.0;
     }
 
@@ -125,47 +128,30 @@ public final class Localita {
         return this.citta.equalsIgnoreCase(altra.citta) &&
                 this.nazione.equalsIgnoreCase(altra.nazione);
     }
-
-    // Getters e Setters
     public String getNazione() {
         return nazione;
     }
 
-    public void setNazione(String nazione) {
-        this.nazione = nazione;
-    }
 
     public String getCitta() {
         return citta;
     }
 
-    public void setCitta(String citta) {
-        this.citta = citta;
-    }
 
     public String getIndirizzo() {
         return indirizzo;
     }
 
-    public void setIndirizzo(String indirizzo) {
-        this.indirizzo = indirizzo;
-    }
 
     public double getLatitudine() {
         return latitudine;
     }
 
-    public void setLatitudine(double latitudine) {
-        this.latitudine = latitudine;
-    }
 
     public double getLongitudine() {
         return longitudine;
     }
 
-    public void setLongitudine(double longitudine) {
-        this.longitudine = longitudine;
-    }
 
     /**
      * Restituisce una rappresentazione testuale della località nel formato:
@@ -198,7 +184,7 @@ public final class Localita {
         Localita altra = (Localita) obj;
 
         // Se entrambe hanno coordinate valide, confronta con tolleranza
-        if (this.hasCoordinate() && altra.hasCoordinate()) {
+        if (this.haCoordinate() && altra.haCoordinate()) {
             final double tolleranza = 0.0001;
             return Math.abs(this.latitudine - altra.latitudine) < tolleranza &&
                     Math.abs(this.longitudine - altra.longitudine) < tolleranza;
@@ -211,21 +197,5 @@ public final class Localita {
                         (this.indirizzo != null && altra.indirizzo != null &&
                                 this.indirizzo.equalsIgnoreCase(altra.indirizzo)));
 
-    }
-
-
-    // Esempio di utilizzo
-    public static void main(String[] args) {
-        // Milano
-        Localita milano = new Localita("Italia", "Milano", "Duomo", 45.4642, 9.1900);
-        System.out.println(milano);
-
-        // Roma
-        Localita roma = new Localita("Italia", "Roma", "Colosseo", 41.8902, 12.4922);
-        System.out.println(roma);
-
-        double distanza = milano.calcolaDistanza(roma);
-        System.out.println("Distanza Milano-Roma: " + String.format("%.2f", distanza) + " km");
-        // Output atteso: circa 477 km
     }
 }

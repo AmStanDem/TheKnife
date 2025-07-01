@@ -565,7 +565,7 @@ public class GestoreFile {
      * Elimina una recensione dal file CSV
      *
      * @param recensione La recensione da eliminare
-     * @return
+     * @return {@code true} se la recensione è stata rimossa correttamente, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -817,39 +817,22 @@ public class GestoreFile {
                 String nazione = riga[ColonnePreferitiCSV.NAZIONE];
                 String citta = riga[ColonnePreferitiCSV.CITTA];
                 String indirizzo = riga[ColonnePreferitiCSV.INDIRIZZO];
+                double latitudine = Double.parseDouble(riga[ColonnePreferitiCSV.LATITUDINE]);
+                double longitudine = Double.parseDouble(riga[ColonnePreferitiCSV.LONGITUDINE]);
 
-                // Controlla se corrisponde alla combinazione cercata
                 if (usernameFile.equals(username) &&
                         nomeRistorante.equals(ristorante.getNome()) &&
                         nazione.equals(ristorante.getLocalita().getNazione()) &&
                         citta.equals(ristorante.getLocalita().getCitta()) &&
-                        indirizzo.equals(ristorante.getLocalita().getIndirizzo())) {
+                        indirizzo.equals(ristorante.getLocalita().getIndirizzo()) &&
+                        latitudine == ristorante.getLocalita().getLatitudine() &&
+                        longitudine == ristorante.getLocalita().getLongitudine()) {
                     return true;
                 }
             }
         }
 
         return false;
-    }
-
-    /**
-     * Cerca un ristorante specifico nei preferiti di un cliente.
-     *
-     * @param cliente    Il cliente proprietario del preferito
-     * @param ristorante Il ristorante da cercare
-     * @return Il ristorante trovato o null se non è nei preferiti
-     * @throws IOException  se si verifica un errore di I/O
-     * @throws CsvException se si verifica un errore nel parsing del CSV
-     */
-    public static Ristorante cercaPreferito(Cliente cliente, Ristorante ristorante) throws IOException, CsvException {
-        ArrayList<Ristorante> preferiti = caricaPreferiti(cliente.getUsername());
-
-        for (Ristorante r : preferiti) {
-            if (r.equals(ristorante)) {
-                return r;
-            }
-        }
-        return null;
     }
 
     /**

@@ -9,7 +9,6 @@ import io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import static servizi.RistoranteService.getRecensioniRistorante;
 
@@ -60,13 +59,15 @@ public final class RecensioneService {
 
         for (Ristorante ristorante : ristoranti) {
             ArrayList<Recensione> recensioni = getRecensioniRistorante(ristorante);
+            ristorante.setRecensioni(recensioni);
         }
     }
 
     public static void caricaRecensioniRistorante(Ristorante ristorante)
             throws IOException, CsvException {
 
-        getRecensioniRistorante(ristorante);
+        var recensioni = getRecensioniRistorante(ristorante);
+        ristorante.setRecensioni(recensioni);
     }
 
     /**
@@ -84,6 +85,9 @@ public final class RecensioneService {
         if (cliente == null || ristorante == null) {
             return false;
         }
+
+        caricaRecensioniRistorante(ristorante);
+
         Recensione recensione = ristorante.trovaRecensioneCliente(cliente);
         if (recensione == null) {
             return false;
@@ -117,6 +121,8 @@ public final class RecensioneService {
         if (!nuovaRecensione.getRistorante().equals(ristorante)) {
             return false;
         }
+
+        caricaRecensioniRistorante(ristorante);
 
         Recensione vecchiaRecensione = ristorante.trovaRecensioneCliente(cliente);
         if (vecchiaRecensione == null) {
@@ -180,25 +186,6 @@ public final class RecensioneService {
         return true;
     }
 
-
-    /**
-     * Visualizza tutte le recensioni di un ristorante.
-     *
-     * @param cliente cliente di cui visualizzare le recensioni.
-     * @param ristorante Ristorante di cui visualizzare le recensioni.
-     */
-    public static void visualizzaRecensione(Cliente cliente, Ristorante ristorante) {
-
-        System.out.println("=== Recensione per " + ristorante.getNome() +  " del cliente " + cliente +  " ===");
-        Recensione recensione = ristorante.trovaRecensioneCliente(cliente);
-
-        if (recensione == null) {
-            System.out.println("Nessuna recensione trovata.");
-            return;
-        }
-        System.out.println(recensione);
-    }
-
     /**
      * Visualizza le recensioni di un cliente.
      *
@@ -210,6 +197,25 @@ public final class RecensioneService {
 
         for (Recensione recensione : recensioni) {
             System.out.println(recensione);
+        }
+    }
+
+    /**
+     * Mostra le recensioni di un ristorante in forma anonima:
+     * solo stelle e testo, senza informazioni sull'autore e senza ripetere il nome del ristorante.
+     */
+    public static void visualizzaRecensioniAnonime(Ristorante ristorante) throws IOException, CsvException {
+        // Carica recensioni dal file associato al ristorante
+        caricaRecensioniRistorante(ristorante);
+        var recensioni = ristorante.getRecensioni();
+        if (recensioni == null || recensioni.isEmpty()) {
+            System.out.println("Nessuna recensione disponibile.");
+            return;
+        }
+        // Stampa in forma anonima: solo stelle e messaggio
+        System.out.println("--- Recensioni anonime ---");
+        for (Recensione rev : recensioni) {
+            System.out.printf("%d stelle: %s%n", rev.getStelle(), rev.getMessaggio());
         }
     }
 

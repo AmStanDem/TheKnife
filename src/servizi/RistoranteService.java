@@ -6,6 +6,7 @@ import io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Servizio per la gestione dei ristoranti e delle loro informazioni.
@@ -144,7 +145,7 @@ public final class RistoranteService {
         }
 
         if (raggioKm != null) {
-            if (raggioKm > 0 && localita.hasCoordinate() && localitaRistorante.hasCoordinate()) {
+            if (raggioKm > 0 && localita.haCoordinate() && localitaRistorante.haCoordinate()) {
                 double distanza = localitaRistorante.calcolaDistanza(localita);
                 return distanza != -1 && distanza <= raggioKm;
             }
@@ -219,16 +220,175 @@ public final class RistoranteService {
 
 
     public static ArrayList<Recensione> getRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
-        ArrayList<Recensione> recensioni = GestoreFile.caricaRecensioniRistorante(ristorante);
-        ristorante.setRecensioni(recensioni);
-        return recensioni;
+        return GestoreFile.caricaRecensioniRistorante(ristorante);
     }
 
-    /**
-     * Aggiunta di un metodo che permette all'utente di visualizzare le informazioni dei ristoranti
-     */
-    public static void visualizzaRistorante(Ristorante ristorante) {
-        System.out.println(ristorante);
+    public static ArrayList<Ristorante> ricercaAvanzata(Scanner scanner, Localita localita, String stop) throws IOException, CsvException {
+        interrotto = false;
+
+        System.out.println("=== RICERCA AVANZATA RISTORANTI ===");
+
+        TipoCucina tipoCucina = selezionaTipoCucina(scanner, stop);
+        if (interrotto) return new ArrayList<>();
+
+        Double raggioKm = inserisciRaggio(scanner, stop);
+        if (interrotto) return new ArrayList<>();
+
+        Float[] prezzi = inserisciFasciaPrezzo(scanner, stop);
+        if (interrotto) return new ArrayList<>();
+
+        Boolean delivery = inserisciServizio(scanner, "delivery", stop);
+        if (interrotto) return new ArrayList<>();
+
+        Boolean prenotazione = inserisciServizio(scanner, "prenotazione online", stop);
+        if (interrotto) return new ArrayList<>();
+
+        Float mediaStelle = inserisciMediaStelle(scanner, stop);
+        if (interrotto) return new ArrayList<>();
+
+        System.out.println("Ricerca in corso...");
+
+        return RistoranteService.cercaRistorante(
+                tipoCucina, localita, prezzi[0], prezzi[1],
+                delivery, prenotazione, mediaStelle, raggioKm
+        );
     }
+
+    private static boolean interrotto = false;
+
+    private static TipoCucina selezionaTipoCucina(Scanner scanner, String stop) {
+        System.out.println("\nSeleziona tipo di cucina (premi INVIO per saltare):");
+        TipoCucina[] tipi = TipoCucina.values();
+        for (int i = 0; i < tipi.length; i++) {
+            System.out.println((i + 1) + ". " + tipi[i]);
+        }
+        System.out.println("0. Qualsiasi tipo");
+
+        System.out.print("\nScelta: ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        if (input.isBlank() || input.equals("0")) {
+            return null;
+        }
+
+        try {
+            int scelta = Integer.parseInt(input);
+            if (scelta >= 1 && scelta <= tipi.length) {
+                return tipi[scelta - 1];
+            }
+        } catch (NumberFormatException ignored) {}
+
+        System.out.println("Scelta non valida, tipo di cucina ignorato.");
+        return null;
+    }
+
+    private static Double inserisciRaggio(Scanner scanner, String stop) {
+        System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        if (input.isEmpty()) return 10.0;
+
+        try {
+            double raggio = Double.parseDouble(input);
+            return (raggio > 0) ? raggio : 10.0;
+        } catch (NumberFormatException e) {
+            System.out.println("Input non valido, utilizzato default 10km.");
+            return 10.0;
+        }
+    }
+
+    private static Float[] inserisciFasciaPrezzo(Scanner scanner, String stop) {
+        System.out.println("\nFascia di prezzo:");
+        Float prezzoMinimo = null, prezzoMassimo = null;
+
+        System.out.print("Prezzo minimo in € (premi INVIO per saltare): ");
+        String minInput = scanner.nextLine().trim();
+        if (minInput.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        if (!minInput.isEmpty()) {
+            try {
+                prezzoMinimo = Float.parseFloat(minInput);
+                if (prezzoMinimo < 0) prezzoMinimo = null;
+            } catch (NumberFormatException ignored) {}
+        }
+
+        System.out.print("Prezzo massimo in € (premi INVIO per saltare): ");
+        String maxInput = scanner.nextLine().trim();
+        if (maxInput.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        if (!maxInput.isEmpty()) {
+            try {
+                prezzoMassimo = Float.parseFloat(maxInput);
+                if (prezzoMassimo < 0) prezzoMassimo = null;
+            } catch (NumberFormatException ignored) {}
+        }
+
+        if (prezzoMinimo != null && prezzoMassimo != null && prezzoMinimo > prezzoMassimo) {
+            System.out.println("Prezzo minimo maggiore del massimo, filtri ignorati.");
+            prezzoMinimo = prezzoMassimo = null;
+        }
+
+        return new Float[]{prezzoMinimo, prezzoMassimo};
+    }
+
+    private static Boolean inserisciServizio(Scanner scanner, String nomeServizio, String stop) {
+        System.out.println("\nServizio " + nomeServizio + ":");
+        System.out.println("1. Solo con " + nomeServizio);
+        System.out.println("2. Solo senza " + nomeServizio);
+        System.out.println("3. Indifferente (default)");
+
+        System.out.print("Scelta: ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        return switch (input) {
+            case "1" -> true;
+            case "2" -> false;
+            default -> null;
+        };
+    }
+
+    private static Float inserisciMediaStelle(Scanner scanner, String stop) {
+        System.out.print("\nMedia stelle minima (1.0-5.0, premi INVIO per saltare): ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase(stop)) {
+            interrotto = true;
+            return null;
+        }
+
+        if (input.isEmpty()) return null;
+
+        try {
+            float stelle = Float.parseFloat(input);
+            if (stelle >= 1.0f && stelle <= 5.0f) {
+                return stelle;
+            }
+        } catch (NumberFormatException ignored) {}
+
+        System.out.println("Input non valido, filtro stelle ignorato.");
+        return null;
+    }
+
 
 }

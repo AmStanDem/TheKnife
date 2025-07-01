@@ -14,13 +14,13 @@ import java.util.Objects;
  * @version 2.0
  */
 public class Ristorante {
-    private String nome;
-    private Localita localita;
-    private TipoCucina tipoDiCucina;
-    private boolean delivery;
-    private boolean prenotazione;
-    private float prezzoMedio;
-    private String descrizione;
+    private final String nome;
+    private final Localita localita;
+    private final TipoCucina tipoDiCucina;
+    private final boolean delivery;
+    private final boolean prenotazione;
+    private final float prezzoMedio;
+    private final String descrizione;
     private Ristoratore proprietario;
     private List<Recensione> recensioni;
 
@@ -89,10 +89,6 @@ public class Ristorante {
         return this.proprietario != null && this.proprietario.equals(proprietario);
     }
 
-    public boolean appartieneA(String username) {
-        return this.proprietario != null && this.proprietario.getUsername().equals(username);
-    }
-
     /**
      * Aggiunge una recensione al ristorante.
      *
@@ -104,16 +100,11 @@ public class Ristorante {
             return false;
         }
 
-        // Verifica se esiste già una recensione dello stesso cliente
         if (trovaRecensioneCliente(recensione.getCliente()) != null) {
-            return false; // Cliente ha già recensito questo ristorante
+            return false;
         }
 
-        boolean aggiunta = recensioni.add(recensione);
-        if (aggiunta) {
-            System.out.println("Recensione aggiunta con successo per: " + nome);
-        }
-        return aggiunta;
+        return recensioni.add(recensione);
     }
 
     /**
@@ -315,10 +306,15 @@ public class Ristorante {
 
     @Override
     public String toString() {
-        return String.format("Ristorante{nome='%s', località='%s', cucina=%s, prezzo=%.2f€, " +
-                        "delivery=%s, prenotazione=%s, recensioni=%d, media=%.1f/5}",
-                nome, localita.getCitta(), tipoDiCucina, prezzoMedio,
-                delivery ? "Sì" : "No", prenotazione ? "Sì" : "No",
-                getNumeroRecensioni(), getMediaStelle());
+        return "🍽️  " + nome + "\n" +
+                "📍  Località: " + localita.getCitta() + "\n" +
+                "🍴  Cucina: " + tipoDiCucina + "\n" +
+                String.format("💶  Prezzo medio: %.2f €%n", prezzoMedio) +
+                "🚚  Delivery: " + (delivery ? "Sì" : "No") + "\n" +
+                "📅  Prenotazione online: " + (prenotazione ? "Sì" : "No") + "\n" +
+                "📝  Descrizione: " + (descrizione.isEmpty() ? "[Nessuna descrizione]" : descrizione) + "\n" +
+                "⭐️  Recensioni: " + getNumeroRecensioni() +
+                " (media " + String.format("%.1f", getMediaStelle()) + "/5)" + "\n";
     }
+
 }

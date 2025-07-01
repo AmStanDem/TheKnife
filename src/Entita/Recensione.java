@@ -10,7 +10,7 @@ import java.util.Objects;
  * Una recensione è immutabile per quanto riguarda cliente e ristorante,
  * ma consente la modifica di stelle, messaggio e risposta del ristoratore.
  *
- * @author Antonio Pesavento, Thomas Riotto - [Matricola] - [VA/CO]
+ * @author Antonio Pesavento, Thomas Riotto
  * @version 1.1
  */
 public final class Recensione {
@@ -23,7 +23,6 @@ public final class Recensione {
     private String rispostaRistoratore;
     private LocalDateTime dataRisposta;
 
-    // Costanti per la validazione
     private static final int MIN_STELLE = 1;
     private static final int MAX_STELLE = 5;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -272,101 +271,4 @@ public final class Recensione {
     public int hashCode() {
         return Objects.hash(cliente, ristorante);
     }
-
-
-    // TESTING
-    public static void main(String[] args) {
-        System.out.println("=== TEST CLASSE RECENSIONE ===\n");
-
-        // Creazione oggetti di test
-        Cliente cliente1 = new Cliente("Antonio", "Pesavento", "apesavento",
-                "password123", LocalDate.of(2006, 1, 14), "Varese");
-        Cliente cliente2 = new Cliente("Thomas", "Riotto", "triotto",
-                "mypass456", LocalDate.of(2005, 3, 22), "Como");
-
-        Localita localita = new Localita("Italia", "Milano", "Via Roma 123", 45.4642, 9.1900);
-        // Assumendo che TipoCucina sia un enum con valore ITALIANA
-        Ristorante ristorante1 = new Ristorante("La Tavola", localita,
-                TipoCucina.ITALIANA, true, true, 35.0f,
-                "Ristorante tradizionale italiano", null);
-
-        // Test 1: Creazione recensione
-        System.out.println("--- TEST 1: Creazione Recensione ---");
-        Recensione rec1 = new Recensione(cliente1, ristorante1, 5, "Ottimo ristorante, cibo eccellente!");
-        System.out.println(rec1);
-        System.out.println();
-
-        // Test 2: Modifica stelle e testo recensione
-        System.out.println("--- TEST 2: Modifica Recensione ---");
-        rec1.setStelle(4);
-        rec1.setMessaggio("Buon ristorante, ma il servizio potrebbe migliorare.");
-        System.out.println("Dopo modifica:");
-        System.out.println(rec1);
-        System.out.println();
-
-        // Test 3: Aggiunta risposta del ristoratore
-        System.out.println("--- TEST 3: Aggiunta Risposta Ristoratore ---");
-        rec1.aggiungiRisposta("Grazie per il feedback! Stiamo lavorando per migliorare il servizio.");
-        System.out.println("Dopo risposta del ristoratore:");
-        System.out.println(rec1);
-        System.out.println();
-
-        // Test 4: Tentativo di aggiungere seconda risposta (dovrebbe fallire)
-        System.out.println("--- TEST 4: Tentativo Seconda Risposta (deve fallire) ---");
-        System.out.println("Prima della seconda risposta - Ha risposta: " + rec1.haRisposta());
-        rec1.aggiungiRisposta("Questa non dovrebbe essere aggiunta!");
-        System.out.println("Dopo tentativo seconda risposta:");
-        System.out.println(rec1);
-        System.out.println();
-
-        // Test 5: Modifica risposta esistente
-        System.out.println("--- TEST 5: Modifica Risposta Esistente ---");
-        rec1.modificaRisposta("La ringraziamo per il prezioso feedback. Abbiamo già implementato dei miglioramenti!");
-        System.out.println("Dopo modifica risposta:");
-        System.out.println(rec1);
-        System.out.println();
-
-        // Test 6: Test validazione stelle (valori non validi)
-        System.out.println("--- TEST 6: Test Validazione Stelle ---");
-        Recensione rec2 = new Recensione(cliente2, ristorante1, 3, "Nella media");
-        System.out.println("Recensione originale (3 stelle):");
-        System.out.println("Stelle: " + rec2.getStelle());
-
-        rec2.setStelle(0); // Non valido
-        System.out.println("Dopo tentativo di impostare 0 stelle: " + rec2.getStelle());
-
-        rec2.setStelle(6); // Non valido
-        System.out.println("Dopo tentativo di impostare 6 stelle: " + rec2.getStelle());
-
-        rec2.setStelle(1); // Valido
-        System.out.println("Dopo impostazione 1 stella: " + rec2.getStelle());
-        System.out.println();
-
-        // Test 7: Test con stringhe vuote o null
-        System.out.println("--- TEST 7: Test Input Vuoti/Null ---");
-        Recensione rec3 = new Recensione(cliente1, ristorante1, 2, "   Test con spazi   ");
-        System.out.println("Recensione con spazi (dovrebbe essere trimmed):");
-        System.out.println("Testo: '" + rec3.getMessaggio() + "'");
-
-        rec3.aggiungiRisposta("   "); // Stringa vuota dopo trim
-        System.out.println("Ha risposta dopo tentativo con spazi vuoti: " + rec3.haRisposta());
-
-        rec3.aggiungiRisposta(null); // Null
-        System.out.println("Ha risposta dopo tentativo con null: " + rec3.haRisposta());
-
-        rec3.aggiungiRisposta("Risposta valida");
-        System.out.println("Ha risposta dopo risposta valida: " + rec3.haRisposta());
-        System.out.println();
-
-        // Test 8: Test modifica risposta senza risposta esistente
-        System.out.println("--- TEST 8: Modifica Risposta Inesistente ---");
-        Recensione rec4 = new Recensione(cliente2, ristorante1, 4, "Buona esperienza");
-        System.out.println("Prima della modifica - Ha risposta: " + rec4.haRisposta());
-        rec4.modificaRisposta("Tentativo di modifica senza risposta esistente");
-        System.out.println("Dopo tentativo modifica - Ha risposta: " + rec4.haRisposta());
-
-
-        System.out.println("\n=== FINE TEST ===");
-    }
-
 }

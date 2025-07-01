@@ -2,7 +2,6 @@ package vista;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import Entita.*;
@@ -20,7 +19,7 @@ public final class MenuCliente extends Menu {
 
     private final Scanner scanner;
     private final Cliente cliente;
-    private String input, stop = "stop";
+    private final String stop = "stop";
 
     /**
      * Crea un nuovo menu cliente
@@ -39,14 +38,11 @@ public final class MenuCliente extends Menu {
         boolean errore = false;
 
         if (scanner == null) {
-            String messaggio = "Impossibile leggere da terminale.\n";
-            errori.append(messaggio);
+            errori.append("Impossibile leggere da terminale.\n");
             errore = true;
         }
-
         if (cliente == null) {
-            String messaggio = "Il cliente deve essere valorizzato.\n";
-            errori.append(messaggio);
+            errori.append("Il cliente deve essere valorizzato.\n");
             errore = true;
         }
         if (errore) {
@@ -54,25 +50,12 @@ public final class MenuCliente extends Menu {
         }
     }
 
-    private void visualizzaPreferiti() {
-
-        System.out.println("I tuoi ristoranti preferiti: ");
-
-        for (int i = 0; i < cliente.getPreferiti().size(); i++) {
-            System.out.println((i + 1) + ". " + cliente.getPreferiti().get(i));
-        }
-    }
-
-    /**
-     * Mostra il contenuto effettivo del menu.
-     */
     @Override
     public void mostra() {
         System.out.println("Benvenuto " + cliente);
         int opzione;
 
         do {
-
             System.out.println("1. Visualizza i ristoranti vicini a te.");
             System.out.println("2. Cerca un ristorante.");
             System.out.println("3. Visualizza i tuoi ristoranti preferiti.");
@@ -84,29 +67,21 @@ public final class MenuCliente extends Menu {
             System.out.println("9. Rimuovi una recensione da un ristorante.");
             System.out.println("10. Uscire dall'app.");
 
-            System.out.println("Inserisci una opzione: ");
-            //il while è per InputMismatchException
-            while(true) {
-                String input = scanner.nextLine().trim();
-                try {
-                    opzione = Integer.parseInt(input);
-                    break;
-                } catch (NumberFormatException e ){
-                    System.out.println(" Input non valido. usa solo numeri");
-                }
-            }
+            System.out.print("Inserisci un'opzione: ");
+            opzione = leggiInt();
+
             switch (opzione) {
                 case 1:
                     visualizzaRistorantiVicini();
                     break;
                 case 2:
-                    cercaRistorante();
+                    cercaRistoranteAvanzata();
                     break;
                 case 3:
                     visualizzaPreferiti();
                     break;
                 case 4:
-                    aggiungiAiPreferiti();
+                    aggiungiAiPreferitiManuale();
                     break;
                 case 5:
                     rimuoviPreferito();
@@ -115,7 +90,7 @@ public final class MenuCliente extends Menu {
                     visualizzaRistorantiRecensiti();
                     break;
                 case 7:
-                    aggiungiRecensione();
+                    aggiungiRecensioneManuale();
                     break;
                 case 8:
                     modificaRecensione();
@@ -127,254 +102,55 @@ public final class MenuCliente extends Menu {
                     System.out.println("Arrivederci. :D");
                     break;
                 default:
-                    System.out.println("Operazione non ancora supportata.");
-                    break;
+                    System.out.println("Operazione non valida.");
             }
         } while (opzione != 10);
     }
 
+    private void visualizzaPreferiti() {
+        System.out.println("I tuoi ristoranti preferiti:");
+        var preferiti = cliente.getPreferiti();
+        for (int i = 0; i < preferiti.size(); i++) {
+            System.out.println((i + 1) + ". " + preferiti.get(i));
+        }
+    }
+
     private void visualizzaRistorantiVicini() {
         double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
-        double raggioKm = 10;
+        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
         Localita localita = new Localita(coords[0], coords[1]);
         try {
-            var ristoranti = RistoranteService.cercaRistorante(localita, raggioKm);
-            for (Ristorante ristorante : ristoranti) {
-                RistoranteService.visualizzaRistorante(ristorante);
-            }
-        }
-        catch (IOException | CsvException e) {
+            var lista = RistoranteService.cercaRistorante(localita, 10.0);
+            lista.forEach(System.out::println);
+        } catch (IOException | CsvException e) {
             System.err.println("Errore nella ricerca dei ristoranti vicini.");
         }
     }
 
-    private void cercaRistorante() {
-        System.out.println("=== RICERCA AVANZATA RISTORANTI ===");
-
+    private void cercaRistoranteAvanzata() {
+        double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
+        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
+        Localita localita = new Localita(coords[0], coords[1]);
         try {
-
-            scanner.nextLine();
-
-            TipoCucina tipoCucina = selezionaTipoCucina();
-            if(input.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-
-            double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
-            Localita localita = new Localita(coords[0], coords[1]);
-
-            Double raggioKm = inserisciRaggio();
-            if(raggioKm == null) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-
-            Float[] prezzi = inserisciFasciaPrezzo();
-            if(prezzi == null) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-            Float prezzoMinimo = prezzi[0];
-            Float prezzoMassimo = prezzi[1];
-
-            Boolean delivery = inserisciServizio("delivery");
-            if(input.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-
-            Boolean prenotazione = inserisciServizio("prenotazione online");
-            if(input.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-
-            Float mediaStelle = inserisciMediaStelle();
-            if(input.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della ricerca\n");
-                return;
-            }
-
-            System.out.println("\nRicerca in corso...");
-            var ristoranti = RistoranteService.cercaRistorante(
-                    tipoCucina, localita, prezzoMinimo, prezzoMassimo,
-                    delivery, prenotazione, mediaStelle, raggioKm
-            );
-
-            if (ristoranti.isEmpty()) {
-                System.out.println("Nessun ristorante trovato con i criteri specificati.");
-                System.out.println("Prova ad allargare i filtri di ricerca.");
+            var risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
+            if (risultati.isEmpty()) {
+                System.out.println("Nessun ristorante trovato.");
             } else {
-                System.out.println("\n=== RISULTATI RICERCA ===");
-                System.out.println("Trovati " + ristoranti.size() + " ristoranti:");
-
-                for (int i = 0; i < ristoranti.size(); i++) {
-                    System.out.println("\n" + (i + 1) + ". ");
-                    RistoranteService.visualizzaRistorante(ristoranti.get(i));
-                }
-                gestisciRisultatiRicerca(ristoranti);
+                gestisciRisultatiRicerca(risultati);
             }
-
         } catch (IOException | CsvException e) {
-            System.err.println("Errore durante la ricerca dei ristoranti.");
-        } catch (IllegalArgumentException e) {
-            System.err.println("Errore nei parametri di ricerca: " + e.getMessage());
-        }
-    }
-
-    private TipoCucina selezionaTipoCucina() {
-        System.out.println("\nSeleziona tipo di cucina (premi INVIO per saltare):");
-
-        TipoCucina[] tipi = TipoCucina.values();
-        for (int i = 0; i < tipi.length; i++) {
-            System.out.println((i + 1) + ". " + tipi[i]);
-        }
-        System.out.println("0. Qualsiasi tipo");
-
-        System.out.print("\nScelta: ");
-        input = scanner.nextLine().trim();
-
-        if (input.isBlank() || input.equals("0") || input.equalsIgnoreCase(stop)) {
-            return null;
-        }
-
-        try {
-            int scelta = Integer.parseInt(input);
-            if (scelta >= 1 && scelta <= tipi.length) {
-                return tipi[scelta - 1];
-            } else {
-                System.out.println("Scelta non valida, tipo di cucina ignorato.");
-                return null;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Input non valido, tipo di cucina ignorato.");
-            return null;
-        }
-    }
-
-    private Double inserisciRaggio() {
-            System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase(stop))
-                return null;
-
-            if (input.isEmpty()) {
-                return 10.0;
-            }
-
-            try {
-                double raggio = Double.parseDouble(input);
-                if (raggio > 0) {
-                    return raggio;
-                } else {
-                    System.out.println("Raggio non valido, utilizzato default 10km.");
-                    return 10.0;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Input non valido, utilizzato default 10km.");
-                return 10.0;
-            }
-    }
-
-    private Float[] inserisciFasciaPrezzo() {
-        System.out.println("\nFascia di prezzo:");
-
-        System.out.print("Prezzo minimo in € (premi INVIO per saltare): ");
-        String minInput = scanner.nextLine().trim();
-        if(minInput.equalsIgnoreCase(stop))
-            return null;
-
-        Float prezzoMinimo = null;
-
-        if (!minInput.isEmpty()) {
-            try {
-                prezzoMinimo = Float.parseFloat(minInput);
-                if (prezzoMinimo < 0) {
-                    System.out.println("Prezzo non valido, filtro prezzo minimo ignorato.");
-                    prezzoMinimo = null;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Input non valido, filtro prezzo minimo ignorato.");
-                prezzoMinimo = null;
-            }
-        }
-
-        System.out.print("Prezzo massimo in € (premi INVIO per saltare): ");
-        String maxInput = scanner.nextLine().trim();
-        if(maxInput.equalsIgnoreCase(stop))
-            return null;
-
-        Float prezzoMassimo = null;
-
-        if (!maxInput.isEmpty()) {
-            try {
-                prezzoMassimo = Float.parseFloat(maxInput);
-                if (prezzoMassimo < 0) {
-                    System.out.println("Prezzo non valido, filtro prezzo massimo ignorato.");
-                    prezzoMassimo = null;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Input non valido, filtro prezzo massimo ignorato.");
-                prezzoMassimo = null;
-            }
-        }
-
-        if (prezzoMinimo != null && prezzoMassimo != null && prezzoMinimo > prezzoMassimo) {
-            System.out.println("Prezzo minimo maggiore del massimo, filtri prezzo ignorati.");
-            prezzoMinimo = null;
-            prezzoMassimo = null;
-        }
-
-        return new Float[]{prezzoMinimo, prezzoMassimo};
-    }
-
-    private Boolean inserisciServizio(String nomeServizio) {
-        System.out.println("\nServizio " + nomeServizio + ":");
-        System.out.println("1. Solo con " + nomeServizio);
-        System.out.println("2. Solo senza " + nomeServizio);
-        System.out.println("3. Indifferente (default)");
-
-        System.out.print("Scelta: ");
-        input = scanner.nextLine().trim();
-
-        return switch (input) {
-            case "1" -> true;
-            case "2" -> false;
-            default -> null;
-        };
-    }
-
-    private Float inserisciMediaStelle() {
-        System.out.print("\nMedia stelle minima (1.0-5.0, premi INVIO per saltare): ");
-        input = scanner.nextLine().trim();
-
-        if(input.equalsIgnoreCase(stop))
-            return null;
-
-        if (input.isBlank()) {
-            return null;
-        }
-
-        try {
-            float stelle = Float.parseFloat(input);
-            if (stelle >= 1.0f && stelle <= 5.0f) {
-                return stelle;
-            } else {
-                System.out.println("Valore non valido (deve essere tra 1.0 e 5.0), filtro ignorato.");
-                return null;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Input non valido, filtro stelle ignorato.");
-            return null;
+            System.err.println("Errore nella ricerca dei ristoranti.");
         }
     }
 
     private void gestisciRisultatiRicerca(ArrayList<Ristorante> risultati) {
         System.out.println("\n=== AZIONI SUI RISULTATI ===");
+        for (int i = 0; i < risultati.size(); i++) {
+            System.out.println((i + 1) + ". " + risultati.get(i));
+        }
 
         int scelta;
+
         do {
             System.out.println("\nCosa vuoi fare?");
             System.out.println("1. Visualizza dettagli di un ristorante");
@@ -383,8 +159,7 @@ public final class MenuCliente extends Menu {
             System.out.println("4. Torna al menu principale");
 
             System.out.print("Scelta: ");
-            scelta = leggiIntero(scanner);
-            scanner.nextLine();
+            scelta = leggiInt();
 
             switch (scelta) {
                 case 1:
@@ -402,20 +177,20 @@ public final class MenuCliente extends Menu {
                 default:
                     System.out.println("Opzione non valida.");
             }
-        } while (scelta != 3);
+        } while (scelta != 4);
     }
 
     private void visualizzaDettagliRistorante(ArrayList<Ristorante> risultati) {
         int indice = selezionaRistorante(risultati);
-        if (indice >= 0) {
+        if (indice >= 0 && indice < risultati.size()) {
             System.out.println("\n=== DETTAGLI RISTORANTE ===");
-            RistoranteService.visualizzaRistorante(risultati.get(indice));
+            System.out.println(risultati.get(indice));
         }
     }
 
     private void aggiungiAiPreferiti(ArrayList<Ristorante> risultati) {
         int indice = selezionaRistorante(risultati);
-        if (indice >= 0) {
+        if (indice >= 0 && indice < risultati.size()) {
             Ristorante ristorante = risultati.get(indice);
 
             if (cliente.getPreferiti().contains(ristorante)) {
@@ -439,8 +214,7 @@ public final class MenuCliente extends Menu {
         System.out.print("\nSeleziona un ristorante (1-" + risultati.size() + "): ");
 
         try {
-            int scelta = leggiIntero(scanner) - 1;
-            scanner.nextLine();
+            int scelta = leggiInt() - 1;
 
             if (scelta >= 0 && scelta < risultati.size()) {
                 return scelta;
@@ -455,211 +229,86 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    private void aggiungiAiPreferitiManuale() {
+        System.out.println("=== AGGIUNGI AI PREFERITI ===");
+        System.out.println("Usa prima 'Cerca un ristorante' per selezionare.");
+    }
+
+    private void aggiungiRecensioneManuale() {
+        System.out.println("=== AGGIUNGI RECENSIONE ===");
+        System.out.println("Usa prima 'Cerca un ristorante' per selezionare.");
+    }
+
     private void rimuoviPreferito() {
-        int indice;
-
-        do {
-            visualizzaPreferiti();
-            System.out.println("Inserisci il numero del ristorante che vuoi rimuovere dai preferiti: ");
-            indice = leggiIntero(scanner) - 1;
-        } while (indice < 0 || indice > cliente.getPreferiti().size());
-
-        Ristorante preferitoDaEliminare = cliente.getPreferiti().get(indice);
-
+        visualizzaPreferiti();
+        System.out.print("Inserisci il numero del preferito da rimuovere: ");
+        int idx = leggiInt() - 1;
+        if (idx < 0 || idx >= cliente.getPreferiti().size()) return;
         try {
-            if (!UtenteService.rimuoviPreferito(cliente, preferitoDaEliminare)) {
-                System.err.println("Errore nella rimozione del ristorante dai preferiti");
-            }
-            System.out.println("Preferito rimosso con successo.");
+            UtenteService.rimuoviPreferito(cliente, cliente.getPreferiti().get(idx));
+            System.out.println("Preferito rimosso.");
         } catch (IOException | CsvException e) {
-            System.err.println("Errore nella rimozione del ristorante dai preferiti");
+            System.err.println("Errore nella rimozione del preferito.");
         }
     }
 
-    public void visualizzaRistorantiRecensiti() {
+    private void visualizzaRistorantiRecensiti() {
         try {
             RecensioneService.visualizzaRecensioniCliente(cliente);
+        } catch (IOException | CsvException e) {
+            System.err.println("Errore nella visualizzazione delle recensioni.");
         }
-        catch (IOException | CsvException e) {
-            System.err.println("Errore nella visualizzazione dei ristoranti recensiti.");
-        }
     }
 
-    private void aggiungiRecensione() {
-        System.out.println("=== AGGIUNGI RECENSIONE ===");
-        System.out.println("Per aggiungere una recensione, devi prima cercare i ristoranti.");
-        System.out.println("Usa l'opzione 'Cerca un ristorante' e poi seleziona 'Aggiungi una recensione a un ristorante' dai risultati.");
-    }
-
-    private void aggiungiAiPreferiti() {
-        System.out.println("=== AGGIUNGI PREFERITI ===");
-        System.out.println("Per aggiungere un ristorante ai preferiti, devi prima cercare i ristoranti.");
-        System.out.println("Usa l'opzione 'Cerca un ristorante' e poi seleziona 'Aggiungi un ristorante ai preferiti' dai risultati.");
-    }
-
-    /**
-     * Modifica una recensione esistente dell'utente
-     */
     private void modificaRecensione() {
         System.out.println("=== MODIFICA RECENSIONE ===");
-
         try {
-            // Ottieni le recensioni dell'utente
             var recensioni = RecensioneService.getRecensioniCliente(cliente);
-
-            if (recensioni.isEmpty()) {
-                System.out.println("Non hai ancora inserito nessuna recensione.");
-                return;
-            }
-
-            // Mostra le recensioni esistenti
-            System.out.println("Le tue recensioni:");
+            if (recensioni.isEmpty()) return;
             for (int i = 0; i < recensioni.size(); i++) {
-                var recensione = recensioni.get(i);
-                System.out.println((i + 1) + ". " + recensione);
+                System.out.println((i + 1) + ". " + recensioni.get(i));
             }
+            System.out.print("Seleziona recensione da modificare: ");
+            int idx = leggiInt() - 1;
+            if (idx < 0 || idx >= recensioni.size()) return;
+            var vecchia = recensioni.get(idx);
 
-            // Selezione della recensione da modificare
-            System.out.print("\nSeleziona la recensione da modificare (1-" + recensioni.size() + "): ");
-            int indice;
-            try {
-                indice = leggiIntero(scanner) - 1;
-                scanner.nextLine(); // Consuma il newline
+            System.out.print("Nuove stelle (1-5) o invio per mantenere: ");
+            String s = scanner.nextLine().trim();
+            int stelle = s.isEmpty() ? vecchia.getStelle() : Integer.parseInt(s);
 
-                if (indice < 0 || indice >= recensioni.size()) {
-                    System.out.println("Selezione non valida.");
-                    return;
-                }
-            } catch (Exception e) {
-                scanner.nextLine(); // Pulisce il buffer
-                System.out.println("Input non valido.");
+            System.out.print("Nuovo testo o invio per mantenere: ");
+            String msg = scanner.nextLine();
+            if (!msg.isEmpty()) vecchia.setMessaggio(msg);
+            if (!RecensioneService.modificaRecensione(cliente, vecchia.getRistorante(), new Recensione(cliente, vecchia.getRistorante(), stelle, vecchia.getMessaggio()))
+            ) {
+                System.err.println("Errore nell'aggiornamento della recensione.");
                 return;
             }
-
-            var recensioneDaModificare = recensioni.get(indice);
-
-            // Modifica delle stelle
-            System.out.println("\nStelle attuali: " + recensioneDaModificare.getStelle());
-            System.out.print("Inserisci le nuove stelle (1-5, STOP per interrompere, premi INVIO per mantenere le attuali, ): ");
-            String inputStelle = scanner.nextLine().trim();
-            if(inputStelle.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della modifica recensione\n");
-                return;
-            }
-
-            int nuoveStelle = recensioneDaModificare.getStelle();
-            if (!inputStelle.isEmpty()) {
-                try {
-                    nuoveStelle = Integer.parseInt(inputStelle);
-                    if (nuoveStelle < 1 || nuoveStelle > 5) {
-                        System.out.println("Numero di stelle non valido, mantengo le attuali.");
-                        nuoveStelle = recensioneDaModificare.getStelle();
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Input non valido, mantengo le stelle attuali.");
-                }
-            }
-
-            // Modifica del testo
-            System.out.println("Testo attuale: \"" + recensioneDaModificare.getMessaggio() + "\"");
-            System.out.print("Inserisci il nuovo testo (STOP per interrompere, premi INVIO per mantenere l'attuale): ");
-            String nuovoTesto = scanner.nextLine();
-            if(nuovoTesto.equalsIgnoreCase(stop)) {
-                System.out.println("\nInserito STOP; Interruzione della modifica recensione\n");
-                return;
-            }
-
-            if (nuovoTesto.isEmpty()) {
-                nuovoTesto = recensioneDaModificare.getMessaggio();
-            }
-
-            Ristorante ristorante = recensioneDaModificare.getRistorante();
-            RecensioneService.caricaRecensioniRistorante(ristorante);
-
-            Recensione recensione = new Recensione(cliente, ristorante, nuoveStelle, nuovoTesto);
-
-            // Aggiornamento della recensione
-            boolean successo = RecensioneService.modificaRecensione(
-                    cliente, recensioneDaModificare.getRistorante(), recensione
-            );
-
-            if (successo) {
-                System.out.println("Recensione modificata con successo!");
-            } else {
-                System.out.println("Errore nella modifica della recensione.");
-            }
-
+            System.out.println("Recensione aggiornata.");
         } catch (IOException | CsvException e) {
-            System.err.println("Errore durante la modifica della recensione: " + e.getMessage());
+            System.err.println("Errore modifica recensione.");
         }
     }
 
-    /**
-     * Rimuove una recensione dell'utente
-     */
     private void rimuoviRecensione() {
         System.out.println("=== RIMUOVI RECENSIONE ===");
-
         try {
-            // Ottieni le recensioni dell'utente
             var recensioni = RecensioneService.getRecensioniCliente(cliente);
-
-            if (recensioni.isEmpty()) {
-                System.out.println("Non hai ancora inserito nessuna recensione.");
-                return;
-            }
-
-            // Mostra le recensioni esistenti
-            System.out.println("Le tue recensioni:");
+            if (recensioni.isEmpty()) return;
             for (int i = 0; i < recensioni.size(); i++) {
-                var recensione = recensioni.get(i);
-                System.out.println((i + 1) + ". " + recensione);
+                System.out.println((i + 1) + ". " + recensioni.get(i));
             }
-
-            // Selezione della recensione da rimuovere
-            System.out.print("\nSeleziona la recensione da rimuovere (1-" + recensioni.size() + "): ");
-            int indice;
-            try {
-                indice = leggiIntero(scanner) - 1;
-                scanner.nextLine();
-
-                if (indice < 0 || indice >= recensioni.size()) {
-                    System.out.println("Selezione non valida.");
-                    return;
-                }
-            } catch (Exception e) {
-                scanner.nextLine();
-                System.out.println("Input non valido.");
+            System.out.print("Seleziona recensione da rimuovere: ");
+            int idx = leggiInt() - 1;
+            if (idx < 0 || idx >= recensioni.size()) return;
+            if (!RecensioneService.eliminaRecensione(cliente, recensioni.get(idx).getRistorante())) {
+                System.err.println("Recensione non eliminata.");
                 return;
             }
-
-            var recensioneDaRimuovere = recensioni.get(indice);
-
-            System.out.print("Sei sicuro di voler rimuovere la recensione per \"" +
-                    recensioneDaRimuovere.getRistorante().getNome() + "\"? (s/N): ");
-            String conferma = scanner.nextLine().trim().toLowerCase();
-
-            if (!conferma.equals("s") && !conferma.equals("si")) {
-                System.out.println("Rimozione annullata.");
-                return;
-            }
-
-            Ristorante ristorante = recensioneDaRimuovere.getRistorante();
-            RecensioneService.caricaRecensioniRistorante(ristorante);
-
-            // Rimozione della recensione
-            boolean successo = RecensioneService.eliminaRecensione(
-                    cliente, recensioneDaRimuovere.getRistorante()
-            );
-
-            if (successo) {
-                System.out.println("Recensione rimossa con successo!");
-            } else {
-                System.out.println("Errore nella rimozione della recensione.");
-            }
-
+            System.out.println("Recensione rimossa.");
         } catch (IOException | CsvException e) {
-            System.err.println("Errore durante la rimozione della recensione: " + e.getMessage());
+            System.err.println("Errore rimozione recensione.");
         }
     }
 
@@ -684,7 +333,7 @@ public final class MenuCliente extends Menu {
             System.out.print("Inserisci il numero di stelle (1-5): ");
             int stelle;
             try {
-                stelle = leggiIntero(scanner);
+                stelle = leggiInt();
                 scanner.nextLine(); // Consuma il newline
 
                 if (stelle < 1 || stelle > 5) {
@@ -719,15 +368,16 @@ public final class MenuCliente extends Menu {
         }
     }
 
-    public static int leggiIntero(Scanner sc){
-        int risultato;
-        while(true) {
-            String input = sc.nextLine().trim();
+    /**
+     * Legge un intero da console in modo sicuro.
+     */
+    private int leggiInt() {
+        while (true) {
+            String line = scanner.nextLine().trim();
             try {
-                risultato = Integer.parseInt(input);
-                return risultato;
-            } catch (NoSuchElementException e) {
-                    System.out.println("Input non valido. Scrivi ");
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.print("Input non valido, riprova: ");
             }
         }
     }

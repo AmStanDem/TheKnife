@@ -66,8 +66,7 @@ public final class GeocodingService {
         }
     }
 
-    public static double[] chiediCoordinateManuali() {
-        final Scanner scanner = new Scanner(System.in);
+    public static double[] chiediCoordinateManuali(Scanner scanner) {
         double latitudine = 0.0, longitudine = 0.0;
         boolean valido = false;
 
@@ -86,12 +85,5 @@ public final class GeocodingService {
 
         scanner.close();
         return new double[]{latitudine, longitudine};
-    }
-
-    public static void main(String[] args) {
-        String luogo = "Via Asilo 1A, Cornaredo";
-        double[] coords = GeocodingService.geocodeAddress(luogo);
-        System.out.println("Latitudine: " + coords[0]);
-        System.out.println("Longitudine: " + coords[1]);
     }
 }

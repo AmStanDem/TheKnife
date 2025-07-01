@@ -85,39 +85,6 @@ public final class Cliente extends Utente {
     }
 
     /**
-     * Restituisce la recensione del cliente per ogni ristorante.
-     *
-     * @param ristoranti I ristoranti su cui cercare le recensioni.
-     * @return Le recensioni del cliente.
-     */
-    public ArrayList<Recensione> getRecensioni(ArrayList<Ristorante> ristoranti) {
-        ArrayList<Recensione> listaRecensioni = new ArrayList<>();
-
-        for (Ristorante ristorante : ristoranti) {
-            Recensione recensione = ristorante.trovaRecensioneCliente(this);
-            if (recensione != null) {
-                listaRecensioni.add(recensione);
-            }
-        }
-        return listaRecensioni;
-    }
-
-    /**
-     * Consente la visualizzazione delle proprie recensioni su dei ristoranti.
-     *
-     * @param ristoranti I ristoranti su cui effettuare la visualizzazione delle recensioni.
-     */
-    public void visualizzaRecensioni(ArrayList<Ristorante> ristoranti) {
-        ArrayList<Recensione> listaRecensioni = getRecensioni(ristoranti);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Recensione recensione : listaRecensioni) {
-            stringBuilder.append(recensione).append("\n");
-        }
-        System.out.println(stringBuilder.toString());
-    }
-
-    /**
      * Aggiunge una recensione a un ristorante.
      *
      * @param ristorante Il ristorante da recensire.
@@ -192,10 +159,7 @@ public final class Cliente extends Utente {
             return false;
         }
 
-        if (ristorante.rimuoviRecensione(vecchiaRecensione)) {
-            return ristorante.aggiungiRecensione(nuovaRecensione);
-        }
-        return false;
+        return ristorante.modificaRecensione(vecchiaRecensione, nuovaRecensione);
     }
 
     /**

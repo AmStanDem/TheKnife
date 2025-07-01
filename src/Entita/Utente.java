@@ -21,12 +21,12 @@ import java.util.Objects;
  * @version 1.0
  */
 public abstract class Utente {
-    protected String nome;
-    protected String cognome;
-    protected String username;
-    protected String password;
-    protected LocalDate dataNascita;
-    protected String luogoDomicilio;
+    private final String nome;
+    private final String cognome;
+    private final String username;
+    private String password;
+    private final LocalDate dataNascita;
+    private final String luogoDomicilio;
 
     /**
      * Crea un nuovo utente impostando i dati anagrafici e cifrando la password.
@@ -56,46 +56,14 @@ public abstract class Utente {
     /** @return Il nome formattato dell’utente */
     public String getNome() { return nome; }
 
-    /** @param nome Nuovo nome (verrà formattato automaticamente) */
-    public void setNome(String nome) {
-        if (nome != null && !nome.isEmpty()) {
-            this.nome = formattaNome(nome);
-        }
-    }
-
     /** @return Il cognome formattato dell’utente */
     public String getCognome() { return cognome; }
-
-    /** @param cognome Nuovo cognome (verrà formattato automaticamente) */
-    public void setCognome(String cognome) {
-        if (cognome != null && !cognome.isEmpty()) {
-            this.cognome = formattaNome(cognome);
-        }
-    }
 
     /** @return Lo username dell’utente */
     public String getUsername() { return username; }
 
-    /** @param username Nuovo username */
-    public void setUsername(String username) {
-        if (username != null && !username.isEmpty()) {
-            this.username = username;
-        }
-    }
-
     /** @return La password cifrata dell’utente */
     public String getPassword() { return password; }
-
-    /**
-     * Imposta una nuova password per l’utente, cifrandola automaticamente.
-     *
-     * @param password Nuova password in chiaro
-     */
-    public void setPassword(String password) {
-        if (password != null && !password.isEmpty()) {
-            this.password = cifraPassword(password);
-        }
-    }
 
     /**
      * Imposta la password già cifrate per l'utente.
@@ -110,18 +78,8 @@ public abstract class Utente {
     /** @return La data di nascita dell’utente */
     public LocalDate getDataNascita() { return dataNascita; }
 
-    /** @param dataNascita Nuova data di nascita */
-    public void setDataNascita(LocalDate dataNascita) { this.dataNascita = dataNascita; }
-
     /** @return Il luogo di domicilio formattato */
     public String getLuogoDomicilio() { return luogoDomicilio; }
-
-    /** @param luogo Luogo di domicilio (verrà formattato automaticamente) */
-    public void setLuogoDomicilio(String luogo) {
-        if (luogo != null && !luogo.isEmpty()) {
-            this.luogoDomicilio = formattaNome(luogo);
-        }
-    }
 
     //endregion
 
