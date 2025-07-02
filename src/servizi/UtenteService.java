@@ -84,7 +84,6 @@ public final class UtenteService {
                 // Carica i ristoranti del ristoratore
                 ArrayList<Ristorante> ristoranti = GestoreFile.caricaRistoranti(r.getUsername());
 
-                // Carica le recensioni per tutti i suoi ristoranti
                 if (!ristoranti.isEmpty()) {
                     RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
                 }

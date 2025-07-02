@@ -52,7 +52,7 @@ public class Ristoratore extends Utente {
      *
      * @return Una nuova ArrayList contenente tutti i ristoranti del ristoratore
      */
-    public List<Ristorante> getRistoranti() {
+    public ArrayList<Ristorante> getRistoranti() {
         return new ArrayList<>(ristoranti);
     }
 

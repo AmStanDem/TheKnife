@@ -21,12 +21,24 @@ import java.util.Objects;
  * @version 1.0
  */
 public abstract class Utente {
+    /** Nome dell’utente formattato correttamente */
     private final String nome;
+
+    /** Cognome dell’utente formattato correttamente */
     private final String cognome;
+
+    /** Identificativo unico scelto dall’utente per accedere al sistema */
     private final String username;
+
+    /** Password cifrata dell’utente, generata tramite algoritmo BCrypt */
     private String password;
+
+    /** Data di nascita dell’utente */
     private final LocalDate dataNascita;
+
+    /** Luogo di domicilio formattato (prima lettera maiuscola) */
     private final String luogoDomicilio;
+
 
     /**
      * Crea un nuovo utente impostando i dati anagrafici e cifrando la password.
@@ -66,7 +78,7 @@ public abstract class Utente {
     public String getPassword() { return password; }
 
     /**
-     * Imposta la password già cifrate per l'utente.
+     * Imposta la password già cifrata per l'utente.
      * @param password Password cifrata
      */
     public void setPasswordCifrata(String password) {
@@ -146,7 +158,7 @@ public abstract class Utente {
         return BCrypt.checkpw(password, this.password);
     }
 
-    /*
+    /**
      * Calcola l’hash BCrypt di una password in chiaro.
      */
     private String cifraPassword(String password) {
@@ -164,7 +176,14 @@ public abstract class Utente {
         if (!(o instanceof Utente utente)) return false;
         return username.equals(utente.username);
     }
-
+    /**
+     * Calcola l'hashCode basato sullo {@code username} dell'utente.
+     * <p>
+     * Questo garantisce coerenza con il metodo {@code equals()}, che si basa anch'esso
+     * sullo {@code username}.
+     *
+     * @return Codice hash dell'utente
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(username);
@@ -180,8 +199,16 @@ public abstract class Utente {
         return String.format("%s %s (%s)", nome, cognome, username);
     }
 
-    // Metodo privato di utilità: formattazione della stringa (singole e multiple parole)
-    // con prima lettera maiuscola e il resto minuscolo.
+    /**
+     * Restituisce la stringa formattata con la prima lettera maiuscola per ogni parola
+     * e il resto in minuscolo.
+     * <p>
+     * Utile per omogeneizzare nomi propri e località, indipendentemente dal formato
+     * fornito in input. Eventuali spazi multipli vengono compressi.
+     *
+     * @param input Stringa da formattare (es. "mario rossi" → "Mario Rossi")
+     * @return Stringa formattata con capitalizzazione corretta
+     */
     private String formattaNome(String input) {
         if (input == null || input.isEmpty()) return input;
 

@@ -85,6 +85,7 @@ public final class MenuIniziale extends Menu {
         String username,password;
         final String stop="STOP";
         boolean corretto;
+        Utente utente = null;
         
         /*
             Controllo dell'username inserito dall'utente
@@ -133,19 +134,16 @@ public final class MenuIniziale extends Menu {
             }
 
             try {
-                if(corretto && autenticaUtente(username, password) == null) {
+                utente = autenticaUtente(username, password);
+                if(corretto &&  utente == null) {
                     System.out.println("\nPassword errata!");
                     corretto = false;
                 }
-            } catch (IOException | CsvException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | CsvException _) {
+                System.err.println("Errore durante la login.");
             }
         } while(!corretto);
-        try {
-            return autenticaUtente(username, password);
-        } catch (IOException | CsvException e) {
-            throw new RuntimeException(e);
-        }
+        return utente;
     }
 
     private void registrazione() throws IOException, CsvException {

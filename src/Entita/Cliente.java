@@ -5,12 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Il Cliente è l'utente del sistema che ha i suoi ristoranti preferiti
- * e può recensire i ristoranti.
+ * Rappresenta un utente del sistema che assume il ruolo di cliente.
+ * <p>
+ * Il cliente può:
+ * <ul>
+ *   <li>Gestire la lista dei ristoranti preferiti</li>
+ *   <li>Recensire ristoranti visitati</li>
+ *   <li>Modificare o rimuovere le proprie recensioni</li>
+ * </ul>
+ * Le funzionalità sono progettate per garantire coerenza e sicurezza,
+ * controllando l'identità del cliente associato alla recensione.
+ *
+ * @author _
+ * @version 1.0
  */
 
 public final class Cliente extends Utente {
-
+    /**
+     * Lista dei ristoranti preferiti selezionati dal cliente.
+     * <p>
+     * Può essere modificata tramite i metodi {@code aggiungiPreferito} e {@code rimuoviPreferito}.
+     */
     private final List<Ristorante> preferiti;
 
     /**
@@ -85,7 +100,7 @@ public final class Cliente extends Utente {
     }
 
     /**
-     * Aggiunge una recensione a un ristorante.
+     * Aggiunge una recensione a un ristorante, se non già recensito.
      *
      * @param ristorante Il ristorante da recensire.
      * @param recensione La recensione da aggiungere.

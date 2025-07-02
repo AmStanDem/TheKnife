@@ -1,10 +1,16 @@
 package Entita;
 
 /**
- * Rappresenta le diverse tipologie di cucina.
- * Enum semplificato con le tipologie più comuni e rappresentative.
+ * Rappresenta le varie tipologie di cucina disponibili nel sistema TheKnife.
+ * <p>
+ * Questa enumerazione è pensata per classificare i ristoranti secondo lo stile culinario,
+ * semplificando la selezione da parte dei clienti. I valori disponibili includono
+ * cucine internazionali, locali e alternative (es. vegetariana, vegana, fusion).
+ * <p>
+ * Ogni elemento dell'enumerazione è associato a una stringa descrittiva leggibile.
  *
  * @author Alessandro Tullo
+ * @version 1.0
  */
 public enum TipoCucina {
     ITALIANA("Italiana"),
@@ -30,8 +36,18 @@ public enum TipoCucina {
     INTERNAZIONALE("Internazionale"),
     PANINOTECA("Paninoteca");
 
+    /**
+     * Nome leggibile e descrittivo della tipologia di cucina.
+     * <p>
+     * Usato per presentazioni in interfacce utente e stampe testuali.
+     */
     private final String nome;
 
+    /**
+     * Costruttore interno dell'enum, utilizzato per inizializzare la stringa associata.
+     *
+     * @param nome Rappresentazione testuale della tipologia
+     */
     TipoCucina(String nome) {
         this.nome = nome;
     }

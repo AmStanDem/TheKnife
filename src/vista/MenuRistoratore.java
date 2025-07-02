@@ -184,12 +184,19 @@ public final class MenuRistoratore extends Menu {
     private void visualizzaRecensioni() {
         System.out.println("\n=== RECENSIONI DEI TUOI RISTORANTI ===");
 
-        List<Ristorante> ristoranti = ristoratore.getRistoranti();
+        ArrayList<Ristorante> ristoranti = ristoratore.getRistoranti();
 
         if (ristoranti == null || ristoranti.isEmpty()) {
             System.out.println("Non hai ancora ristoranti registrati.");
             return;
         }
+//        try {
+//            RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
+//        }
+//        catch (IOException | CsvException e) {
+//            System.err.println();
+//        }
+
 
         List<Ristorante> ristorantiConRecensioni = new ArrayList<>();
         for (Ristorante ristorante : ristoranti) {

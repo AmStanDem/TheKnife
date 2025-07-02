@@ -2,12 +2,15 @@ package io_file;
 
 import Entita.*;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -327,11 +330,13 @@ public class GestoreFile {
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static Utente cercaUtente(String username) throws IOException, CsvException {
-        try (CSVReader reader = new CSVReader(new FileReader(DATASET_UTENTI.toFile()))) {
-            List<String[]> righe = reader.readAll();
+        try (BufferedReader br = Files.newBufferedReader(DATASET_UTENTI);
+             CSVReader reader = new CSVReaderBuilder(br)
+                     .withSkipLines(1)
+                     .build()) {
 
-            for (int i = 1; i < righe.size(); i++) {
-                String[] riga = righe.get(i);
+            String[] riga;
+            while ((riga = reader.readNext()) != null) {
                 if (username.equals(riga[ColonneUtenteCSV.USERNAME])) {
                     return creaUtenteDaRiga(riga);
                 }
@@ -435,8 +440,8 @@ public class GestoreFile {
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
-    public static LinkedList<Recensione> caricaRecensioni() throws IOException, CsvException {
-        LinkedList<Recensione> recensioni = new LinkedList<>();
+    public static ArrayList<Recensione> caricaRecensioni() throws IOException, CsvException {
+        ArrayList<Recensione> recensioni = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new FileReader(DATASET_RECENSIONI.toFile()))) {
             List<String[]> righe = reader.readAll();
@@ -519,9 +524,17 @@ public class GestoreFile {
     public static ArrayList<Recensione> caricaRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
         ArrayList<Recensione> recensioniRistorante = new ArrayList<>();
 
-        for (Recensione recensione : caricaRecensioni()) {
-            if (recensione.getRistorante().equals(ristorante)) {
-                recensioniRistorante.add(recensione);
+        try (CSVReader reader = new CSVReader(new FileReader(DATASET_RECENSIONI.toFile()))) {
+            List<String[]> righe = reader.readAll();
+
+            // Salta l'intestazione (prima riga)
+            for (int i = 1; i < righe.size(); i++) {
+                String[] riga = righe.get(i);
+                Recensione recensione = creaRecensioneDaRiga(riga);
+
+                if (recensione != null && recensione.getRistorante().equals(ristorante)) {
+                    recensioniRistorante.add(recensione);
+                }
             }
         }
 
@@ -548,7 +561,7 @@ public class GestoreFile {
             return false;
         }
 
-        LinkedList<Recensione> tutteRecensioni = caricaRecensioni();
+        ArrayList<Recensione> tutteRecensioni = caricaRecensioni();
 
         // Trova e sostituisci la recensione
         for (int i = 0; i < tutteRecensioni.size(); i++) {
@@ -570,7 +583,7 @@ public class GestoreFile {
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static boolean eliminaRecensione(Recensione recensione) throws IOException, CsvException {
-        LinkedList<Recensione> tutteRecensioni = caricaRecensioni();
+        ArrayList<Recensione> tutteRecensioni = caricaRecensioni();
         tutteRecensioni.removeIf(r -> r.equals(recensione));
 
         // Riscrivi tutto il file
@@ -677,7 +690,7 @@ public class GestoreFile {
      * @param recensioni Lista delle recensioni da scrivere
      * @throws IOException se si verifica un errore di I/O
      */
-    private static void riscriviFileRecensioni(LinkedList<Recensione> recensioni) throws IOException {
+    private static void riscriviFileRecensioni(ArrayList<Recensione> recensioni) throws IOException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(DATASET_RECENSIONI.toFile()))) {
             writer.writeNext(INTESTAZIONE_RECENSIONI);
 

@@ -1,3 +1,7 @@
 Nome,Cognome,Username,Password,DataNascita,LuogoDomicilio,Ruolo
 "Ristoratore","Ristoratore","ristoratore01","$2a$10$L8kMF5invC8dCvaWbpTuI.RsBzVniIfaQVzNIib7RQ5JE83pAxla.","1980-12-01","Via Roma 1, Milano","Ristoratore"
 "Cliente","Cliente","cliente01","$2a$10$8xQcADqSo3m2RbzoGx44nuQi/9rOb77m9wxgIT3Q9LD5RxMfuhy6m","1980-01-01","Viale Milano 115, Gallarate","Cliente"
+"Marco","Rossi","marco_rossi","$2a$10$VV0i5cS6MYbKcRGmGPiybupXWcFTtFeOtWz0UuA4rhAVTDr1G1Qd.","1985-03-15","Via Roma 25, Milano","Cliente"
+"Giulia","Bianchi","giulia_bianchi","$2a$10$up9xD/lYxk1bfDej38IqJORDqH0h31K5XPh1yBD3ioRlLjINVAPS2","1990-07-22","Corso Vittorio 88, Roma","Ristoratore"
+"Roberto","Ferrari","roberto_ferrari","$2a$10$qUOKQ15d2HkAMQlKGPHFAeN4RO/.kZ7F4/Y4mUmFDY0kMWK7/41NC","1980-09-30","Via Indipendenza 73, Bologna","Ristoratore"
+"Elena","Russo","elena_russo","$2a$10$roKIHkzcJ8oWpExXfTWNAuHEV17u00iBDMQDiGXU3xuaRtGQhRUfO","1995-01-18","Corso Francia 156, Torino","Cliente"
