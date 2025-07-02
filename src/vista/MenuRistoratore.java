@@ -136,8 +136,7 @@ public final class MenuRistoratore extends Menu {
             }
 
             TipoCucina tipoCucina = tipiCucina[sceltaCucina - 1];
-
-            // Inserimento prezzo medio
+            
             System.out.print("\nPrezzo medio (€): ");
             float prezzoMedio = scanner.nextFloat();
 
@@ -160,7 +159,6 @@ public final class MenuRistoratore extends Menu {
             scanner.nextLine();
             String descrizione = scanner.nextLine().trim();
 
-            // Crea il nuovo ristorante
             Ristorante nuovoRistorante = new Ristorante(
                     nome,
                     localita,
@@ -183,9 +181,6 @@ public final class MenuRistoratore extends Menu {
         }
     }
 
-    /**
-     * Visualizza le recensioni dei ristoranti del ristoratore e permette di rispondere.
-     */
     private void visualizzaRecensioni() {
         System.out.println("\n=== RECENSIONI DEI TUOI RISTORANTI ===");
 
@@ -232,9 +227,6 @@ public final class MenuRistoratore extends Menu {
         visualizzaRecensioniRistorante(ristoranteSelezionato);
     }
 
-    /**
-     * Visualizza le recensioni di un singolo ristorante con opzioni di gestione.
-     */
     private void visualizzaRecensioniRistorante(Ristorante ristorante) {
         int opzione;
 
@@ -247,6 +239,7 @@ public final class MenuRistoratore extends Menu {
             System.out.println("2. Visualizza solo recensioni senza risposta");
             System.out.println("3. Filtra recensioni per stelle");
             System.out.println("4. Rispondi a una recensione");
+            System.out.println("5. Modifica la risposta a una recensione");
             System.out.println("0. Torna indietro");
 
             System.out.print("Scelta: ");
@@ -265,6 +258,9 @@ public final class MenuRistoratore extends Menu {
                 case 4:
                     rispondiARecensione(ristorante);
                     break;
+                case 5:
+                    modificaRispostaRecensione(ristorante);
+                    break;
                 case 0:
                     System.out.println("Tornando al menu ristoranti...");
                     break;
@@ -274,9 +270,6 @@ public final class MenuRistoratore extends Menu {
         } while (opzione != 0);
     }
 
-    /**
-     * Mostra una lista di recensioni in formato leggibile.
-     */
     private void mostraRecensioni(List<Recensione> recensioni) {
         if (recensioni.isEmpty()) {
             System.out.println("Nessuna recensione da visualizzare.");
@@ -295,9 +288,6 @@ public final class MenuRistoratore extends Menu {
 
     }
 
-    /**
-     * Filtra e visualizza recensioni per numero di stelle.
-     */
     private void filtraRecensioniPerStelle(Ristorante ristorante) {
         System.out.print("Inserisci il numero di stelle (1-5): ");
         int stelle = scanner.nextInt();
@@ -354,7 +344,7 @@ public final class MenuRistoratore extends Menu {
         System.out.println(formatRecensione(recensioneDaRispondere));
 
         System.out.print("\nInserisci la tua risposta: ");
-        scanner.nextLine(); // Consuma il newline
+        scanner.nextLine();
         String testoRisposta = scanner.nextLine().trim();
 
         try {
@@ -367,6 +357,125 @@ public final class MenuRistoratore extends Menu {
             }
         } catch (Exception e) {
             System.err.println("Errore nell'aggiungere la risposta.");
+        }
+    }
+
+    private void modificaRispostaRecensione(Ristorante ristorante) {
+        try {
+            RecensioneService.caricaRecensioniRistorante(ristorante);
+        }
+        catch (IOException | CsvException e ) {
+            System.err.println("Errore nel caricamento delle recensioni.");
+            return;
+        }
+
+        ArrayList<Recensione> recensioniConRisposta = ristorante.getRecensioniConRisposta();
+
+        if (recensioniConRisposta.isEmpty()) {
+            System.out.println("Nessuna recensione con risposta trovata per questo ristorante.");
+            return;
+        }
+
+        System.out.println("\nRecensioni con risposta che puoi modificare:");
+        for (int i = 0; i < recensioniConRisposta.size(); i++) {
+            Recensione r = recensioniConRisposta.get(i);
+            System.out.printf("%d. %s%n", i + 1, formatRecensione(r));
+            System.out.println("-".repeat(40));
+        }
+
+        System.out.print("Seleziona il numero della recensione di cui modificare la risposta (0 per annullare): ");
+        int scelta = scanner.nextInt();
+
+        if (scelta == 0) {
+            return;
+        }
+
+        if (scelta < 1 || scelta > recensioniConRisposta.size()) {
+            System.out.println("Selezione non valida.");
+            return;
+        }
+
+        Recensione recensioneDaModificare = recensioniConRisposta.get(scelta - 1);
+
+        System.out.println("\nRecensione selezionata:");
+        System.out.println(formatRecensione(recensioneDaModificare));
+
+        System.out.println("\nRisposta attuale: " + recensioneDaModificare.getRispostaRistoratore());
+
+        System.out.println("\nOpzioni:");
+        System.out.println("1. Modifica il testo della risposta");
+        System.out.println("2. Elimina la risposta");
+        System.out.println("0. Annulla");
+
+        System.out.print("Scelta: ");
+        int opzioneModifica = scanner.nextInt();
+
+        switch (opzioneModifica) {
+            case 1:
+                modificaTestoRisposta(ristorante, recensioneDaModificare);
+                break;
+            case 2:
+                eliminaRispostaRecensione(ristorante, recensioneDaModificare);
+                break;
+            case 0:
+                System.out.println("Operazione annullata.");
+                break;
+            default:
+                System.out.println("Opzione non valida.");
+        }
+    }
+
+    /**
+     * Modifica il testo della risposta a una recensione.
+     */
+    private void modificaTestoRisposta(Ristorante ristorante, Recensione recensione) {
+        System.out.print("\nInserisci il nuovo testo della risposta: ");
+        scanner.nextLine();
+        String nuovoTestoRisposta = scanner.nextLine().trim();
+
+        if (nuovoTestoRisposta.isEmpty()) {
+            System.out.println("Errore: Il testo della risposta non può essere vuoto.");
+            return;
+        }
+
+        try {
+            boolean successo = RecensioneService.modificaRispostaRecensione(
+                    ristoratore, ristorante, recensione, nuovoTestoRisposta
+            );
+
+            if (successo) {
+                System.out.println("✓ Risposta modificata con successo!");
+                RecensioneService.caricaRecensioniRistorante(ristorante);
+            } else {
+                System.err.println("Errore nella modifica della risposta.");
+            }
+        } catch (IOException | CsvException e) {
+            System.err.println("Errore durante la modifica della risposta: " + e.getMessage());
+        }
+    }
+
+    private void eliminaRispostaRecensione(Ristorante ristorante, Recensione recensione) {
+        System.out.print("Sei sicuro di voler eliminare la risposta? (s/n): ");
+        String conferma = scanner.next().toLowerCase();
+
+        if (!conferma.equals("s") && !conferma.equals("si") && !conferma.equals("sì")) {
+            System.out.println("Operazione annullata.");
+            return;
+        }
+
+        try {
+            boolean successo = RecensioneService.modificaRispostaRecensione(
+                    ristoratore, ristorante, recensione, ""
+            );
+
+            if (successo) {
+                System.out.println("✓ Risposta eliminata con successo!");
+                RecensioneService.caricaRecensioniRistorante(ristorante);
+            } else {
+                System.err.println("Errore nell'eliminazione della risposta.");
+            }
+        } catch (IOException | CsvException e) {
+            System.err.println("Errore durante l'eliminazione della risposta.");
         }
     }
 

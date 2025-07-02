@@ -199,6 +199,7 @@ public class Ristorante {
     /**
      * Ritorna le recensioni senza risposta del ristoratore.
      * Utile per i ristoratori che vogliono rispondere alle recensioni.
+     * @return Le recensioni senza risposta
      */
     public ArrayList<Recensione> getRecensioniSenzaRisposta() {
         ArrayList<Recensione> recensioniSenzaRisposta = new ArrayList<>();
@@ -208,6 +209,21 @@ public class Ristorante {
             }
         }
         return recensioniSenzaRisposta;
+    }
+
+    /**
+     * Ritorna le recensioni con la risposta del ristoratore.
+     * Utile per i ristoratori che vogliono rispondere alle recensioni.
+     * @return Le recensioni con risposta
+     */
+    public ArrayList<Recensione> getRecensioniConRisposta() {
+        ArrayList<Recensione> recensioniConRisposta = new ArrayList<>();
+        for (Recensione recensione : recensioni) {
+            if (recensione.haRisposta()) {
+                recensioniConRisposta.add(recensione);
+            }
+        }
+        return recensioniConRisposta;
     }
 
     /**

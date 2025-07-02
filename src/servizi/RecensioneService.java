@@ -173,12 +173,72 @@ public final class RecensioneService {
         }
 
         if (!GestoreFile.eliminaRecensione(recensione)) {
-            recensione.modificaRisposta("");
+            //recensione.modificaRisposta("");
             return false;
         }
 
         if (!GestoreFile.aggiungiRecensione(recensione)) {
-            recensione.modificaRisposta("");
+//            recensione.modificaRisposta("");
+//            GestoreFile.aggiungiRecensione(recensione);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Modifica la risposta del ristoratore a una recensione esistente.
+     *
+     * @param ristoratore Ristoratore che modifica la risposta alla recensione.
+     * @param ristorante  Ristorante per cui è stata fatta la recensione.
+     * @param recensione  Recensione di cui modificare la risposta.
+     * @param nuovoTestoRisposta Nuovo testo della risposta del ristoratore.
+     * @return {@code true} se la risposta è stata modificata correttamente, {@code false} altrimenti.
+     * @throws IOException  Se si verifica un errore durante l'accesso al file.
+     * @throws CsvException Se si verifica un errore durante la gestione del CSV.
+     */
+    public static boolean modificaRispostaRecensione(Ristoratore ristoratore, Ristorante ristorante,
+                                                     Recensione recensione, String nuovoTestoRisposta)
+            throws IOException, CsvException {
+
+        // Validazione parametri di input
+        if (ristoratore == null || ristorante == null || recensione == null ||
+                nuovoTestoRisposta == null) {
+            return false;
+        }
+
+        // Verifica che il ristorante appartenga al ristoratore
+        if (!ristorante.appartieneA(ristoratore)) {
+            return false;
+        }
+
+        // Verifica che la recensione sia relativa al ristorante specificato
+        if (!recensione.getRistorante().equals(ristorante)) {
+            return false;
+        }
+
+        // Verifica che la recensione abbia già una risposta da modificare
+        if (!recensione.haRisposta()) {
+            return false;
+        }
+
+        // Salva la risposta precedente per eventuale rollback
+        String rispostaPrecedente = recensione.getRispostaRistoratore();
+
+        // Modifica la risposta nella recensione
+        boolean rispostaModificata = recensione.modificaRisposta(nuovoTestoRisposta.trim());
+
+        if (!rispostaModificata) {
+            return false;
+        }
+
+        if (!GestoreFile.eliminaRecensione(recensione)) {
+            recensione.modificaRisposta(rispostaPrecedente);
+            return false;
+        }
+
+        if (!GestoreFile.aggiungiRecensione(recensione)) {
+            recensione.modificaRisposta(rispostaPrecedente);
             GestoreFile.aggiungiRecensione(recensione);
             return false;
         }

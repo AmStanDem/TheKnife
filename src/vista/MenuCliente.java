@@ -65,7 +65,7 @@ public final class MenuCliente extends Menu {
             System.out.println("7. Aggiungi una recensione a un ristorante.");
             System.out.println("8. Modifica una recensione di un ristorante.");
             System.out.println("9. Rimuovi una recensione da un ristorante.");
-            System.out.println("10. Uscire dall'app.");
+            System.out.println("10. Logout");
 
             System.out.print("Inserisci un'opzione: ");
             opzione = leggiInt();

@@ -44,8 +44,7 @@ public final class MenuIniziale extends Menu {
             System.out.println("4. Esci");
             System.out.println("Inserisci pure la funzionalità che desideri: ");
 
-            selezione = scanner.nextInt();
-            scanner.nextLine();
+            selezione = leggiIntero();
 
             switch (selezione) {
                 case 1:

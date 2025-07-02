@@ -180,14 +180,16 @@ public final class Recensione {
     /**
      * Consente al ristoratore di modificare la propria risposta alla recensione.
      * Può essere modificata solo se esiste già una risposta.
-     *
+     * @return {@code true} se la risposta è stata modificata con successo, {@code false} altrimenti.
      * @param nuovaRisposta la nuova risposta del ristoratore
      */
-    public void modificaRisposta(String nuovaRisposta) {
+    public boolean modificaRisposta(String nuovaRisposta) {
         if (rispostaRistoratore != null && nuovaRisposta != null) {
             this.rispostaRistoratore = nuovaRisposta.trim();
             this.dataRisposta = LocalDateTime.now();
+            return true;
         }
+        return false;
     }
 
     /**
