@@ -292,7 +292,7 @@ public final class MenuRistoratore extends Menu {
 
         System.out.println("Premi INVIO per continuare...");
         scanner.nextLine();
-        scanner.nextLine();
+
     }
 
     /**

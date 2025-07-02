@@ -334,7 +334,7 @@ public final class MenuCliente extends Menu {
             int stelle;
             try {
                 stelle = leggiInt();
-                scanner.nextLine(); // Consuma il newline
+
 
                 if (stelle < 1 || stelle > 5) {
                     System.out.println("Il numero di stelle deve essere compreso tra 1 e 5.");
@@ -373,8 +373,9 @@ public final class MenuCliente extends Menu {
      */
     private int leggiInt() {
         while (true) {
-            String line = scanner.nextLine().trim();
+
             try {
+                String line = scanner.nextLine().trim();
                 return Integer.parseInt(line);
             } catch (NumberFormatException e) {
                 System.out.print("Input non valido, riprova: ");
