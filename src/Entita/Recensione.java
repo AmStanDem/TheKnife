@@ -1,30 +1,64 @@
 package Entita;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
- * Rappresenta una recensione lasciata da un utente per un Ristorante.
- * Una recensione è immutabile per quanto riguarda cliente e ristorante,
- * ma consente la modifica di stelle, messaggio e risposta del ristoratore.
+ * Rappresenta una recensione effettuata da un {@code Cliente} verso un {@code Ristorante}.
+ * <p>
+ * Le recensioni sono associate a un cliente e a un ristorante, e comprendono:
+ * <ul>
+ *   <li>Punteggio espresso in stelle da 1 a 5</li>
+ *   <li>Messaggio testuale opzionale</li>
+ *   <li>Risposta del ristoratore (modificabile)</li>
+ * </ul>
+ * <p>
+ * La classe supporta la modifica del punteggio e del messaggio, oltre alla gestione controllata
+ * della risposta da parte del ristoratore.
+ * Ogni recensione è temporalmente tracciata.
  *
- * @author Antonio Pesavento, Thomas Riotto
+ * @author Antonio Pesavento
+ * @author Thomas Riotto
  * @version 1.1
  */
 public final class Recensione {
 
+    /** Cliente che ha effettuato la recensione */
     private final Cliente cliente;
-    private final Ristorante ristorante;
-    private int stelle;
-    private String messaggio;
-    private LocalDateTime dataRecensione;
-    private String rispostaRistoratore;
-    private LocalDateTime dataRisposta;
 
+    /** Ristorante oggetto della recensione */
+    private final Ristorante ristorante;
+
+    /** Numero di stelle attribuite alla recensione (da 1 a 5) */
+    private final int stelle;
+
+    /** Eventuale messaggio scritto dal cliente */
+    private String messaggio;
+
+    /** Data e ora in cui è stata registrata la recensione */
+    private final LocalDateTime dataRecensione;
+
+    /** Risposta del ristoratore al cliente */
+    private String rispostaRistoratore;
+
+    /** Data e ora in cui è stata registrata la risposta del ristoratore */
+    private LocalDateTime dataRisposta;
+    /** Numero minimo di stelle = 1*/
     private static final int MIN_STELLE = 1;
+    /** Numero massimo di stelle = 5*/
     private static final int MAX_STELLE = 5;
+
+    /**
+     * Formattatore utilizzato per convertire data e ora in formato leggibile.
+     * <p>
+     * Il formato seguito e {@code "dd/MM/yyyy HH:mm"} e viene applicato a:
+     * <ul>
+     *     <li>Data della recensione</li>
+     *     <li>Data della risposta del ristoratore</li>
+     * </ul>
+     * Il campo è dichiarato {@code static final} perché condiviso e immutabile tra tutte le istanze della classe {@code Recensione}.
+     * */
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     /**
@@ -130,17 +164,6 @@ public final class Recensione {
     }
 
     /**
-     * Modifica il numero di stelle se compreso tra 1 e 5.
-     *
-     * @param stelle Il nuovo numero di stelle
-     */
-    public void setStelle(int stelle) {
-        if (stelle >= MIN_STELLE && stelle <= MAX_STELLE) {
-            this.stelle = stelle;
-        }
-    }
-
-    /**
      * Modifica l'eventuale messaggio della recensione.
      *
      * @param messaggio Il contenuto del nuovo messaggio
@@ -150,10 +173,12 @@ public final class Recensione {
     }
 
     /**
-     * Consente al ristoratore di aggiungere una risposta alla recensione.
-     * È consentita una sola risposta per recensione.
+     * Aggiunge una risposta da parte del ristoratore.
+     * <p>
+     * È consentita una sola risposta.
      *
-     * @param risposta La risposta del ristoratore
+     * @param risposta Testo della risposta
+     * @return {@code true} se aggiunta con successo
      */
     public boolean aggiungiRisposta(String risposta) {
         if (rispostaRistoratore == null && risposta != null && !risposta.trim().isEmpty()) {
@@ -164,6 +189,11 @@ public final class Recensione {
         return false;
     }
 
+    /**
+     * Imposta manualmente la data della risposta del ristoratore.
+     * <p>
+     * @param dataRisposta Data e ora da associare alla risposta
+     */
     public void setDataRisposta(LocalDateTime dataRisposta) {
         this.dataRisposta = dataRisposta;
     }
@@ -229,10 +259,18 @@ public final class Recensione {
      * @param username Username del cliente da verificare
      * @return true se la recensione appartiene al cliente specificato
      */
-    public boolean appartienteA(String username) {
+    public boolean appartieneA(String username) {
         return cliente != null && cliente.getUsername().equals(username);
     }
 
+    /**
+     * Restituisce una rappresentazione testuale dettagliata della recensione.
+     * <p>
+     * Include username e nome del cliente, punteggio in stelle, nome del ristorante,
+     * eventuale messaggio, data della recensione e, se presente, risposta del ristoratore.
+     *
+     * @return Stringa formattata con tutti i dati principali della recensione
+     */
     @Override
     public String toString() {
         String formattedDateTime = dataRecensione.format(FORMATTER);
@@ -261,6 +299,15 @@ public final class Recensione {
         return sb.toString();
     }
 
+    /**
+     * Verifica l'uguaglianza tra due recensioni in base al cliente e al ristorante.
+     * <p>
+     * Due recensioni sono considerate uguali se fanno riferimento allo stesso
+     * cliente e allo stesso ristorante, indipendentemente dal contenuto.
+     *
+     * @param obj Oggetto da confrontare con questa recensione
+     * @return {@code true} se la recensione confrontata ha stesso cliente e ristorante
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Recensione recensione)) return false;
@@ -269,6 +316,12 @@ public final class Recensione {
                 Objects.equals(ristorante, recensione.ristorante);
     }
 
+    /**
+     * Calcola il codice hash per la recensione, basandosi su cliente e ristorante.
+     * <p>
+     * Questo garantisce coerenza con {@code equals}.
+     * @return Valore hash della recensione
+     */
     @Override
     public int hashCode() {
         return Objects.hash(cliente, ristorante);

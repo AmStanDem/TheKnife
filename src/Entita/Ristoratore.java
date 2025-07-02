@@ -14,7 +14,16 @@ import java.util.List;
  */
 public class Ristoratore extends Utente {
 
+    /**
+     * Elenco dei ristoranti associati al ristoratore.
+     * <p>
+     * Ogni oggetto {@code Ristorante} rappresenta un locale gestito dal ristoratore corrente.
+     * La lista può essere inizializzata vuota o con elementi già esistenti,
+     * e viene utilizzata per operazioni di consultazione, modifica, risposta alle recensioni
+     * e per il calcolo di statistiche aggregate.
+     */
     private final List<Ristorante> ristoranti;
+
 
     /**
      * Costruttore per creare un nuovo ristoratore senza ristoranti.
@@ -116,7 +125,7 @@ public class Ristoratore extends Utente {
 
         List<Recensione> recensioni = ristorante.getRecensioni();
         for (Recensione rec : recensioni) {
-            if (rec.appartienteA(usernameCliente)) {
+            if (rec.appartieneA(usernameCliente)) {
                 if (rec.haRisposta()) {
                     return false;
                 }
@@ -146,7 +155,7 @@ public class Ristoratore extends Utente {
 
         List<Recensione> recensioni = ristorante.getRecensioni();
         for (Recensione rec : recensioni) {
-            if (rec.appartienteA(usernameCliente) && rec.haRisposta()) {
+            if (rec.appartieneA(usernameCliente) && rec.haRisposta()) {
                 rec.modificaRisposta(nuovaRisposta);
                 return true;
             }
@@ -178,7 +187,15 @@ public class Ristoratore extends Utente {
             System.out.printf("Hai %d recensioni totali. Media stelle complessiva: %.2f%n", totaleRecensioni, mediaGlobale);
         }
     }
-
+    /**
+     * Cerca un ristorante tra quelli posseduti dal ristoratore in base al nome e alla località.
+     * <p>
+     * Utile per identificare univocamente il ristorante in operazioni che coinvolgono recensioni.
+     *
+     * @param nome Nome del ristorante da cercare
+     * @param localita Località geografica associata al ristorante
+     * @return Il ristorante corrispondente, oppure {@code null} se non trovato
+     */
     private Ristorante trovaRistorante(String nome, Localita localita) {
         for (Ristorante ristorante : ristoranti) {
             if (ristorante.getNome().equals(nome) && ristorante.getLocalita().equals(localita)) {

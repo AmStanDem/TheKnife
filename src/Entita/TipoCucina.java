@@ -62,9 +62,12 @@ public enum TipoCucina {
     }
 
     /**
-     * Override del metodo toString per restituire il nome della tipologia di cucina.
+     * Rappresenta l'enumerazione come stringa leggibile.
+     * <p>
+     * Sovrascrive il comportamento predefinito di {@code toString()} per restituire
+     * direttamente il nome leggibile della cucina.
      *
-     * @return Il nome della tipologia di cucina.
+     * @return Nome della tipologia di cucina
      */
     @Override
     public String toString() {

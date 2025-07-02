@@ -31,13 +31,28 @@ public class GestoreFile {
     //region === ATTRIBUTI ===
 
     //region === PERCORSI DEI FILE CSV ===
+    /**
+     * Path del file utenti
+     */
     private static final Path DATASET_UTENTI = Path.of("data", "Utenti.csv");
+    /**
+     * Path del file ristoranti
+     */
     private static final Path DATASET_RISTORANTI = Path.of("data", "Ristoranti.csv");
+    /**
+     * Path del file recensioni
+     */
     private static final Path DATASET_RECENSIONI = Path.of("data", "Recensioni.csv");
+    /**
+     * Path del file preferiti
+     */
     private static final Path DATASET_PREFERITI = Path.of("data", "Preferiti.csv");
     //endregion
 
     //region === INTESTAZIONI DEI FILE CSV ===
+    /**
+     * Intestazione del file recensioni.csv
+     */
     private static final String[] INTESTAZIONE_RECENSIONI = {
             "Username", "Ristorante", "Nazione", "Città", "Indirizzo",
             "Latitudine", "Longitudine", "Stelle", "Messaggio", "Data", "Risposta", "DataRisposta"
@@ -45,6 +60,10 @@ public class GestoreFile {
     //endregion
 
     //region === CLASSI STATICHE PER INDICI COLONNE CSV ===
+
+    /**
+     * Rappresenta le posizioni dei campi del file Utenti.csv
+     */
     private static class ColonneUtenteCSV {
         public static final int NOME = 0;
         public static final int COGNOME = 1;
@@ -55,6 +74,9 @@ public class GestoreFile {
         public static final int TIPO_UTENTE = 6;
     }
 
+    /**
+     * Rappresenta le posizioni dei campi del file Ristoranti.csv
+     */
     private static class ColonneRistoranteCSV {
         public static final int NOME = 0;
         public static final int PREZZO_MEDIO = 1;
@@ -70,6 +92,9 @@ public class GestoreFile {
         public static final int USERNAME = 11;
     }
 
+    /**
+     * Rappresenta le posizioni dei campi del file Recensioni.csv
+     */
     private static class ColonneRecensioneCSV {
         public static final int USERNAME = 0;
         public static final int RISTORANTE = 1;
@@ -85,6 +110,9 @@ public class GestoreFile {
         public static final int DATA_RISPOSTA = 11;
     }
 
+    /**
+     * Rappresenta le posizioni dei campi del file Preferiti.csv
+     */
     private static class ColonnePreferitiCSV {
         public static final int USERNAME = 0;
         public static final int RISTORANTE = 1;
@@ -96,12 +124,17 @@ public class GestoreFile {
     }
     //endregion
 
+    /** Valori di lookup per i boolean del delivery e prenotazione. */
     private static final String VALORE_SI = "Sì";
     private static final String VALORE_NO = "No";
 
     //endregion
 
     //region === COSTRUTTORI ===
+
+    /**
+     * Tenuto intenzionalmente privato.
+     */
     private GestoreFile() {
     }
     //endregion
@@ -233,7 +266,7 @@ public class GestoreFile {
      *
      * @param nome     Il nome del ristorante da verificare
      * @param localita La località del ristorante da verificare
-     * @return true se il ristorante esiste, false altrimenti
+     * @return {@code true} se il ristorante esiste, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -304,7 +337,7 @@ public class GestoreFile {
      * Funziona sia per clienti che per ristoratori.
      *
      * @param utente L'utente da aggiungere
-     * @return true se l'utente è stato aggiunto con successo, false se esiste già
+     * @return {@code true} se l'utente è stato aggiunto con successo, {@code false} se esiste già
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -349,7 +382,7 @@ public class GestoreFile {
      * Verifica se esiste già un utente con il dato username.
      *
      * @param username L'username da verificare
-     * @return true se l'utente esiste, false altrimenti
+     * @return {@code true} se l'utente esiste, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -463,7 +496,7 @@ public class GestoreFile {
      * Un duplicato è definito come una recensione dello stesso cliente per lo stesso ristorante.
      *
      * @param recensione La recensione da aggiungere
-     * @return true se la recensione è stata aggiunta con successo, false se esiste già
+     * @return {@code true} se la recensione è stata aggiunta con successo, {@code false} altrimenti.
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -474,7 +507,6 @@ public class GestoreFile {
             return false;
         }
 
-        // Se non esiste un duplicato, procede con l'inserimento
         try (CSVWriter csvWriter = new CSVWriter(new FileWriter(DATASET_RECENSIONI.toFile(), true))) {
             String[] datiRecensione = creaRigaDaRecensione(recensione);
             csvWriter.writeNext(datiRecensione);
@@ -494,7 +526,7 @@ public class GestoreFile {
         ArrayList<Recensione> recensioniCliente = new ArrayList<>();
 
         for (Recensione recensione : caricaRecensioni()) {
-            if (recensione.appartienteA(username)) {
+            if (recensione.appartieneA(username)) {
                 recensioniCliente.add(recensione);
             }
         }
@@ -563,7 +595,6 @@ public class GestoreFile {
 
         ArrayList<Recensione> tutteRecensioni = caricaRecensioni();
 
-        // Trova e sostituisci la recensione
         for (int i = 0; i < tutteRecensioni.size(); i++) {
             if (tutteRecensioni.get(i).equals(vecchiaRecensione)) {
                 tutteRecensioni.set(i, nuovaRecensione);
@@ -740,7 +771,7 @@ public class GestoreFile {
      *
      * @param cliente    Il cliente che aggiunge il preferito
      * @param ristorante Il ristorante da aggiungere ai preferiti
-     * @return true se il preferito è stato aggiunto con successo, false se esiste già
+     * @return {@code true} se il preferito è stato aggiunto con successo, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -761,7 +792,7 @@ public class GestoreFile {
      *
      * @param cliente    Il cliente che rimuove il preferito
      * @param ristorante Il ristorante da rimuovere dai preferiti
-     * @return true se il preferito è stato rimosso con successo, false se non esisteva
+     * @return {@code true} se il preferito è stato rimosso con successo, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
@@ -813,7 +844,7 @@ public class GestoreFile {
      *
      * @param username   Username del cliente
      * @param ristorante Il ristorante da verificare
-     * @return true se il ristorante è già nei preferiti, false altrimenti
+     * @return {@code true} se il ristorante è già nei preferiti, {@code false} altrimenti
      * @throws IOException  se si verifica un errore di I/O
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */

@@ -13,16 +13,26 @@ import java.util.Scanner;
 
 /**
  * Menu con le operazioni disponibili per un ristoratore.
+ * Permette di aggiungere ristoranti, visualizzare recensioni,
+ * rispondere/modificare/eliminare risposte a recensioni e vedere riepiloghi.
+ * Usa il terminale per l'interazione.
+ *
  * @author Alessandro Tullo
  */
 public final class MenuRistoratore extends Menu {
+    /**
+     * Scanner per la lettura da terminale.
+     */
     private final Scanner scanner;
+    /**
+     * Il ristoratore autenticato.
+     */
     private final Ristoratore ristoratore;
 
     /**
      * Crea un nuovo menu per il ristoratore.
-     * @param scanner I/O su terminale.
-     * @param ristoratore ristoratore registrato.
+     * @param scanner     Scanner per input da terminale.
+     * @param ristoratore Oggetto Ristoratore autenticato.
      * @throws IllegalArgumentException se i parametri non sono validi.
      */
     public MenuRistoratore(Scanner scanner, Ristoratore ristoratore) {
@@ -31,6 +41,13 @@ public final class MenuRistoratore extends Menu {
         this.ristoratore = ristoratore;
     }
 
+    /**
+     * Valida che gli attributi scanner e ristoratore non siano null.
+     *
+     * @param scanner     Scanner per input da terminale.
+     * @param ristoratore Oggetto Ristoratore autenticato.
+     * @throws IllegalArgumentException se uno dei due è null.
+     */
     private void validaAttributi(Scanner scanner, Ristoratore ristoratore) {
         StringBuilder errori = new StringBuilder();
         boolean errore = false;
@@ -52,7 +69,7 @@ public final class MenuRistoratore extends Menu {
     }
 
     /**
-     * Mostra le opzioni disponibili a un ristoratore.
+     * Mostra il menu principale con le opzioni disponibili per il ristoratore.
      */
     @Override
     public void mostra() {
@@ -86,6 +103,10 @@ public final class MenuRistoratore extends Menu {
         } while (opzione != 4);
     }
 
+    /**
+     * Permette al ristoratore di inserire un nuovo ristorante,
+     * chiedendo le informazioni necessarie e geocodificando l'indirizzo.
+     */
     private void aggiungiRistorante() {
         System.out.println("\n=== AGGIUNGI NUOVO RISTORANTE ===");
 
@@ -136,7 +157,7 @@ public final class MenuRistoratore extends Menu {
             }
 
             TipoCucina tipoCucina = tipiCucina[sceltaCucina - 1];
-            
+
             System.out.print("\nPrezzo medio (€): ");
             float prezzoMedio = scanner.nextFloat();
 
@@ -181,6 +202,10 @@ public final class MenuRistoratore extends Menu {
         }
     }
 
+    /**
+     * Mostra i ristoranti con recensioni disponibili del ristoratore,
+     * permettendo di selezionarne uno per approfondire.
+     */
     private void visualizzaRecensioni() {
         System.out.println("\n=== RECENSIONI DEI TUOI RISTORANTI ===");
 
@@ -190,12 +215,6 @@ public final class MenuRistoratore extends Menu {
             System.out.println("Non hai ancora ristoranti registrati.");
             return;
         }
-//        try {
-//            RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
-//        }
-//        catch (IOException | CsvException e) {
-//            System.err.println();
-//        }
 
 
         List<Ristorante> ristorantiConRecensioni = new ArrayList<>();
@@ -234,6 +253,12 @@ public final class MenuRistoratore extends Menu {
         visualizzaRecensioniRistorante(ristoranteSelezionato);
     }
 
+    /**
+     * Mostra le recensioni di un ristorante specifico, con varie opzioni
+     * (filtraggio, risposta, modifica).
+     *
+     * @param ristorante Il ristorante selezionato.
+     */
     private void visualizzaRecensioniRistorante(Ristorante ristorante) {
         int opzione;
 
@@ -277,6 +302,11 @@ public final class MenuRistoratore extends Menu {
         } while (opzione != 0);
     }
 
+    /**
+     * Stampa una lista di recensioni a schermo, una per riga.
+     *
+     * @param recensioni Lista di recensioni da mostrare.
+     */
     private void mostraRecensioni(List<Recensione> recensioni) {
         if (recensioni.isEmpty()) {
             System.out.println("Nessuna recensione da visualizzare.");
@@ -295,6 +325,11 @@ public final class MenuRistoratore extends Menu {
 
     }
 
+    /**
+     * Filtra le recensioni di un ristorante per numero di stelle.
+     *
+     * @param ristorante Il ristorante di cui filtrare le recensioni.
+     */
     private void filtraRecensioniPerStelle(Ristorante ristorante) {
         System.out.print("Inserisci il numero di stelle (1-5): ");
         int stelle = scanner.nextInt();
@@ -316,7 +351,9 @@ public final class MenuRistoratore extends Menu {
     }
 
     /**
-     * Gestisce la risposta a una recensione.
+     * Permette al ristoratore di rispondere a una recensione senza risposta.
+     *
+     * @param ristorante Il ristorante a cui appartiene la recensione.
      */
     private void rispondiARecensione(Ristorante ristorante) {
         ArrayList<Recensione> recensioniSenzaRisposta = ristorante.getRecensioniSenzaRisposta();
@@ -367,6 +404,11 @@ public final class MenuRistoratore extends Menu {
         }
     }
 
+    /**
+     * Permette al ristoratore di modificare o eliminare una risposta a una recensione.
+     *
+     * @param ristorante Il ristorante a cui appartiene la recensione.
+     */
     private void modificaRispostaRecensione(Ristorante ristorante) {
         try {
             RecensioneService.caricaRecensioniRistorante(ristorante);
@@ -433,7 +475,10 @@ public final class MenuRistoratore extends Menu {
     }
 
     /**
-     * Modifica il testo della risposta a una recensione.
+     * Modifica il testo della risposta del ristoratore a una recensione.
+     *
+     * @param ristorante     Il ristorante associato alla recensione.
+     * @param recensione     La recensione da modificare.
      */
     private void modificaTestoRisposta(Ristorante ristorante, Recensione recensione) {
         System.out.print("\nInserisci il nuovo testo della risposta: ");
@@ -461,6 +506,12 @@ public final class MenuRistoratore extends Menu {
         }
     }
 
+    /**
+     * Elimina la risposta del ristoratore da una recensione.
+     *
+     * @param ristorante Il ristorante associato.
+     * @param recensione La recensione da cui rimuovere la risposta.
+     */
     private void eliminaRispostaRecensione(Ristorante ristorante, Recensione recensione) {
         System.out.print("Sei sicuro di voler eliminare la risposta? (s/n): ");
         String conferma = scanner.next().toLowerCase();
@@ -487,7 +538,10 @@ public final class MenuRistoratore extends Menu {
     }
 
     /**
-     * Formatta una recensione per la visualizzazione.
+     * Formatta una recensione in formato leggibile per il terminale.
+     *
+     * @param recensione La recensione da formattare.
+     * @return Stringa formattata.
      */
     private String formatRecensione(Recensione recensione) {
         return recensione.toString();

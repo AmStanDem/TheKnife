@@ -60,22 +60,17 @@ public final class RecensioneService {
             throws IOException, CsvException {
 
         
-        // Mappa per associare ristoranti tramite nome (o id)
+        // Mappa per associare ristoranti tramite una chiave
         Map<String, Ristorante> mappaRistoranti = new HashMap<>();
         for (Ristorante r : ristoranti) {
-            mappaRistoranti.put(r.getNome() + r.getLocalita().getNazione() + r.getLocalita().getCitta() + r.getLocalita().getIndirizzo() + r.getLocalita().getLatitudine() + r.getLocalita().getLongitudine(), r); // oppure getId()
+            mappaRistoranti.put(r.getChiave(), r);
             r.setRecensioni(new ArrayList<>());
         }
 
         ArrayList<Recensione> tutteLeRecensioni = GestoreFile.caricaRecensioni();
 
         for (Recensione r : tutteLeRecensioni) {
-            String nomeRistorante = r.getRistorante().getNome() +
-                    r.getRistorante().getLocalita().getNazione() +
-                    r.getRistorante().getLocalita().getCitta() +
-                    r.getRistorante().getLocalita().getIndirizzo() +
-                    r.getRistorante().getLocalita().getLatitudine() +
-                    r.getRistorante().getLocalita().getLongitudine();
+            String nomeRistorante = r.getRistorante().getChiave();
             Ristorante ristorante = mappaRistoranti.get(nomeRistorante);
 
             if (ristorante != null) {

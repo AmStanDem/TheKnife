@@ -14,19 +14,72 @@ import java.util.Objects;
  * @version 2.0
  */
 public class Ristorante {
+    /**
+     * Nome del ristorante, utilizzato come identificativo.
+     */
     private final String nome;
+    /**
+     * Localizzazione geografica del ristorante, comprendente indirizzo, città e coordinate.
+     * <p>
+     * L'attributo incapsula informazioni territoriali utili per la geolocalizzazione e la presentazione su mappa.
+     */
     private final Localita localita;
+    /**
+     * Tipologia culinaria offerta dal ristorante, selezionata tra quelle disponibili in {@code TipoCucina}.
+     * <p>
+     * Aiuta i clienti a filtrare e selezionare i locali in base alle preferenze gastronomiche.
+     */
     private final TipoCucina tipoDiCucina;
+    /**
+     * Valore booleano che indica se il ristorante offre servizio di consegna a domicilio.
+     * <p>
+     * Determina la visibilità in filtri o funzionalità basate sul delivery.
+     */
     private final boolean delivery;
+
+    /**
+     * Valore booleano che indica se il ristorante accetta prenotazioni.
+     */
     private final boolean prenotazione;
+
+    /**
+     * Prezzo medio di una consumazione nel ristorante, espresso come valore float.
+     */
     private final float prezzoMedio;
+
+    /**
+     * Descrizione testuale del locale, comprensiva di dettagli, storia, atmosfera e altri elementi narrativi.
+     */
     private final String descrizione;
+
+    /**
+     * Proprietario del ristorante, rappresentato da un oggetto {@code Ristoratore}.
+     */
     private Ristoratore proprietario;
+
+    /**
+     * Lista delle recensioni lasciate dai clienti per questo ristorante.
+     * <p>
+     * Rappresenta il feedback degli utenti e viene utilizzata per calcolare la reputazione.
+     */
     private List<Recensione> recensioni;
 
     /**
-     * Costruttore
+     * Crea un nuovo oggetto {@code Ristorante} e ne imposta i valori principali.
+     * <p>
+     * Applica la validazione su nome, località e prezzo medio. La descrizione
+     * viene pulita da eventuali spazi superflui e le recensioni inizializzate come lista vuota.
+     *
+     * @param nome Nome del ristorante
+     * @param localita Località geografica del ristorante
+     * @param tipoDiCucina Tipologia culinaria offerta
+     * @param delivery Flag per il servizio a domicilio
+     * @param prenotazione Flag per la prenotazione anticipata
+     * @param prezzoMedio Valore medio di spesa
+     * @param descrizione Testo descrittivo del locale
+     * @param proprietario Proprietario associato al ristorante
      */
+
     public Ristorante(String nome, Localita localita, TipoCucina tipoDiCucina,
                       boolean delivery, boolean prenotazione, float prezzoMedio,
                       String descrizione, Ristoratore proprietario) {
@@ -45,49 +98,114 @@ public class Ristorante {
     }
 
     // Getters
+
+    /**
+     * Restituisce il nome del ristorante.
+     *
+     * @return Nome del ristorante
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Restituisce l’oggetto {@code Localita} che rappresenta l’indirizzo e la posizione del ristorante.
+     *
+     * @return Informazioni di localizzazione del ristorante
+     */
     public Localita getLocalita() {
         return localita;
     }
 
+    /**
+     * Restituisce la tipologia di cucina offerta dal ristorante.
+     *
+     * @return Tipo di cucina selezionato
+     */
     public TipoCucina getTipoDiCucina() {
         return tipoDiCucina;
     }
 
+    /**
+     * Verifica se il ristorante offre il servizio di consegna a domicilio.
+     *
+     * @return {@code true} se disponibile, {@code false} altrimenti
+     */
     public boolean getDelivery() {
         return delivery;
     }
 
+    /**
+     * Verifica se il ristorante consente la prenotazione anticipata.
+     *
+     * @return {@code true} se accetta prenotazioni, {@code false} altrimenti
+     */
     public boolean getPrenotazione() {
         return prenotazione;
     }
-
+    /**
+     * Restituisce il prezzo medio di una consumazione nel ristorante.
+     *
+     * @return Prezzo medio indicativo
+     */
     public float getPrezzoMedio() {
         return prezzoMedio;
     }
 
+    /**
+     * Restituisce la descrizione testuale del ristorante.
+     *
+     * @return Descrizione informativa e promozionale
+     */
     public String getDescrizione() {
         return descrizione;
     }
 
+    /**
+     * Restituisce il proprietario attualmente associato al ristorante.
+     *
+     * @return Oggetto {@code Ristoratore} proprietario
+     */
     public Ristoratore getProprietario() {
         return proprietario;
     }
 
+    /**
+     * Imposta il ristoratore proprietario del ristorante.
+     * <p>
+     * Utilizzato per cambiare la proprietà dell'entità {@code Ristorante}.
+     *
+     * @param proprietario Nuovo proprietario da associare
+     */
     public void setProprietario(Ristoratore proprietario) {
         this.proprietario = proprietario;
     }
 
+    /**
+     * Restituisce lo username del proprietario, se presente.
+     * <p>
+     * Utile per confronti, identificazione o tracciamento nel sistema.
+     *
+     * @return Username del ristoratore o {@code null}
+     */
     public String getUsernameProprietario() {
         return proprietario != null ? proprietario.getUsername().trim() : null;
     }
 
+    /**
+     * Verifica se il ristorante appartiene al ristoratore specificato.
+     * <p>
+     * Utile per confermare l'identità del proprietario, ad esempio prima di
+     * eseguire operazioni amministrative come modifiche, cancellazioni o inserimenti.
+     *
+     * @param proprietario Ristoratore da confrontare con quello registrato
+     * @return {@code true} se il ristorante è di proprietà del ristoratore indicato,
+     *         {@code false} altrimenti
+     */
     public boolean appartieneA(Ristoratore proprietario) {
         return this.proprietario != null && this.proprietario.equals(proprietario);
     }
+
 
     /**
      * Aggiunge una recensione al ristorante.
@@ -155,9 +273,13 @@ public class Ristorante {
         return new LinkedList<>(recensioni);
     }
 
+
     /**
-     * Imposta le recensioni
-     * @param recensioni Le recensioni
+     * Imposta la lista delle recensioni associate al ristorante.
+     * <p>
+     * La lista passata viene copiata per evitare modifiche esterne non controllate.
+     *
+     * @param recensioni Nuova lista di recensioni da assegnare
      */
     public void setRecensioni(List<Recensione> recensioni) {
         this.recensioni = new ArrayList<>(recensioni);
@@ -281,6 +403,33 @@ public class Ristorante {
         return somma / recensioni.size();
     }
 
+    /**
+     * Restituisce una chiave identificativa del ristorante.
+     * La chiave è formata dal nome del ristorante e dal suo luogo.
+     * @return La chiave del ristorante (nome + luogo).
+     */
+    public String getChiave() {
+        return nome + localita.getNazione() + localita.getCitta() +
+                localita.getIndirizzo() + localita.getLatitudine() + localita.getLongitudine();
+    }
+
+    /**
+     * Verifica la validità dei parametri fondamentali per la creazione di un {@code Ristorante}.
+     * <p>
+     * Controlla che:
+     * <ul>
+     *   <li>Il nome sia non nullo e non vuoto</li>
+     *   <li>La località sia valorizzata</li>
+     *   <li>Il prezzo medio sia maggiore di zero</li>
+     * </ul>
+     * In presenza di uno o più errori, costruisce un messaggio descrittivo
+     * e solleva un'eccezione di tipo {@code IllegalArgumentException}.
+     *
+     * @param nome Nome del ristorante
+     * @param localita Località geografica del ristorante
+     * @param prezzoMedio Prezzo medio stimato
+     * @throws IllegalArgumentException Se uno o più parametri non rispettano i vincoli minimi
+     */
     private void validaAttributi(String nome, Localita localita, float prezzoMedio) {
         StringBuilder errori = new StringBuilder();
         boolean errore = false;
@@ -304,7 +453,20 @@ public class Ristorante {
             throw new IllegalArgumentException(errori.toString());
         }
     }
-
+    /**
+     * Verifica se due oggetti {@code Ristorante} sono uguali.
+     * <p>
+     * La comparazione si basa su:
+     * <ul>
+     *   <li>{@code nome}: confrontato in modo case-sensitive</li>
+     *   <li>{@code localita}: verificata tramite il metodo {@code equals()} della classe {@code Localita}</li>
+     * </ul>
+     * Questo metodo è fondamentale per evitare duplicati e gestire correttamente
+     * collezioni come {@code Set} o chiavi di mappe.
+     *
+     * @param obj Oggetto da confrontare con il ristorante corrente
+     * @return {@code true} se i due oggetti sono uguali, {@code false} altrimenti
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -315,11 +477,25 @@ public class Ristorante {
                 Objects.equals(localita, ristorante.localita);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(nome, localita);
     }
-
+    /**
+     * Restituisce una rappresentazione testuale dettagliata del ristorante.
+     * <p>
+     * Include informazioni quali:
+     * <ul>
+     *   <li>Nome, tipo di cucina, località e prezzo medio</li>
+     *   <li>Disponibilità dei servizi di delivery e prenotazione</li>
+     *   <li>Descrizione personalizzata</li>
+     *   <li>Statistiche sulle recensioni, inclusa la media delle stelle</li>
+     * </ul>
+     * La formattazione con icone migliora la leggibilità nelle interfacce utente.
+     *
+     * @return Stringa formattata contenente tutte le informazioni principali del ristorante
+     */
     @Override
     public String toString() {
         return "🍽️  " + nome + "\n" +

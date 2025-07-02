@@ -19,8 +19,9 @@ public abstract class Menu {
         System.out.println("\t   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝     ╚══════╝");
         System.out.println();
     }
+
+    /**
+     * Metodo astratto che mostra il menu
+     */
     public abstract void mostra();
-    public static void main(String[] args) {
-        stampaBanner();
-    }
 }

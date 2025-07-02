@@ -132,22 +132,44 @@ public final class Localita {
         return nazione;
     }
 
-
+    /**
+     * Restituisce la città in cui si trova il ristorante.
+     *
+     * @return Nome della città associata al ristorante
+     */
     public String getCitta() {
         return citta;
     }
 
-
+    /**
+     * Restituisce l'indirizzo completo del ristorante.
+     * <p>
+     * Può includere via, numero civico e altre specifiche locali.
+     *
+     * @return Indirizzo testuale del ristorante
+     */
     public String getIndirizzo() {
         return indirizzo;
     }
 
-
+    /**
+     * Restituisce la coordinata geografica di latitudine.
+     * <p>
+     * Utilizzata per la geolocalizzazione e la mappatura del ristorante.
+     *
+     * @return Valore decimale della latitudine
+     */
     public double getLatitudine() {
         return latitudine;
     }
 
-
+    /**
+     * Restituisce la coordinata geografica di longitudine.
+     * <p>
+     * Utilizzata insieme alla latitudine per identificare la posizione sulla mappa.
+     *
+     * @return Valore decimale della longitudine
+     */
     public double getLongitudine() {
         return longitudine;
     }

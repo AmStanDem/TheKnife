@@ -16,22 +16,36 @@ import static servizi.UtenteService.autenticaUtente;
 
 /**
  * Menù iniziale all'avvio del programma.
+ * Permette login, registrazione, accesso guest o uscita.
+ * Gestisce il flusso principale iniziale dell'applicazione.
+ *
  * @author Antonio Pesavento
  */
 public final class MenuIniziale extends Menu {
 
+    /**
+     * Servizio per la registrazione degli utenti.
+     */
     private final RegistrazioneService registrazioneService;
+
+    /**
+     * Scanner per l'interazione con l'utente via terminale.
+     */
     private final Scanner scanner;
 
     /**
      * Crea un nuovo menù iniziale.
+     *
      * @param scanner I/O su terminale.
      */
     public MenuIniziale(Scanner scanner) {
-       this.scanner = scanner;
-       this.registrazioneService = new RegistrazioneService(scanner);
+        this.scanner = scanner;
+        this.registrazioneService = new RegistrazioneService(scanner);
     }
 
+    /**
+     * Mostra il menù iniziale all'avvio del programma e gestisce le scelte dell'utente.
+     */
     @Override
     public void mostra(){
         int selezione;
@@ -77,19 +91,19 @@ public final class MenuIniziale extends Menu {
                     System.out.println("Scelta non valida, riprova");
             }
         } while(selezione != 4);
-
     }
-    
-    
+
+    /**
+     * Effettua il login chiedendo username e password, con gestione errori e interruzione.
+     *
+     * @return Utente autenticato oppure null se il login è interrotto o fallito.
+     */
     private Utente login() {
         String username,password;
         final String stop="STOP";
         boolean corretto;
         Utente utente = null;
-        
-        /*
-            Controllo dell'username inserito dall'utente
-         */
+
         do {
             corretto = true;
             System.out.print("\nInserisci l'username per fare il login:  ");
@@ -114,10 +128,7 @@ public final class MenuIniziale extends Menu {
                 throw new RuntimeException(e);
             }
         } while(!corretto);
-        
-        /*
-            Controllo della password inserita dall'utente
-         */
+
         do {
             corretto = true;
             System.out.print("\nStai facendo il login con l'username "+username+"\nInserisci la password:  ");
@@ -146,6 +157,12 @@ public final class MenuIniziale extends Menu {
         return utente;
     }
 
+    /**
+     * Effettua la registrazione di un nuovo utente e salva i dati.
+     *
+     * @throws IOException se avviene un errore di I/O.
+     * @throws CsvException se avviene un errore di lettura/scrittura CSV.
+     */
     private void registrazione() throws IOException, CsvException {
         Utente nuovoUtente = registrazioneService.registraUtente();
         if (nuovoUtente == null) {
@@ -153,7 +170,11 @@ public final class MenuIniziale extends Menu {
             return;
         }
         try {
-            UtenteService.registraUtente(nuovoUtente);
+            boolean successo = UtenteService.registraUtente(nuovoUtente);
+            if (!successo) {
+                System.err.println("Registrazione non riuscita!");
+                return;
+            }
         } catch (IOException | CsvException e) {
             System.err.println("Errore durante il salvataggio dell'utente.");
             return;
@@ -170,10 +191,10 @@ public final class MenuIniziale extends Menu {
     }
 
     /**
-     * Modalità guest: ricerca vicini, ricerca avanzata, cambia località, recensioni anonime.
+     * Modalità guest: consente ricerca di ristoranti, recensioni anonime e cambio località.
+     * Gestisce l'interazione da guest tramite menù testuale.
      */
     public void modalitaGuest() {
-        // inizializzazione località
         System.out.println("\nSei ora in modalità guest.");
         String luogo = registrazioneService.chiediDomicilio();
         if (luogo == null) {
@@ -261,7 +282,11 @@ public final class MenuIniziale extends Menu {
         } while (scelta != 5);
     }
 
-    // legge un intero consumando sempre la riga completa
+    /**
+     * Legge un numero intero da terminale, consumando l'intera riga.
+     *
+     * @return Intero inserito correttamente.
+     */
     private int leggiIntero() {
         while (true) {
             String line = scanner.nextLine().trim();

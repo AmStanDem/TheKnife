@@ -21,7 +21,9 @@ import com.google.gson.JsonObject;
  */
 public final class GeocodingService {
 
+    /** Oggetto per effettuare le richieste HTTP. */
     private static final HttpClient httpClient = HttpClient.newHttpClient();
+    /** Oggetto per effettuare la lettura dei dati in JSON. */
     private static final Gson gson = new Gson();
 
     private GeocodingService() {
@@ -66,6 +68,11 @@ public final class GeocodingService {
         }
     }
 
+    /**
+     * Consente l'inserimento manuale delle coordinate.
+     * @param scanner Scanner per I/O.
+     * @return Array di double [latitudine, longitudine]
+     */
     public static double[] chiediCoordinateManuali(Scanner scanner) {
         double latitudine = 0.0, longitudine = 0.0;
         boolean valido = false;
@@ -82,8 +89,6 @@ public final class GeocodingService {
                 System.err.println("Valore non valido. Inserisci numeri decimali validi.");
             }
         }
-
-        scanner.close();
         return new double[]{latitudine, longitudine};
     }
 }

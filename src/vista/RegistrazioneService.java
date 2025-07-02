@@ -12,14 +12,39 @@ import java.util.Scanner;
 
 import static io_file.GestoreFile.esisteUtente;
 
+/**
+ * Servizio per gestire la registrazione di un nuovo utente nel sistema.
+ * Permette di acquisire i dati necessari tramite input da console e validarne la correttezza.
+ * Supporta sia utenti Cliente sia Ristoratore.
+ */
 public class RegistrazioneService {
+    /**
+     * Scanner per leggere l'input da console.
+     */
     private final Scanner sc;
+
+    /**
+     * Stringa che consente di interrompere la registrazione in qualsiasi momento.
+     */
     public final String STOP = "STOP";
 
+    /**
+     * Costruisce un servizio di registrazione utilizzando uno Scanner per l'input.
+     *
+     * @param sc Scanner per l'input da console.
+     */
     public RegistrazioneService(Scanner sc) {
         this.sc = sc;
     }
 
+    /**
+     * Avvia il processo di registrazione chiedendo tutti i dati necessari.
+     *
+     * @return Un nuovo oggetto Utente (Cliente o Ristoratore) se la registrazione ha successo,
+     *         altrimenti null se la registrazione è stata annullata o fallita.
+     * @throws IOException Se ci sono problemi di I/O nella verifica username.
+     * @throws CsvException Se ci sono problemi di lettura/scrittura nel file CSV utenti.
+     */
     public Utente registraUtente() throws IOException, CsvException {
         String nome = chiediNome("nome");
         if (nome == null) return null;
@@ -53,6 +78,12 @@ public class RegistrazioneService {
         }
     }
 
+    /**
+     * Chiede e valida un nome o cognome, assicurandosi che contenga solo lettere.
+     *
+     * @param campo Il nome del campo da chiedere (es. "nome", "cognome").
+     * @return La stringa validata o null se l'utente ha inserito STOP.
+     */
     private String chiediNome(String campo) {
         while (true) {
             System.out.println("Inserisci il " + campo + ": ");
@@ -81,6 +112,15 @@ public class RegistrazioneService {
         }
     }
 
+    /**
+     * Chiede e valida lo username.
+     * Lo username deve essere lungo tra 3 e 16 caratteri e contenere solo lettere, numeri o underscore.
+     * Verifica anche che lo username non sia già esistente.
+     *
+     * @return Lo username valido o null se l'utente ha inserito STOP.
+     * @throws IOException Se ci sono errori di I/O.
+     * @throws CsvException Se ci sono errori nella lettura/scrittura del file CSV.
+     */
     private String chiediUsername() throws IOException, CsvException {
         while (true) {
             System.out.println("Inserisci username: ");
@@ -115,6 +155,13 @@ public class RegistrazioneService {
         }
     }
 
+    /**
+     * Chiede e valida la password.
+     * La password deve essere lunga tra 8 e 16 caratteri, non contenere spazi,
+     * e contenere almeno una lettera, un numero e un simbolo.
+     *
+     * @return La password valida o null se l'utente ha inserito STOP.
+     */
     private String chiediPassword() {
         while (true) {
             System.out.println("Inserisci password: ");
@@ -152,6 +199,12 @@ public class RegistrazioneService {
         }
     }
 
+    /**
+     * Chiede e valida la data di nascita (anno, mese, giorno).
+     * Gestisce il controllo degli anni bisestili e la correttezza delle date.
+     *
+     * @return La data di nascita validata come LocalDate oppure null se annullata.
+     */
     private LocalDate chiediDataNascita() {
         String anno, mese, giorno;
         int aaaa, mm ,gg;
@@ -244,6 +297,12 @@ public class RegistrazioneService {
         return LocalDate.of(aaaa, mm, gg);
     }
 
+    /**
+     * Chiede e valida il domicilio dell'utente.
+     * Il domicilio è composto da via, numero civico (opzionale) e città.
+     *
+     * @return La stringa del domicilio completo o null se l'utente ha inserito STOP.
+     */
     public String chiediDomicilio() {
         String via, civico, citta, luogoDomicilio;
 
@@ -271,7 +330,12 @@ public class RegistrazioneService {
         return luogoDomicilio;
     }
 
-
+    /**
+     * Chiede e valida il ruolo dell'utente.
+     * Ruolo 1 = Cliente, Ruolo 2 = Ristoratore.
+     *
+     * @return Un intero rappresentante il ruolo scelto oppure -1 se l'utente annulla.
+     */
     private int chiediRuolo() {
         while (true) {
             System.out.print("Scegli ruolo - 1: Cliente | 2: Ristoratore: ");

@@ -12,20 +12,34 @@ import servizi.RistoranteService;
 import servizi.UtenteService;
 
 /**
- * Menu con le operazioni disponibili per un cliente.
+ * Classe che rappresenta il menu principale per un cliente autenticato.
+ * Fornisce varie opzioni per visualizzare ristoranti, gestire preferiti e recensioni.
+ *
  * @author Marco Zaro
  */
 public final class MenuCliente extends Menu {
 
+    /**
+     * Scanner per la lettura dell'input da tastiera.
+     */
     private final Scanner scanner;
+
+    /**
+     * Cliente autenticato associato al menu.
+     */
     private final Cliente cliente;
+
+    /**
+     * Comando per uscire o interrompere operazioni.
+     */
     private final String stop = "stop";
 
     /**
-     * Crea un nuovo menu cliente
-     * @param scanner I/O su terminale.
-     * @param cliente Cliente registrato.
-     * @throws IllegalArgumentException se i parametri sono invalidi.
+     * Costruttore del menu cliente.
+     *
+     * @param scanner Scanner per leggere input da tastiera.
+     * @param cliente Cliente autenticato.
+     * @throws IllegalArgumentException se scanner o cliente sono null.
      */
     public MenuCliente(Scanner scanner, Cliente cliente) {
         validaAttributi(scanner, cliente);
@@ -33,6 +47,13 @@ public final class MenuCliente extends Menu {
         this.cliente = cliente;
     }
 
+    /**
+     * Valida gli argomenti passati al costruttore.
+     *
+     * @param scanner Scanner per input.
+     * @param cliente Cliente autenticato.
+     * @throws IllegalArgumentException se uno degli argomenti è null.
+     */
     private void validaAttributi(Scanner scanner, Cliente cliente) {
         StringBuilder errori = new StringBuilder();
         boolean errore = false;
@@ -50,6 +71,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Mostra il menu cliente e gestisce l'interazione con l'utente.
+     */
     @Override
     public void mostra() {
         System.out.println("Benvenuto " + cliente);
@@ -107,6 +131,9 @@ public final class MenuCliente extends Menu {
         } while (opzione != 10);
     }
 
+    /**
+     * Visualizza i ristoranti preferiti del cliente.
+     */
     private void visualizzaPreferiti() {
         System.out.println("I tuoi ristoranti preferiti:");
         var preferiti = cliente.getPreferiti();
@@ -115,6 +142,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Visualizza i ristoranti vicini al domicilio del cliente.
+     */
     private void visualizzaRistorantiVicini() {
         double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
         if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
@@ -127,6 +157,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Permette di effettuare una ricerca avanzata di ristoranti.
+     */
     private void cercaRistoranteAvanzata() {
         double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
         if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
@@ -143,6 +176,11 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Gestisce le azioni possibili sui risultati di ricerca.
+     *
+     * @param risultati Lista di ristoranti trovati.
+     */
     private void gestisciRisultatiRicerca(ArrayList<Ristorante> risultati) {
         System.out.println("\n=== AZIONI SUI RISULTATI ===");
         for (int i = 0; i < risultati.size(); i++) {
@@ -180,6 +218,11 @@ public final class MenuCliente extends Menu {
         } while (scelta != 4);
     }
 
+    /**
+     * Visualizza i dettagli di un ristorante selezionato.
+     *
+     * @param risultati Lista dei ristoranti.
+     */
     private void visualizzaDettagliRistorante(ArrayList<Ristorante> risultati) {
         int indice = selezionaRistorante(risultati);
         if (indice >= 0 && indice < risultati.size()) {
@@ -188,6 +231,11 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Aggiunge un ristorante selezionato dai risultati ai preferiti del cliente.
+     *
+     * @param risultati Lista dei ristoranti trovati.
+     */
     private void aggiungiAiPreferiti(ArrayList<Ristorante> risultati) {
         int indice = selezionaRistorante(risultati);
         if (indice >= 0 && indice < risultati.size()) {
@@ -210,6 +258,12 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Permette di selezionare un ristorante da una lista.
+     *
+     * @param risultati Lista dei ristoranti.
+     * @return indice selezionato o -1 se non valido.
+     */
     private int selezionaRistorante(ArrayList<Ristorante> risultati) {
         System.out.print("\nSeleziona un ristorante (1-" + risultati.size() + "): ");
 
@@ -229,16 +283,25 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Messaggio per invitare a usare prima la ricerca per aggiungere preferiti.
+     */
     private void aggiungiAiPreferitiManuale() {
         System.out.println("=== AGGIUNGI AI PREFERITI ===");
         System.out.println("Usa prima 'Cerca un ristorante' per selezionare.");
     }
 
+    /**
+     * Messaggio per invitare a usare prima la ricerca per aggiungere recensioni.
+     */
     private void aggiungiRecensioneManuale() {
         System.out.println("=== AGGIUNGI RECENSIONE ===");
         System.out.println("Usa prima 'Cerca un ristorante' per selezionare.");
     }
 
+    /**
+     * Rimuove un ristorante dalla lista dei preferiti.
+     */
     private void rimuoviPreferito() {
         visualizzaPreferiti();
         System.out.print("Inserisci il numero del preferito da rimuovere: ");
@@ -252,6 +315,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Visualizza i ristoranti recensiti dal cliente.
+     */
     private void visualizzaRistorantiRecensiti() {
         try {
             RecensioneService.visualizzaRecensioniCliente(cliente);
@@ -260,6 +326,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Permette di modificare una recensione esistente.
+     */
     private void modificaRecensione() {
         System.out.println("=== MODIFICA RECENSIONE ===");
         try {
@@ -291,6 +360,9 @@ public final class MenuCliente extends Menu {
         }
     }
 
+    /**
+     * Permette di rimuovere una recensione.
+     */
     private void rimuoviRecensione() {
         System.out.println("=== RIMUOVI RECENSIONE ===");
         try {
@@ -312,6 +384,12 @@ public final class MenuCliente extends Menu {
         }
     }
 
+
+    /**
+     * Aggiunge una recensione a un ristorante scelto tra i risultati.
+     *
+     * @param risultati Lista dei ristoranti disponibili.
+     */
     private void aggiungiRecensioneDaRisultati(ArrayList<Ristorante> risultati) {
         System.out.println("=== AGGIUNGI RECENSIONE ===");
 
