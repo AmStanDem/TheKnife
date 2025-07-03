@@ -263,18 +263,22 @@ public final class MenuIniziale extends Menu {
                     if (ultimiRisultati.isEmpty()) {
                         System.out.println("Prima effettua una ricerca o mostra vicini.");
                     } else {
+                        boolean stato;
                         System.out.print("Seleziona ristorante (1-" + ultimiRisultati.size() + "): ");
-                        int idx = leggiIntero() - 1;
-                        if (idx < 0 || idx >= ultimiRisultati.size()) {
-                            System.out.println("Scelta non valida.");
-                        } else {
-                            try {
-                                RecensioneService.visualizzaRecensioniAnonime(ultimiRisultati.get(idx));
+                        do {
+                            stato = true;
+                            int idx = leggiIntero() - 1;
+                            if (idx < 0 || idx >= ultimiRisultati.size()) {
+                                System.out.println("Scelta non valida. Inserire un numero: ");
+                                stato = false;
+                            } else {
+                                try {
+                                    RecensioneService.visualizzaRecensioniAnonime(ultimiRisultati.get(idx));
+                                } catch (IOException | CsvException e) {
+                                    System.err.println("Errore durante la visualizzazione delle recensioni in forma anonima.");
+                                }
                             }
-                            catch (IOException | CsvException e) {
-                                System.err.println("Errore durante la visualizzazione delle recensioni in forma anonima.");
-                            }
-                        }
+                        } while (!stato);
                     }
                 }
                 case 5 -> System.out.println("Sei uscito dalla modalità guest.");
