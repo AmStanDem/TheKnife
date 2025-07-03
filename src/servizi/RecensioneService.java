@@ -198,20 +198,9 @@ public final class RecensioneService {
             return false;
         }
 
-        if (recensione.haRisposta()) {
-            return false;
-        }
         boolean rispostaAggiunta = recensione.aggiungiRisposta(testoRisposta.trim());
 
         if (!rispostaAggiunta) {
-            return false;
-        }
-
-       boolean rispostaRistoratoreAggiunta =
-               ristoratore.rispondiARecensione(ristorante.getNome(), ristorante.getLocalita(),
-                       recensione.getCliente().getUsername(), testoRisposta);
-
-        if (!rispostaRistoratoreAggiunta) {
             return false;
         }
 
@@ -262,12 +251,6 @@ public final class RecensioneService {
 
         // Modifica la risposta nella recensione
         boolean rispostaModificata = recensione.modificaRisposta(nuovoTestoRisposta.trim());
-
-        if (!rispostaModificata) {
-            return false;
-        }
-
-        rispostaModificata = ristoratore.modificaRisposta(ristorante.getNome(), ristorante.getLocalita(), recensione.getCliente().getUsername(), nuovoTestoRisposta);
 
         if (!rispostaModificata) {
             return false;

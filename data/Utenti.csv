@@ -6,3 +6,4 @@ Nome,Cognome,Username,Password,DataNascita,LuogoDomicilio,Ruolo
 "Roberto","Ferrari","roberto_ferrari","$2a$10$qUOKQ15d2HkAMQlKGPHFAeN4RO/.kZ7F4/Y4mUmFDY0kMWK7/41NC","1980-09-30","Via Indipendenza 73, Bologna","Ristoratore"
 "Elena","Russo","elena_russo","$2a$10$roKIHkzcJ8oWpExXfTWNAuHEV17u00iBDMQDiGXU3xuaRtGQhRUfO","1995-01-18","Corso Francia 156, Torino","Cliente"
 "Luca","Rossetti","lrossetti95","$2a$10$TQn7.T1QxLSWpET8efkske9aoHWBrNNziFT1nRqte7mjwuIGl5GCu","1995-08-21","Roma 2, Milano","Cliente"
+"Pippo","Calzelunghe","pippocalze","$2a$10$Ya.tM1cU1QAgrbmFUa87cesca9MHVpwXoJs3rF.mcsRyTZpKA7h72","1910-02-28","Via Ottorino Rossi, Varese","Ristoratore"

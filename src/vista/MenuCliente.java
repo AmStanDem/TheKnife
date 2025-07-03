@@ -25,14 +25,15 @@ public final class MenuCliente extends Menu {
     private final Scanner scanner;
 
     /**
-     * Cliente autenticato associato al menu.
-     */
-    private final Cliente cliente;
-
-    /**
      * Comando per uscire o interrompere operazioni.
      */
     private final String stop = "stop";
+
+    /**
+    /**
+     * Cliente autenticato associato al menu.
+     */
+    private final Cliente cliente;
 
     /**
      * Costruttore del menu cliente.
@@ -165,6 +166,9 @@ public final class MenuCliente extends Menu {
         if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
         Localita localita = new Localita(coords[0], coords[1]);
         try {
+            /**
+             * Comando per uscire o interrompere operazioni.
+             */
             var risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
             if (risultati.isEmpty()) {
                 System.out.println("Nessun ristorante trovato.");

@@ -84,6 +84,7 @@ public final class MenuRistoratore extends Menu {
             System.out.println("2. Riepilogo delle recensioni dei ristoranti.");
             System.out.println("3. Visualizza le recensioni.");
             System.out.println("4. Logout.");
+            System.out.print("Selezione: ");
 
             opzione = scanner.nextInt();
             switch (opzione) {
@@ -112,7 +113,6 @@ public final class MenuRistoratore extends Menu {
         System.out.println("\n=== AGGIUNGI NUOVO RISTORANTE ===");
 
         try {
-
 
             boolean stato;
             String nome;
@@ -182,7 +182,7 @@ public final class MenuRistoratore extends Menu {
             do {
                 stato = true;
 
-                System.out.print("Seleziona il tipo di cucina (1-" + tipiCucina.length + "): ");
+                System.out.print("\nSeleziona il tipo di cucina (1-" + tipiCucina.length + "): ");
                 sceltaCucina = scanner.nextLine().strip();
 
                 if(sceltaCucina.equalsIgnoreCase(stop)) {
@@ -200,7 +200,7 @@ public final class MenuRistoratore extends Menu {
 
                 if (stato && (Integer.parseInt(sceltaCucina) < 1 || Integer.parseInt(sceltaCucina) > tipiCucina.length)) {
                     System.out.println("Errore: Selezione non valida.");
-                    return;
+                    stato = false;
                 }
 
             } while(!stato);
@@ -241,6 +241,7 @@ public final class MenuRistoratore extends Menu {
                             stato = false;
                             break;
                         }
+                        virgola = true;
                     }
                 }
 
@@ -521,7 +522,7 @@ public final class MenuRistoratore extends Menu {
         System.out.println(formatRecensione(recensioneDaRispondere));
 
         System.out.print("\nInserisci la tua risposta: (STOP per uscire)");
-        scanner.nextLine();
+        //scanner.nextLine();
         String testoRisposta = scanner.nextLine().trim();
 
         if (testoRisposta.equalsIgnoreCase("STOP")) {
@@ -628,7 +629,6 @@ public final class MenuRistoratore extends Menu {
      */
     private void modificaTestoRisposta(Ristorante ristorante, Recensione recensione) {
         System.out.print("\nInserisci il nuovo testo della risposta: ");
-        scanner.nextLine();
         String nuovoTestoRisposta = scanner.nextLine().trim();
 
         if (nuovoTestoRisposta.equalsIgnoreCase("STOP")) {

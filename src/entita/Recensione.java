@@ -204,7 +204,7 @@ public final class Recensione {
      * @return true se la recensione ha una risposta, false altrimenti
      */
     public boolean haRisposta() {
-        return rispostaRistoratore != null;
+        return rispostaRistoratore != null && !rispostaRistoratore.trim().isEmpty();
     }
 
     /**
