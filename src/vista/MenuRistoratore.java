@@ -662,14 +662,12 @@ public final class MenuRistoratore extends Menu {
      */
     private void eliminaRispostaRecensione(Ristorante ristorante, Recensione recensione) {
         System.out.print("Sei sicuro di voler eliminare la risposta? (s/n): ");
-        String conferma = scanner.next().toLowerCase().strip();
+        String conferma = scanner.nextLine().toLowerCase().strip();
 
         if (!conferma.equals("s") && !conferma.equals("si") && !conferma.equals("sì")) {
-            scanner.nextLine();
             System.out.println("Operazione annullata.");
             return;
         }
-
         try {
             boolean successo = RecensioneService.modificaRispostaRecensione(
                     ristoratore, ristorante, recensione, ""
