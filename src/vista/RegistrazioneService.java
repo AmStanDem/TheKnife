@@ -1,8 +1,8 @@
 package vista;
 
-import Entita.Cliente;
-import Entita.Ristoratore;
-import Entita.Utente;
+import entita.Cliente;
+import entita.Ristoratore;
+import entita.Utente;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;

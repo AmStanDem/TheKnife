@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 /**
  * Rappresenta una località geografica relativa a un ristorante o a un utente.<p>

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Entita.*;
+import entita.*;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
@@ -308,8 +308,11 @@ public final class MenuCliente extends Menu {
         int idx = leggiInt() - 1;
         if (idx < 0 || idx >= cliente.getPreferiti().size()) return;
         try {
-            UtenteService.rimuoviPreferito(cliente, cliente.getPreferiti().get(idx));
-            System.out.println("Preferito rimosso.");
+            boolean successo = UtenteService.rimuoviPreferito(cliente, cliente.getPreferiti().get(idx));
+            if (successo)
+                System.out.println("Preferito rimosso.");
+            else
+                System.err.println("Errore nella rimozione del preferito!");
         } catch (IOException | CsvException e) {
             System.err.println("Errore nella rimozione del preferito.");
         }

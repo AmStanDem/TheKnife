@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 /**
  * Rappresenta le varie tipologie di cucina disponibili nel sistema TheKnife.

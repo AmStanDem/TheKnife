@@ -1,6 +1,6 @@
 package vista;
 
-import Entita.*;
+import entita.*;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
@@ -28,6 +28,7 @@ public final class MenuRistoratore extends Menu {
      * Il ristoratore autenticato.
      */
     private final Ristoratore ristoratore;
+    private final String stop = "stop";
 
     /**
      * Crea un nuovo menu per il ristoratore.
@@ -111,24 +112,52 @@ public final class MenuRistoratore extends Menu {
         System.out.println("\n=== AGGIUNGI NUOVO RISTORANTE ===");
 
         try {
-            System.out.print("Nome del ristorante: ");
-            scanner.nextLine();
-            String nome = scanner.nextLine().trim();
 
-            if (nome.isEmpty()) {
-                System.out.println("Errore: Il nome del ristorante non può essere vuoto.");
+
+            boolean stato;
+            String nome;
+            do {
+                stato = true;
+
+                System.out.print("Nome del ristorante: ");
+                scanner.nextLine();
+                nome = scanner.nextLine().trim();
+
+                if (nome.equalsIgnoreCase(stop)) {
+                    System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                    return;
+                }
+
+                if (nome.isBlank()) {
+                    System.out.println("Errore: Il nome del ristorante non può essere vuoto.");
+                    stato = false;
+                }
+
+            } while(!stato);
+
+
+            System.out.println("\n=== INFORMAZIONI LOCALITÀ ===");
+
+            System.out.print("Nazione: ");
+            String nazione = scanner.nextLine().trim();
+            if (nazione.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
                 return;
             }
 
-            System.out.println("\n=== INFORMAZIONI LOCALITÀ ===");
-            System.out.print("Nazione: ");
-            String nazione = scanner.nextLine().trim();
-
             System.out.print("Città: ");
             String citta = scanner.nextLine().trim();
+            if (citta.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                return;
+            }
 
             System.out.print("Indirizzo: ");
             String indirizzo = scanner.nextLine().trim();
+            if (indirizzo.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                return;
+            }
 
             double[] coords = GeocodingService.geocodeAddress(nazione + " " + citta + " " + indirizzo);
             double latitudine, longitudine;
@@ -142,43 +171,113 @@ public final class MenuRistoratore extends Menu {
             Localita localita = new Localita(nazione, citta, indirizzo, latitudine, longitudine);
 
             System.out.println("\n=== TIPO DI CUCINA ===");
+
             System.out.println("Tipi di cucina disponibili:");
             TipoCucina[] tipiCucina = TipoCucina.values();
             for (int i = 0; i < tipiCucina.length; i++) {
                 System.out.println((i + 1) + ". " + tipiCucina[i]);
             }
 
-            System.out.print("Seleziona il tipo di cucina (1-" + tipiCucina.length + "): ");
-            int sceltaCucina = scanner.nextInt();
+            String sceltaCucina;
+            do {
+                stato = true;
 
-            if (sceltaCucina < 1 || sceltaCucina > tipiCucina.length) {
-                System.out.println("Errore: Selezione non valida.");
-                return;
-            }
+                System.out.print("Seleziona il tipo di cucina (1-" + tipiCucina.length + "): ");
+                sceltaCucina = scanner.nextLine().strip();
 
-            TipoCucina tipoCucina = tipiCucina[sceltaCucina - 1];
+                if(sceltaCucina.equalsIgnoreCase(stop)) {
+                    System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                    return;
+                }
 
-            System.out.print("\nPrezzo medio (€): ");
-            float prezzoMedio = scanner.nextFloat();
+                for(char c : sceltaCucina.toCharArray()) {
+                    if(!Character.isDigit(c)) {
+                        System.out.println("Errore: inseriti caratteri anomali nella selezione");
+                        stato = false;
+                        break;
+                    }
+                }
 
-            if (prezzoMedio <= 0) {
-                System.out.println("Errore: Il prezzo medio deve essere maggiore di zero.");
-                return;
-            }
+                if (stato && (Integer.parseInt(sceltaCucina) < 1 || Integer.parseInt(sceltaCucina) > tipiCucina.length)) {
+                    System.out.println("Errore: Selezione non valida.");
+                    return;
+                }
+
+            } while(!stato);
+
+            TipoCucina tipoCucina = tipiCucina[Integer.parseInt(sceltaCucina) - 1];
+
+
+            String prezzoMedio;
+            do {
+                stato = true;
+
+                System.out.print("\nPrezzo medio (€): ");
+                prezzoMedio = scanner.nextLine().strip();
+
+                if(prezzoMedio.equalsIgnoreCase(stop)) {
+                    System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                    return;
+                }
+
+                boolean virgola = false;
+                for(int i=0; i<prezzoMedio.length(); i++) {
+                    char c = prezzoMedio.charAt(i);
+                    if(!Character.isDigit(c) && c != ',' && c != '.') {
+                        System.out.println("Errore: inseriti caratteri anomali nel prezzo medio");
+                        stato = false;
+                        break;
+                    } else if(c == ',') {
+                        if(virgola) {
+                            System.out.println("Errore: non ci possono essere piu' virgole nel prezzo medio");
+                            stato = false;
+                            break;
+                        }
+                        prezzoMedio = prezzoMedio.replace(',','.');
+                        virgola = true;
+                    } else if(c == '.') {
+                        if(virgola) {
+                            System.out.println("Errore: non ci possono essere piu' virgole nel prezzo medio");
+                            stato = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (stato && Float.parseFloat(prezzoMedio) <= 0) {
+                    System.out.println("Errore: Il prezzo medio deve essere maggiore di zero.");
+                    stato = false;
+                }
+
+            } while(!stato);
+
 
             // Inserimento servizi
             System.out.println("\n=== SERVIZI DISPONIBILI ===");
             System.out.print("Servizio delivery disponibile? (s/n): ");
             String inputDelivery = scanner.next().toLowerCase();
+
+            if (inputDelivery.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                return;
+            }
             boolean delivery = inputDelivery.equals("s") || inputDelivery.equals("si") || inputDelivery.equals("sì");
 
             System.out.print("Prenotazione online disponibile? (s/n): ");
             String inputPrenotazione = scanner.next().toLowerCase();
+            if (inputPrenotazione.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                return;
+            }
             boolean prenotazione = inputPrenotazione.equals("s") || inputPrenotazione.equals("si") || inputPrenotazione.equals("sì");
 
             System.out.print("\nDescrizione del ristorante (opzionale): ");
             scanner.nextLine();
             String descrizione = scanner.nextLine().trim();
+            if (descrizione.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
+                return;
+            }
 
             Ristorante nuovoRistorante = new Ristorante(
                     nome,
@@ -186,16 +285,20 @@ public final class MenuRistoratore extends Menu {
                     tipoCucina,
                     delivery,
                     prenotazione,
-                    prezzoMedio,
+                    Float.parseFloat(prezzoMedio),
                     descrizione,
                     ristoratore
             );
 
-            RistoranteService.aggiungiRistorante(ristoratore,  nuovoRistorante);
+            boolean successo = RistoranteService.aggiungiRistorante(ristoratore,  nuovoRistorante);
 
-            System.out.println("\n✓ Ristorante '" + nome + "' aggiunto con successo!");
-            System.out.println("Riepilogo:");
-            System.out.println(nuovoRistorante);
+            if (successo) {
+                System.out.println("\n✓ Ristorante '" + nome + "' aggiunto con successo!");
+                System.out.println("Riepilogo:");
+                System.out.println(nuovoRistorante);
+            }
+            else
+                System.err.println("Errore durante l'inserimento di un ristorante!");
 
         } catch (IOException | CsvException e) {
             System.err.println("Errore durante la creazione del nuovo inserimento.");
@@ -331,22 +434,45 @@ public final class MenuRistoratore extends Menu {
      * @param ristorante Il ristorante di cui filtrare le recensioni.
      */
     private void filtraRecensioniPerStelle(Ristorante ristorante) {
-        System.out.print("Inserisci il numero di stelle (1-5): ");
-        int stelle = scanner.nextInt();
+        boolean stato;
+        int filtro;
 
-        if (stelle < 1 || stelle > 5) {
-            System.out.println("Numero di stelle non valido.");
-            return;
-        }
+        do{
+            stato = true;
 
-        ArrayList<Recensione> recensioniFiltrate = ristorante.getRecensioniPerStelle(stelle);
+            System.out.print("Inserisci il numero di stelle (1-5): ");
+            String stelle = scanner.nextLine().strip();
+
+            if(stelle.equalsIgnoreCase(stop)) {
+                System.out.println("\nInserito STOP; Filtro recensioni interrotto\n");
+                return;
+            }
+
+            for(char c : stelle.toCharArray()) {
+                if(!Character.isDigit(c)) {
+                    System.out.println("Errore: inseriti caratteri anomali nel filtro");
+                    stato = false;
+                    break;
+                }
+            }
+            filtro = Integer.parseInt(stelle);
+
+            if (filtro < 1 || filtro > 5) {
+                System.out.println("Numero di stelle non valido.");
+                stato = false;
+            }
+
+        } while(!stato);
+
+
+        ArrayList<Recensione> recensioniFiltrate = ristorante.getRecensioniPerStelle(filtro);
 
         if (recensioniFiltrate.isEmpty()) {
-            System.out.println("Nessuna recensione trovata con " + stelle + " stelle.");
+            System.out.println("Nessuna recensione trovata con " + filtro + " stelle.");
             return;
         }
 
-        System.out.println("\nRecensioni con " + stelle + " stelle:");
+        System.out.println("\nRecensioni con " + filtro + " stelle:");
         mostraRecensioni(recensioniFiltrate);
     }
 
@@ -370,26 +496,38 @@ public final class MenuRistoratore extends Menu {
             System.out.println("-".repeat(40));
         }
 
-        System.out.print("Seleziona il numero della recensione a cui rispondere (0 per annullare): ");
-        int scelta = scanner.nextInt();
+        boolean stato;
+        int scelta;
+        do {
+            stato = true;
+            System.out.print("Seleziona il numero della recensione a cui rispondere (0 per annullare): ");
+            scelta = leggiIntero();
 
-        if (scelta == 0) {
-            return;
-        }
+            if (scelta == 0) {
+                return;
+            }
 
-        if (scelta < 1 || scelta > recensioniSenzaRisposta.size()) {
-            System.out.println("Selezione non valida.");
-            return;
-        }
+            if (scelta < 1 || scelta > recensioniSenzaRisposta.size()) {
+                System.out.println("Selezione non valida.");
+                stato = false;
+            }
+
+        } while(!stato);
+
 
         Recensione recensioneDaRispondere = recensioniSenzaRisposta.get(scelta - 1);
 
         System.out.println("\nRecensione selezionata:");
         System.out.println(formatRecensione(recensioneDaRispondere));
 
-        System.out.print("\nInserisci la tua risposta: ");
+        System.out.print("\nInserisci la tua risposta: (STOP per uscire)");
         scanner.nextLine();
         String testoRisposta = scanner.nextLine().trim();
+
+        if (testoRisposta.equalsIgnoreCase("STOP")) {
+            System.out.println("\nInserito STOP; Risposta alla recensione interrotta\n");
+            return;
+        }
 
         try {
             boolean successo = RecensioneService.rispondiARecensione(ristoratore, ristorante, recensioneDaRispondere, testoRisposta);
@@ -412,8 +550,7 @@ public final class MenuRistoratore extends Menu {
     private void modificaRispostaRecensione(Ristorante ristorante) {
         try {
             RecensioneService.caricaRecensioniRistorante(ristorante);
-        }
-        catch (IOException | CsvException e ) {
+        } catch (IOException | CsvException e) {
             System.err.println("Errore nel caricamento delle recensioni.");
             return;
         }
@@ -432,17 +569,23 @@ public final class MenuRistoratore extends Menu {
             System.out.println("-".repeat(40));
         }
 
-        System.out.print("Seleziona il numero della recensione di cui modificare la risposta (0 per annullare): ");
-        int scelta = scanner.nextInt();
+        int scelta;
+        boolean stato;
+        do {
+            stato = true;
+            System.out.print("Seleziona il numero della recensione di cui modificare la risposta (0 per annullare): ");
+            scelta = leggiIntero();
 
-        if (scelta == 0) {
-            return;
-        }
+            if (scelta == 0) {
+                return;
+            }
 
-        if (scelta < 1 || scelta > recensioniConRisposta.size()) {
-            System.out.println("Selezione non valida.");
-            return;
-        }
+            if (scelta < 1 || scelta > recensioniConRisposta.size()) {
+                System.out.println("Selezione non valida.");
+                stato = false;
+            }
+
+        } while (!stato);
 
         Recensione recensioneDaModificare = recensioniConRisposta.get(scelta - 1);
 
@@ -456,22 +599,25 @@ public final class MenuRistoratore extends Menu {
         System.out.println("2. Elimina la risposta");
         System.out.println("0. Annulla");
 
-        System.out.print("Scelta: ");
-        int opzioneModifica = scanner.nextInt();
+        int opzioneModifica;
+        do {
+            System.out.print("Scelta: ");
+            opzioneModifica = leggiIntero();
 
-        switch (opzioneModifica) {
-            case 1:
-                modificaTestoRisposta(ristorante, recensioneDaModificare);
-                break;
-            case 2:
-                eliminaRispostaRecensione(ristorante, recensioneDaModificare);
-                break;
-            case 0:
-                System.out.println("Operazione annullata.");
-                break;
-            default:
-                System.out.println("Opzione non valida.");
-        }
+            switch (opzioneModifica) {
+                case 1:
+                    modificaTestoRisposta(ristorante, recensioneDaModificare);
+                    break;
+                case 2:
+                    eliminaRispostaRecensione(ristorante, recensioneDaModificare);
+                    break;
+                case 0:
+                    System.out.println("Operazione annullata.");
+                    break;
+                default:
+                    System.out.println("Opzione non valida.");
+            }
+        } while (opzioneModifica < 0 || opzioneModifica > 2);
     }
 
     /**
@@ -484,6 +630,11 @@ public final class MenuRistoratore extends Menu {
         System.out.print("\nInserisci il nuovo testo della risposta: ");
         scanner.nextLine();
         String nuovoTestoRisposta = scanner.nextLine().trim();
+
+        if (nuovoTestoRisposta.equalsIgnoreCase("STOP")) {
+            System.out.println("\nInserito STOP; Modifica della risposta della recensione interrotta\n");
+            return;
+        }
 
         if (nuovoTestoRisposta.isEmpty()) {
             System.out.println("Errore: Il testo della risposta non può essere vuoto.");
@@ -545,5 +696,17 @@ public final class MenuRistoratore extends Menu {
      */
     private String formatRecensione(Recensione recensione) {
         return recensione.toString();
+    }
+
+    private int leggiIntero() {
+        while (true) {
+            String line = scanner.nextLine().strip();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.print("Input non valido. Inserisci un numero!");
+                return -1;
+            }
+        }
     }
 }

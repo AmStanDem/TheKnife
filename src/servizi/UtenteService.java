@@ -1,9 +1,9 @@
 package servizi;
 
-import Entita.Cliente;
-import Entita.Ristorante;
-import Entita.Ristoratore;
-import Entita.Utente;
+import entita.Cliente;
+import entita.Ristorante;
+import entita.Ristoratore;
+import entita.Utente;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 

@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package io_file;
 
-import Entita.*;
+import entita.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;

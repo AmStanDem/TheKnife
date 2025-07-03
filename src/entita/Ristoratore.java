@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

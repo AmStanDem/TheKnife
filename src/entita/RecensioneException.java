@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 /**
  * Eccezione personalizzata per errori relativi alla gestione delle recensioni.

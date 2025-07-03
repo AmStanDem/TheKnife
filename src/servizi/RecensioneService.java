@@ -1,9 +1,9 @@
 package servizi;
 
-import Entita.Cliente;
-import Entita.Recensione;
-import Entita.Ristorante;
-import Entita.Ristoratore;
+import entita.Cliente;
+import entita.Recensione;
+import entita.Ristorante;
+import entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
@@ -52,10 +52,23 @@ public final class RecensioneService {
         return cliente.aggiungiRecensione(ristorante, recensione);
     }
 
+    /**
+     * Recupera le recensioni di un cliente
+     * @param cliente Cliente
+     * @return Le recensioni di un cliente
+     * @throws IOException Errore nella lettura del file
+     * @throws CsvException Errore nel parsing del file CSV
+     */
     public static ArrayList<Recensione> getRecensioniCliente(Cliente cliente) throws IOException, CsvException {
         return GestoreFile.caricaRecensioniCliente(cliente);
     }
 
+    /**
+     * Effettua il caricamento delle recensioni per i ristoranti
+     * @param ristoranti I ristoranti
+     * @throws IOException Errore nella lettura del file
+     * @throws CsvException Errore nel parsing del file CSV
+     */
     public static void caricaRecensioniPerTuttiRistoranti(ArrayList<Ristorante> ristoranti)
             throws IOException, CsvException {
 
@@ -79,7 +92,12 @@ public final class RecensioneService {
         }
     }
 
-
+    /**
+     * Carica le recensioni di un ristorante
+     * @param ristorante Ristorante
+     * @throws IOException Errore nella lettura del file
+     * @throws CsvException Errore nel parsing del file CSV
+     */
     public static void caricaRecensioniRistorante(Ristorante ristorante)
             throws IOException, CsvException {
 
@@ -189,18 +207,18 @@ public final class RecensioneService {
             return false;
         }
 
+       boolean rispostaRistoratoreAggiunta =
+               ristoratore.rispondiARecensione(ristorante.getNome(), ristorante.getLocalita(),
+                       recensione.getCliente().getUsername(), testoRisposta);
+
+        if (!rispostaRistoratoreAggiunta) {
+            return false;
+        }
+
         if (!GestoreFile.eliminaRecensione(recensione)) {
-            //recensione.modificaRisposta("");
             return false;
         }
-
-        if (!GestoreFile.aggiungiRecensione(recensione)) {
-//            recensione.modificaRisposta("");
-//            GestoreFile.aggiungiRecensione(recensione);
-            return false;
-        }
-
-        return true;
+        return GestoreFile.aggiungiRecensione(recensione);
     }
 
     /**
@@ -244,6 +262,12 @@ public final class RecensioneService {
 
         // Modifica la risposta nella recensione
         boolean rispostaModificata = recensione.modificaRisposta(nuovoTestoRisposta.trim());
+
+        if (!rispostaModificata) {
+            return false;
+        }
+
+        rispostaModificata = ristoratore.modificaRisposta(ristorante.getNome(), ristorante.getLocalita(), recensione.getCliente().getUsername(), nuovoTestoRisposta);
 
         if (!rispostaModificata) {
             return false;

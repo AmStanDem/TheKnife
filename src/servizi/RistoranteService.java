@@ -1,6 +1,6 @@
 package servizi;
 
-import Entita.*;
+import entita.*;
 import com.opencsv.exceptions.CsvException;
 import io_file.GestoreFile;
 
@@ -126,7 +126,12 @@ public final class RistoranteService {
     }
 
 
-
+    /**
+     * Filtra per tipologia di cucina
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param tipoCucina tipo di cucina
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroTipoCucina(Ristorante ristorante, TipoCucina tipoCucina) {
         if (tipoCucina == null) {
             return true;
@@ -134,6 +139,13 @@ public final class RistoranteService {
         return ristorante.getTipoDiCucina().equals(tipoCucina);
     }
 
+    /**
+     * Filtra per la località
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param localita località
+     * @param raggioKm raggio km
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroLocalita(Ristorante ristorante, Localita localita, Double raggioKm) {
         if (ristorante == null || localita == null) {
             return false;
@@ -155,6 +167,12 @@ public final class RistoranteService {
         return localita.stessaZonaGeografica(localitaRistorante);
     }
 
+    /**
+     * Filtra per il prezzo minimo
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param prezzoMinimo prezzoMinimo
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroPrezzoMinimo(Ristorante ristorante, Float prezzoMinimo) {
         if (prezzoMinimo == null) {
             return true;
@@ -162,6 +180,12 @@ public final class RistoranteService {
         return ristorante.getPrezzoMedio() >= prezzoMinimo;
     }
 
+    /**
+     * Filtra per il prezzo massimo
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param prezzoMassimo prezzoMassimo
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroPrezzoMassimo(Ristorante ristorante, Float prezzoMassimo) {
         if (prezzoMassimo == null) {
             return true;
@@ -169,6 +193,12 @@ public final class RistoranteService {
         return ristorante.getPrezzoMedio() <= prezzoMassimo;
     }
 
+    /**
+     * Filtra per la prenotazione
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param prenotazione prenotazione
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroPrenotazione(Ristorante ristorante, Boolean prenotazione) {
         if (prenotazione == null) {
             return true;
@@ -176,6 +206,12 @@ public final class RistoranteService {
         return ristorante.getPrenotazione() == prenotazione;
     }
 
+    /**
+     * Filtra per il delivery
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param delivery delivery
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroDelivery(Ristorante ristorante, Boolean delivery) {
         if (delivery == null) {
             return true;
@@ -183,6 +219,12 @@ public final class RistoranteService {
         return ristorante.getDelivery() == delivery;
     }
 
+    /**
+     * Filtra per la media delle stelle
+     * @param ristorante ristorante su cui effettuare il filtro
+     * @param mediaStelle mediaStelle
+     * @return {@code true} se il filtro è passato {@code false} altrimenti
+     */
     private static boolean filtroMediaStelle(Ristorante ristorante, Float mediaStelle) {
         if (mediaStelle == null) {
             return true;
@@ -219,10 +261,26 @@ public final class RistoranteService {
     }
 
 
+    /**
+     * Recupera le recensioni di un ristorante
+     * @param ristorante ristorante
+     * @return Le recensioni del ristorante
+     * @throws IOException Errore durante la lettura del file
+     * @throws CsvException Errore nel parsing del file CSV
+     */
     public static ArrayList<Recensione> getRecensioniRistorante(Ristorante ristorante) throws IOException, CsvException {
         return GestoreFile.caricaRecensioniRistorante(ristorante);
     }
 
+    /**
+     * Effettua la ricerca dei ristoranti interagendo con l'utente
+     * @param scanner Scanner per I/O
+     * @param localita Località
+     * @param stop stop
+     * @return I ristoranti desiderati
+     * @throws IOException Errore nella lettura del file
+     * @throws CsvException Errore nel parsing CSV
+     */
     public static ArrayList<Ristorante> ricercaAvanzata(Scanner scanner, Localita localita, String stop) throws IOException, CsvException {
         interrotto = false;
 
@@ -256,6 +314,13 @@ public final class RistoranteService {
 
     private static boolean interrotto = false;
 
+
+    /**
+     * Recupera il tipo cucina dall'utente
+     * @param scanner scanner
+     * @param stop stop per fermare la ricerca
+     * @return Il tipocucina desiderato
+     */
     private static TipoCucina selezionaTipoCucina(Scanner scanner, String stop) {
         System.out.println("\nSeleziona tipo di cucina (premi INVIO per saltare):");
         TipoCucina[] tipi = TipoCucina.values();
@@ -287,6 +352,12 @@ public final class RistoranteService {
         return null;
     }
 
+    /**
+     * Recupera il raggio in km dall'utente
+     * @param scanner scanner
+     * @param stop stop per fermare la ricerca
+     * @return Il raggio in km desiderato
+     */
     private static Double inserisciRaggio(Scanner scanner, String stop) {
         System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
         String input = scanner.nextLine().trim();
@@ -307,6 +378,12 @@ public final class RistoranteService {
         }
     }
 
+    /**
+     * Recupera la fascia di prezzo dall'utente
+     * @param scanner scanner
+     * @param stop stop per fermare la ricerca
+     * @return La fascia di prezzo desiderata
+     */
     private static Float[] inserisciFasciaPrezzo(Scanner scanner, String stop) {
         System.out.println("\nFascia di prezzo:");
         Float prezzoMinimo = null, prezzoMassimo = null;
@@ -347,6 +424,13 @@ public final class RistoranteService {
         return new Float[]{prezzoMinimo, prezzoMassimo};
     }
 
+    /**
+     * Recupera il servizio voluto dall'utente
+     * @param scanner scanner
+     * @param nomeServizio Il nome del servizio
+     * @param stop stop per fermare la ricerca
+     * @return Il servizio desiderato
+     */
     private static Boolean inserisciServizio(Scanner scanner, String nomeServizio, String stop) {
         System.out.println("\nServizio " + nomeServizio + ":");
         System.out.println("1. Solo con " + nomeServizio);
@@ -368,6 +452,12 @@ public final class RistoranteService {
         };
     }
 
+    /**
+     * Recupera la media delle stelle dall'utente
+     * @param scanner scanner
+     * @param stop stop per fermare la ricerca
+     * @return La media delle stelle
+     */
     private static Float inserisciMediaStelle(Scanner scanner, String stop) {
         System.out.print("\nMedia stelle minima (1.0-5.0, premi INVIO per saltare): ");
         String input = scanner.nextLine().trim();
@@ -389,6 +479,4 @@ public final class RistoranteService {
         System.out.println("Input non valido, filtro stelle ignorato.");
         return null;
     }
-
-
 }

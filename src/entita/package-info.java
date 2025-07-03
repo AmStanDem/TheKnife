@@ -14,4 +14,4 @@
  * Il package ha lo scopo di offrire una struttura modulare e coerente per la gestione degli oggetti
  * di dominio, facilitando lo sviluppo e il mantenimento dell'applicazione.
  */
-package Entita;
+package entita;

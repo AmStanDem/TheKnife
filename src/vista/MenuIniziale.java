@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 
-import Entita.*;
+import entita.*;
 import com.opencsv.exceptions.CsvException;
 import servizi.GeocodingService;
 import servizi.RecensioneService;
@@ -55,8 +55,9 @@ public final class MenuIniziale extends Menu {
             System.out.println("1. Login");
             System.out.println("2. Registrazione");
             System.out.println("3. Guest");
-            System.out.println("4. Esci");
-            System.out.println("Inserisci pure la funzionalità che desideri: ");
+            System.out.println("4. Esci\n");
+            System.out.println("Puoi scrivere STOP in qualsiasi momento per concludere il programma");
+            System.out.println("Inserisci la funzionalità che desideri: ");
 
             selezione = leggiIntero();
 
@@ -179,7 +180,7 @@ public final class MenuIniziale extends Menu {
             System.err.println("Errore durante il salvataggio dell'utente.");
             return;
         }
-        System.out.println("Registrazione completata con successo!");
+        System.out.println("Registrazione completata con successo!\n");
         if (nuovoUtente instanceof Cliente cliente) {
             MenuCliente menuCliente = new MenuCliente(scanner, cliente);
             menuCliente.mostra();

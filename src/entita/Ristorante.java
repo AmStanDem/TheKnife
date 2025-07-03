@@ -1,4 +1,4 @@
-package Entita;
+package entita;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -477,7 +477,17 @@ public class Ristorante {
                 Objects.equals(localita, ristorante.localita);
     }
 
-
+    /**
+     * Calcola il codice hash per il ristorante.
+     * <p>
+     * Il valore restituito viene derivato dagli attributi {@code nome} e {@code localita},
+     * coerentemente con il metodo {@code equals()}.
+     * <p>
+     * Questo metodo è essenziale per mantenere la coerenza contrattuale tra {@code equals()} e {@code hashCode()},
+     * assicurando che oggetti uguali producano lo stesso hash.
+     *
+     * @return Il codice hash calcolato per l'istanza corrente di {@code Ristorante}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(nome, localita);
