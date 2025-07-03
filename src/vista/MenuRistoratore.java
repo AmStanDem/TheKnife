@@ -86,7 +86,7 @@ public final class MenuRistoratore extends Menu {
             System.out.println("4. Logout.");
             System.out.print("Selezione: ");
 
-            opzione = scanner.nextInt();
+            opzione = leggiIntero();
             switch (opzione) {
                 case 1:
                     aggiungiRistorante();
@@ -120,7 +120,6 @@ public final class MenuRistoratore extends Menu {
                 stato = true;
 
                 System.out.print("Nome del ristorante: ");
-                scanner.nextLine();
                 nome = scanner.nextLine().trim();
 
                 if (nome.equalsIgnoreCase(stop)) {
@@ -273,7 +272,6 @@ public final class MenuRistoratore extends Menu {
             boolean prenotazione = inputPrenotazione.equals("s") || inputPrenotazione.equals("si") || inputPrenotazione.equals("sì");
 
             System.out.print("\nDescrizione del ristorante (opzionale): ");
-            scanner.nextLine();
             String descrizione = scanner.nextLine().trim();
             if (descrizione.equalsIgnoreCase(stop)) {
                 System.out.println("\nInserito STOP; Inserimento nuovo ristorante interrotto\n");
@@ -342,7 +340,7 @@ public final class MenuRistoratore extends Menu {
         System.out.println("0. Torna al menu principale");
 
         System.out.print("Scelta: ");
-        int scelta = scanner.nextInt();
+        int scelta = leggiIntero();
 
         if (scelta == 0) {
             return;
@@ -379,7 +377,7 @@ public final class MenuRistoratore extends Menu {
             System.out.println("0. Torna indietro");
 
             System.out.print("Scelta: ");
-            opzione = scanner.nextInt();
+            opzione = leggiIntero();
 
             switch (opzione) {
                 case 1:
@@ -522,7 +520,6 @@ public final class MenuRistoratore extends Menu {
         System.out.println(formatRecensione(recensioneDaRispondere));
 
         System.out.print("\nInserisci la tua risposta: (STOP per uscire)");
-        //scanner.nextLine();
         String testoRisposta = scanner.nextLine().trim();
 
         if (testoRisposta.equalsIgnoreCase("STOP")) {
@@ -665,9 +662,10 @@ public final class MenuRistoratore extends Menu {
      */
     private void eliminaRispostaRecensione(Ristorante ristorante, Recensione recensione) {
         System.out.print("Sei sicuro di voler eliminare la risposta? (s/n): ");
-        String conferma = scanner.next().toLowerCase();
+        String conferma = scanner.next().toLowerCase().strip();
 
         if (!conferma.equals("s") && !conferma.equals("si") && !conferma.equals("sì")) {
+            scanner.nextLine();
             System.out.println("Operazione annullata.");
             return;
         }
@@ -700,12 +698,13 @@ public final class MenuRistoratore extends Menu {
 
     private int leggiIntero() {
         while (true) {
+            scanner.nextLine();
             String line = scanner.nextLine().strip();
             try {
                 return Integer.parseInt(line);
             } catch (NumberFormatException e) {
                 System.out.print("Input non valido. Inserisci un numero!");
-                return -1;
+
             }
         }
     }

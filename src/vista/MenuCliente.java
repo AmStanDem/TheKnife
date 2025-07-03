@@ -401,7 +401,7 @@ public final class MenuCliente extends Menu {
         System.out.println("=== AGGIUNGI RECENSIONE ===");
 
         int indiceRistorante = selezionaRistorante(risultati);
-        if (indiceRistorante < 0) {
+        if (indiceRistorante < 0 || indiceRistorante > risultati.size()) {
             return;
         }
 
@@ -419,14 +419,11 @@ public final class MenuCliente extends Menu {
             int stelle;
             try {
                 stelle = leggiInt();
-
-
                 if (stelle < 1 || stelle > 5) {
                     System.out.println("Il numero di stelle deve essere compreso tra 1 e 5.");
                     return;
                 }
             } catch (Exception e) {
-                scanner.nextLine(); // Pulisce il buffer
                 System.out.println("Input non valido per le stelle.");
                 return;
             }
