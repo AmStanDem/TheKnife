@@ -698,7 +698,6 @@ public final class MenuRistoratore extends Menu {
 
     private int leggiIntero() {
         while (true) {
-            scanner.nextLine();
             String line = scanner.nextLine().strip();
             try {
                 return Integer.parseInt(line);
