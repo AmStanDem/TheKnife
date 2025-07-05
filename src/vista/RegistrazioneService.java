@@ -16,6 +16,8 @@ import static io_file.GestoreFile.esisteUtente;
  * Servizio per gestire la registrazione di un nuovo utente nel sistema.
  * Permette di acquisire i dati necessari tramite input da console e validarne la correttezza.
  * Supporta sia utenti Cliente sia Ristoratore.
+ *
+ * @author Alessandro Tullo
  */
 public class RegistrazioneService {
     /**

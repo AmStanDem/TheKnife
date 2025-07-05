@@ -15,6 +15,7 @@ import servizi.UtenteService;
  * Classe che rappresenta il menu principale per un cliente autenticato.
  * Fornisce varie opzioni per visualizzare ristoranti, gestire preferiti e recensioni.
  *
+ * @author Thomas Riotto
  * @author Marco Zaro
  */
 public final class MenuCliente extends Menu {

@@ -8,7 +8,6 @@ import java.util.Scanner;
  * @author Antonio Pesavento
  * @author Alessandro Tullo
  * @author Marco Zaro
- * @version 1.0
  */
 public final class TheKnife {
     public static void main(String[] args) {

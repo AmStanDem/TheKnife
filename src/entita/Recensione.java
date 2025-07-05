@@ -20,7 +20,6 @@ import java.util.Objects;
  *
  * @author Antonio Pesavento
  * @author Thomas Riotto
- * @version 1.1
  */
 public final class Recensione {
 

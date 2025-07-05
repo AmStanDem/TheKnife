@@ -5,7 +5,7 @@ package entita;
  * Viene lanciata quando si verificano errori durante la creazione, modifica
  * o gestione di una recensione.
  *
- * @author Thomas Riotto
+ * @author Antonio Pesavento
  */
 public class RecensioneException extends RuntimeException {
 

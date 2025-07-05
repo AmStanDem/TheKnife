@@ -10,7 +10,6 @@ package entita;
  * Ogni elemento dell'enumerazione è associato a una stringa descrittiva leggibile.
  *
  * @author Alessandro Tullo
- * @version 1.0
  */
 public enum TipoCucina {
     ITALIANA("Italiana"),

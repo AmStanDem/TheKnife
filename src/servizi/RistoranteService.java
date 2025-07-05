@@ -14,6 +14,7 @@ import java.util.Scanner;
  * in modo ancor più veloce i luoghi più pertinenti alle sue esigenze.
  *
  * @author Marco Zaro
+ * @author Thomas Riotto
  */
 
 public final class RistoranteService {

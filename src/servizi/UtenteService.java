@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Servizio per la gestione degli utenti e delle operazioni a essi correlate.
  * Funge da intermediario tra la logica di business e la persistenza dei dati.
  *
- * @author Thomas Riotto
+ * @author Antonio Pesavento
  */
 public final class UtenteService {
 

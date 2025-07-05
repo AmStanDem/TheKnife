@@ -24,7 +24,6 @@ import java.util.List;
  * per utenti, ristoranti, recensioni e preferiti.
  *
  * @author Thomas Riotto
- * @version 2.0
  */
 public class GestoreFile {
 

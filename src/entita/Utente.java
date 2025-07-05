@@ -18,7 +18,6 @@ import java.util.Objects;
  * @author Antonio Pesavento
  * @author Alessandro Tullo
  * @author Marco Zaro
- * @version 1.0
  */
 public abstract class Utente {
     /** Nome dell’utente formattato correttamente */

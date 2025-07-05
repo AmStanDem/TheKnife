@@ -7,7 +7,6 @@ package entita;
  * visualizzare ristoranti vicini sulla piattaforma TheKnife.
  *
  * @author Thomas Riotto
- * @version 1.0
  */
 
 public final class Localita {

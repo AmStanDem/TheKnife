@@ -18,7 +18,8 @@ import static servizi.RistoranteService.getRecensioniRistorante;
  * Servizio per la gestione delle recensioni e delle operazioni correlate.
  * Funge da intermediario tra la logica di business e la persistenza dei dati.
  *
- * @author Thomas Riotto
+ * @author Antonio Pesavento
+ * @author Alessandro Tullo
  */
 public final class RecensioneService {
 

@@ -16,8 +16,7 @@ import java.util.List;
  * Le funzionalità sono progettate per garantire coerenza e sicurezza,
  * controllando l'identità del cliente associato alla recensione.
  *
- * @author _
- * @version 1.0
+ * @author Alessandro Tullo
  */
 
 public final class Cliente extends Utente {

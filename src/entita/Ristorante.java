@@ -11,7 +11,6 @@ import java.util.Objects;
  * e delle caratteristiche del ristorante.
  *
  * @author Marco Zaro
- * @version 2.0
  */
 public class Ristorante {
     /**

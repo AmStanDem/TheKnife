@@ -17,7 +17,7 @@ import java.util.Scanner;
  * rispondere/modificare/eliminare risposte a recensioni e vedere riepiloghi.
  * Usa il terminale per l'interazione.
  *
- * @author Alessandro Tullo
+ * @author Marco Zaro
  */
 public final class MenuRistoratore extends Menu {
     /**

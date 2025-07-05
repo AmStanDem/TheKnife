@@ -20,6 +20,7 @@ import static servizi.UtenteService.autenticaUtente;
  * Gestisce il flusso principale iniziale dell'applicazione.
  *
  * @author Antonio Pesavento
+ * @author Alessandro Tullo
  */
 public final class MenuIniziale extends Menu {
 

@@ -10,7 +10,6 @@ import java.util.List;
  * uno o più ristoranti, visualizzare le recensioni ricevute e rispondere a esse.
  *
  * @author Thomas Riotto
- * @version 1.0
  */
 public class Ristoratore extends Utente {
 
