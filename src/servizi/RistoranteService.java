@@ -287,22 +287,40 @@ public final class RistoranteService {
         System.out.println("=== RICERCA AVANZATA RISTORANTI ===");
 
         TipoCucina tipoCucina = selezionaTipoCucina(scanner, stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         Double raggioKm = inserisciRaggio(scanner, stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         Float[] prezzi = inserisciFasciaPrezzo(scanner, stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         Boolean delivery = inserisciServizio(scanner, "delivery", stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         Boolean prenotazione = inserisciServizio(scanner, "prenotazione online", stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         Float mediaStelle = inserisciMediaStelle(scanner, stop);
-        if (interrotto) return new ArrayList<>();
+        if (interrotto) {
+            System.out.println("\nInserito STOP; Ricerca interrotta!\n");
+            return new ArrayList<>();
+        }
 
         System.out.println("Ricerca in corso...");
 

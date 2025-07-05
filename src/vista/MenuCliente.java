@@ -135,12 +135,17 @@ public final class MenuCliente extends Menu {
     /**
      * Visualizza i ristoranti preferiti del cliente.
      */
-    private void visualizzaPreferiti() {
+    private boolean visualizzaPreferiti() {
         System.out.println("I tuoi ristoranti preferiti:");
         var preferiti = cliente.getPreferiti();
+        if (preferiti.isEmpty()) {
+            System.out.println("Non hai nessun ristorante tra i preferiti!");
+            return false;
+        }
         for (int i = 0; i < preferiti.size(); i++) {
             System.out.println((i + 1) + ". " + preferiti.get(i));
         }
+        return true;
     }
 
     /**
@@ -171,7 +176,7 @@ public final class MenuCliente extends Menu {
              */
             var risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
             if (risultati.isEmpty()) {
-                System.out.println("Nessun ristorante trovato.");
+                System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
             } else {
                 gestisciRisultatiRicerca(risultati);
             }
@@ -307,7 +312,9 @@ public final class MenuCliente extends Menu {
      * Rimuove un ristorante dalla lista dei preferiti.
      */
     private void rimuoviPreferito() {
-        visualizzaPreferiti();
+        boolean haPreferiti = visualizzaPreferiti();
+        if (!haPreferiti)
+            return;
         System.out.print("Inserisci il numero del preferito da rimuovere: ");
         int idx = leggiInt() - 1;
         if (idx < 0 || idx >= cliente.getPreferiti().size()) return;
@@ -340,13 +347,19 @@ public final class MenuCliente extends Menu {
         System.out.println("=== MODIFICA RECENSIONE ===");
         try {
             var recensioni = RecensioneService.getRecensioniCliente(cliente);
-            if (recensioni.isEmpty()) return;
+            if (recensioni.isEmpty())  {
+                System.out.println("Non hai nessuna recensione!");
+                return;
+            }
             for (int i = 0; i < recensioni.size(); i++) {
                 System.out.println((i + 1) + ". " + recensioni.get(i));
             }
-            System.out.print("Seleziona recensione da modificare: ");
+            System.out.print("Seleziona recensione da modificare (premi 0 per annullare): ");
             int idx = leggiInt() - 1;
-            if (idx < 0 || idx >= recensioni.size()) return;
+            if (idx < 0 || idx >= recensioni.size()) {
+                System.out.println("Modifica della recensione annullata!");
+                return;
+            }
             var vecchia = recensioni.get(idx);
 
             System.out.print("Nuove stelle (1-5) o invio per mantenere: ");
@@ -374,13 +387,19 @@ public final class MenuCliente extends Menu {
         System.out.println("=== RIMUOVI RECENSIONE ===");
         try {
             var recensioni = RecensioneService.getRecensioniCliente(cliente);
-            if (recensioni.isEmpty()) return;
+            if (recensioni.isEmpty()) {
+                System.out.println("Non hai nessuna recensione!");
+                return;
+            }
             for (int i = 0; i < recensioni.size(); i++) {
                 System.out.println((i + 1) + ". " + recensioni.get(i));
             }
-            System.out.print("Seleziona recensione da rimuovere: ");
+            System.out.print("Seleziona recensione da rimuovere (premi 0 per annullare): ");
             int idx = leggiInt() - 1;
-            if (idx < 0 || idx >= recensioni.size()) return;
+            if (idx < 0 || idx >= recensioni.size()) {
+                System.out.println("Cancellazione della recensione annullata!");
+                return;
+            }
             if (!RecensioneService.eliminaRecensione(cliente, recensioni.get(idx).getRistorante())) {
                 System.err.println("Recensione non eliminata.");
                 return;
