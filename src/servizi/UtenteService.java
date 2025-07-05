@@ -48,57 +48,82 @@ public final class UtenteService {
      * @throws CsvException Se si verifica un errore durante la gestione del CSV.
      */
     public static Utente autenticaUtente(String username, String password) throws IOException, CsvException {
-        if (username == null || username.trim().isEmpty() ||
-                password == null || password.trim().isEmpty()) {
+        if (username == null || password == null ||
+                username.isBlank() || password.isBlank()) {
             return null;
         }
 
-        Utente utente = GestoreFile.verificaLogin(username.trim(), password);
+        String cleanUsername = username.trim();
+
+        Utente utente = GestoreFile.verificaLogin(cleanUsername, password);
+        if (utente == null) {
+            return null;
+        }
 
         return switch (utente) {
-            case null -> null;
-
             case Cliente c -> {
-                ArrayList<Ristorante> preferiti = GestoreFile.caricaPreferiti(c.getUsername());
+                try {
+                    ArrayList<Ristorante> preferiti = GestoreFile.caricaPreferiti(c.getUsername());
 
-                if (!preferiti.isEmpty()) {
-                    try {
+                    // Carica recensioni solo se ci sono preferiti
+                    if (!preferiti.isEmpty()) {
                         RecensioneService.caricaRecensioniPerTuttiRistoranti(preferiti);
-                    } catch (IOException | CsvException e) {
-                        System.err.println("Errore nel caricamento delle recensioni dei preferiti: " + e.getMessage());
                     }
+
+                    yield new Cliente(
+                            c.getNome(),
+                            c.getCognome(),
+                            c.getUsername(),
+                            c.getPassword(),
+                            c.getDataNascita(),
+                            c.getLuogoDomicilio(),
+                            preferiti
+                    );
+                } catch (IOException | CsvException e) {
+                    System.err.println("Errore nel caricamento dei preferiti: " + e.getMessage());
+
+                    yield new Cliente(
+                            c.getNome(),
+                            c.getCognome(),
+                            c.getUsername(),
+                            c.getPassword(),
+                            c.getDataNascita(),
+                            c.getLuogoDomicilio(),
+                            new ArrayList<>()
+                    );
                 }
-
-                yield new Cliente(
-                        c.getNome(),
-                        c.getCognome(),
-                        c.getUsername(),
-                        c.getPassword(),
-                        c.getDataNascita(),
-                        c.getLuogoDomicilio(),
-                        preferiti
-                );
             }
-
             case Ristoratore r -> {
-                // Carica i ristoranti del ristoratore
-                ArrayList<Ristorante> ristoranti = GestoreFile.caricaRistoranti(r.getUsername());
+                try {
+                    ArrayList<Ristorante> ristoranti = GestoreFile.caricaRistoranti(r.getUsername());
 
-                if (!ristoranti.isEmpty()) {
-                    RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
+                    if (!ristoranti.isEmpty()) {
+                        RecensioneService.caricaRecensioniPerTuttiRistoranti(ristoranti);
+                    }
+
+                    yield new Ristoratore(
+                            r.getNome(),
+                            r.getCognome(),
+                            r.getUsername(),
+                            r.getPassword(),
+                            r.getDataNascita(),
+                            r.getLuogoDomicilio(),
+                            ristoranti
+                    );
+                } catch (IOException | CsvException e) {
+                    System.err.println("Errore nel caricamento dei ristoranti: " + e.getMessage());
+
+                    yield new Ristoratore(
+                            r.getNome(),
+                            r.getCognome(),
+                            r.getUsername(),
+                            r.getPassword(),
+                            r.getDataNascita(),
+                            r.getLuogoDomicilio(),
+                            new ArrayList<>()
+                    );
                 }
-
-                yield new Ristoratore(
-                        r.getNome(),
-                        r.getCognome(),
-                        r.getUsername(),
-                        r.getPassword(),
-                        r.getDataNascita(),
-                        r.getLuogoDomicilio(),
-                        ristoranti
-                );
             }
-
             default -> utente;
         };
     }

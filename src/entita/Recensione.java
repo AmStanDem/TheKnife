@@ -180,7 +180,7 @@ public final class Recensione {
      * @return {@code true} se aggiunta con successo
      */
     public boolean aggiungiRisposta(String risposta) {
-        if (rispostaRistoratore == null && risposta != null && !risposta.trim().isEmpty()) {
+        if ((rispostaRistoratore == null || rispostaRistoratore.isEmpty()) && risposta != null && !risposta.trim().isEmpty()) {
             this.rispostaRistoratore = risposta.trim();
             this.dataRisposta = LocalDateTime.now();
             return true;

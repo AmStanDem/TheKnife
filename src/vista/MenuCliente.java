@@ -175,10 +175,11 @@ public final class MenuCliente extends Menu {
             /**
              * Comando per uscire o interrompere operazioni.
              */
-            var risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
+            ArrayList<Ristorante> risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
             if (risultati.isEmpty()) {
                 System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
             } else {
+                RecensioneService.caricaRecensioniPerTuttiRistoranti(risultati);
                 gestisciRisultatiRicerca(risultati);
             }
         } catch (IOException | CsvException e) {

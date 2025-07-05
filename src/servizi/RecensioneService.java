@@ -73,20 +73,32 @@ public final class RecensioneService {
     public static void caricaRecensioniPerTuttiRistoranti(ArrayList<Ristorante> ristoranti)
             throws IOException, CsvException {
 
-        
-        // Mappa per associare ristoranti tramite una chiave
-        Map<String, Ristorante> mappaRistoranti = new HashMap<>();
-        for (Ristorante r : ristoranti) {
-            mappaRistoranti.put(r.getChiave(), r);
-            r.setRecensioni(new ArrayList<>());
+        if (ristoranti == null || ristoranti.isEmpty()) {
+            return;
         }
 
+        // Mappa per associare ristoranti tramite una chiave
+        // Usando capacità iniziale ottimizzata e load factor 0.75
+        Map<String, Ristorante> mappaRistoranti = new HashMap<>(ristoranti.size() * 4 / 3 + 1);
+
+        // Inizializzazione ristoranti con pre-allocazione delle liste
+        for (Ristorante r : ristoranti) {
+            mappaRistoranti.put(r.getChiave(), r);
+            // Pre-alloca ArrayList con capacità ragionevole (es. 10)
+            r.setRecensioni(new ArrayList<>(10));
+        }
+
+        // Caricamento recensioni
         ArrayList<Recensione> tutteLeRecensioni = GestoreFile.caricaRecensioni();
 
-        for (Recensione r : tutteLeRecensioni) {
-            String nomeRistorante = r.getRistorante().getChiave();
-            Ristorante ristorante = mappaRistoranti.get(nomeRistorante);
+        if (tutteLeRecensioni.isEmpty()) {
+            return;
+        }
 
+        // Assegnazione recensioni ai ristoranti
+        for (Recensione r : tutteLeRecensioni) {
+            String chiaveRistorante = r.getRistorante().getChiave();
+            Ristorante ristorante = mappaRistoranti.get(chiaveRistorante);
             if (ristorante != null) {
                 ristorante.aggiungiRecensione(r);
             }

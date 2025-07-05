@@ -400,11 +400,25 @@ public class GestoreFile {
      * @throws CsvException se si verifica un errore nel parsing del CSV
      */
     public static Utente verificaLogin(String username, String password) throws IOException, CsvException {
-        Utente utente = cercaUtente(username);
+        if (username == null || password == null || username.isBlank() || password.isBlank()) {
+            return null;
+        }
 
-        if (utente != null) {
-            if (utente.verificaPassword(password)) {
-                return utente;
+        try (BufferedReader br = Files.newBufferedReader(DATASET_UTENTI);
+             CSVReader reader = new CSVReaderBuilder(br)
+                     .withSkipLines(1)
+                     .build()) {
+
+            String[] riga;
+            while ((riga = reader.readNext()) != null) {
+                if (username.equals(riga[ColonneUtenteCSV.USERNAME])) {
+                    Utente utente = creaUtenteDaRiga(riga);
+
+                    if (utente != null && utente.verificaPassword(password)) {
+                        return utente;
+                    }
+                    return null;
+                }
             }
         }
         return null;
