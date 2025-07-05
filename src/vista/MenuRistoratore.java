@@ -546,12 +546,6 @@ public final class MenuRistoratore extends Menu {
      * @param ristorante Il ristorante a cui appartiene la recensione.
      */
     private void modificaRispostaRecensione(Ristorante ristorante) {
-        try {
-            RecensioneService.caricaRecensioniRistorante(ristorante);
-        } catch (IOException | CsvException e) {
-            System.err.println("Errore nel caricamento delle recensioni.");
-            return;
-        }
 
         ArrayList<Recensione> recensioniConRisposta = ristorante.getRecensioniConRisposta();
 
