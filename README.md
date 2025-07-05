@@ -12,7 +12,7 @@
 
 1. [Introduzione](#-introduzione)  
 2. [Funzionalità](#-funzionalità)  
-3. [Installazione]()  
+3. [Installazione](https://github.com/AmStanDem/TheKnife/tree/master?tab=readme-ov-file#%EF%B8%8F-installazione)  
 4. [Utilizzo](https://github.com/AmStanDem/TheKnife/tree/master?tab=readme-ov-file#%EF%B8%8F-utilizzo)  
 
 ---
