@@ -13,7 +13,7 @@
 1. [Introduzione](#-introduzione)  
 2. [Funzionalità](#-funzionalità)  
 3. [Installazione](#-installazione)  
-4. [Utilizzo](#-utilizzo)  
+4. [Utilizzo]()  
 
 ---
 
