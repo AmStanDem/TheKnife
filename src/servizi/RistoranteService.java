@@ -104,6 +104,7 @@ public final class RistoranteService {
         return risultato;
     }
 
+
     /**
      * Cerca ristoranti applicando una combinazione di filtri specificati.
      * Tutti i parametri sono opzionali (possono essere {@code null}) tranne la localita che è obbligatoria.
