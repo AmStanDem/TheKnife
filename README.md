@@ -9,6 +9,7 @@
 ---
 
 ## 📌 **Indice**  
+
 1. [Introduzione](#-introduzione)  
 2. [Funzionalità](#-funzionalità)  
 3. [Installazione](#-installazione)  
@@ -16,7 +17,8 @@
 
 ---
 
-## 📜 **Introduzione**  
+## 📜 **Introduzione** 
+
 TheKnife è un programma che permette agli utenti di cercare ristoranti nelle vicinanze in base alla loro posizione corrente.
 Con la registrazione, l'utente può creare un suo account cliente oppure ristoratore: <p>
 🔹 *Cliente:* oltre a cercare i ristoranti nelle vicinanze, può guardare le recensioni e pubblicarne di sue; <p>
@@ -24,12 +26,14 @@ Con la registrazione, l'utente può creare un suo account cliente oppure ristora
 
 ---
 
-## ✨ **Funzionalità**  
-Elenco delle principali funzionalità:  
-✅ **Feature 1**: Descrizione breve.  
-✅ **Feature 2**: Altra descrizione.  
-🚧 *Altre funzionalità in sviluppo...*  
-devo mangiare
+## ✨ **Funzionalità**
+
+1. Modalità guest per permettere all'utente di visualizzare ristoranti vicini senza doversi registrare/login;
+2. Una volta registrato, il cliente potrà mettere nella lista dei preferiti i ristoranti che gli sono piaciuti;
+3. Il cliente può inserire recensioni e valutare i ristoranti e, in futuro, modificare o rimuovere le sue recensioni;
+4. Il ristoratore può comodamente visualizzare tutte le recensioni e le medie di stelle dei suoi ristoranti;
+5. Il ristoratore può rispondere alle recensioni lasciate dai clienti dei suoi ristoranti.
+
 ---
 
 ## ⚙️ **Installazione**  
