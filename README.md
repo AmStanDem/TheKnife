@@ -35,13 +35,26 @@ TheKnife è una piattaforma dal doppio utilizzo: consente agli utenti registrati
 
 ## ⚙️ **Installazione**  
 
-da capire con thomas 
+### Requisiti
 
-```bash
-git clone https://github.com/tuo-repo/progetto.git
-cd progetto
-npm install
-```
+•	Java [Oracle Open JDK 24.0]
+•	File eseguibile TheKnife.jar
+
+### Avvio
+
+Metodo 1. Avvio da terminale
+  1.	Apri il prompt dei comandi (Windows) o il terminale (Linux/macOS).
+  2.	Vai nella cartella dove si trova il file TheKnife.jar:
+      cd /percorso/della/cartella
+  3.	Avvia il programma con: 
+      java -jar TheKnife.jar
+    	
+Metodo 2. Avvio tramite interfaccia grafica
+  1.	Vai nella cartella dove si trova il file TheKnife.jar
+  2.	Fai click destro sul file 
+  3.	Seleziona Apri con -> Java (oppure Java(TM) Platform SE binary)
+
+---
 
 ## 🖥️ **Utilizzo**
 
