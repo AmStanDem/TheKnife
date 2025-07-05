@@ -19,7 +19,7 @@
 
 ## 📜 **Introduzione** 
 
-TheKnife è una piattaforma dal doppio utilizzo: consente agli utenti registrati e non, di trovare ristoranti in tutto il mondo e selezionarli in base al luogo, alla tipologia del ristorante stesso, alla fascia di prezzo, alla possibilità o meno di prenotare un tavolo o di ordinare da asporto; e allo stesso tempo permette ai ristoratori di inserire il proprio ristorante o la propria catena per farsi conoscere e ad interagire con i clienti tramite la risposta alle recensioni.
+TheKnife è una piattaforma multifunzione che ha lo scopo di mettere in contatto clienti e ristoratori in modo intuitivo. Da un lato offre agli utenti la possibilità di scoprire ristoranti in tutto il mondo e selezionarli in base al luogo, alla tipologia culinaria, alla fascia di prezzo, e alla possibilità o meno di prenotare un tavolo o di ordinare da asporto. Dall’altro consente ai ristoratori di promuovere la propria attività o la propria catena di ristoranti inserendo le informazioni essenziali, ricevendo recensioni e dialogando direttamente con la clientela attraverso risposte pubbliche, favorendo così visibilità e miglioramento del servizio.
 
 ---
 
@@ -59,6 +59,7 @@ Metodo 2. Avvio tramite interfaccia grafica
 ## 🖥️ **Utilizzo**
 
 📒 **Manuale utente**
+
 https://uninsubria365-my.sharepoint.com/:w:/r/personal/triotto1_studenti_uninsubria_it/Documents/ManualeUtente.docx?d=w8ba40d2e4a9e45c1b7fcc9a52921ac3e&csf=1&web=1&e=WVMIsp
 
 🔧 **Manuale tecnico**
