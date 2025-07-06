@@ -655,7 +655,6 @@ public final class MenuRistoratore extends Menu {
             if (successo) {
                 System.out.println("✓ Risposta modificata con successo!");
                 ristoratore.modificaRisposta(ristorante.getNome(),ristorante.getLocalita(),recensione.getCliente().getUsername(),nuovoTestoRisposta);
-                //RecensioneService.caricaRecensioniRistorante(ristorante);
             } else {
                 System.err.println("Errore nella modifica della risposta.");
             }

@@ -89,15 +89,6 @@ public class Ristoratore extends Utente {
     }
 
     /**
-     * Restituisce il numero totale di ristoranti posseduti dal ristoratore.
-     *
-     * @return Il numero di ristoranti nella lista
-     */
-    public int getNumeroRistoranti() {
-        return ristoranti.size();
-    }
-
-    /**
      * Verifica se il ristoratore possiede un determinato ristorante.
      *
      * @param ristorante Il ristorante da verificare
@@ -108,36 +99,6 @@ public class Ristoratore extends Utente {
             return false;
         }
         return ristoranti.contains(ristorante);
-    }
-
-    /**
-     * Risponde a una recensione specifica lasciata da un cliente per uno dei ristoranti del ristoratore.
-     * Il ristoratore può rispondere solo una volta per ogni recensione.
-     * Utilizza nome e località per identificare univocamente il ristorante.
-     *
-     * @param nomeRistorante  Il nome del ristorante per cui si vuole rispondere alla recensione
-     * @param localita        La località del ristorante per disambiguare ristoranti con stesso nome
-     * @param usernameCliente Lo username del cliente che ha lasciato la recensione
-     * @param risposta        Il testo della risposta del ristoratore
-     * @return true se la risposta è stata aggiunta con successo, false altrimenti
-     */
-    public boolean rispondiARecensione(String nomeRistorante, Localita localita, String usernameCliente, String risposta) {
-        Ristorante ristorante = trovaRistorante(nomeRistorante, localita);
-        if (ristorante == null) {
-            return false;
-        }
-
-        List<Recensione> recensioni = ristorante.getRecensioni();
-        for (Recensione rec : recensioni) {
-            if (rec.appartieneA(usernameCliente)) {
-                if (rec.haRisposta()) {
-                    return false;
-                }
-                rec.aggiungiRisposta(risposta);
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

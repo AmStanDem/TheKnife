@@ -62,7 +62,7 @@ public final class MenuIniziale extends Menu {
             System.out.println("2. Registrazione");
             System.out.println("3. Guest");
             System.out.println("4. Esci\n");
-            System.out.println("Puoi scrivere STOP in qualsiasi momento per concludere il programma");
+            System.out.println("Puoi scrivere STOP in qualsiasi momento per interrompere un processo.");
             System.out.println("Inserisci la funzionalità che desideri: ");
 
             selezione = leggiIntero();
