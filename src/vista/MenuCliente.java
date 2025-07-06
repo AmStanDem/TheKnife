@@ -158,6 +158,10 @@ public final class MenuCliente extends Menu {
         Localita localita = new Localita(coords[0], coords[1]);
         try {
             var lista = RistoranteService.cercaRistorante(localita, 10.0);
+            if (lista.isEmpty()) {
+                System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
+                return;
+            }
             lista.forEach(System.out::println);
         } catch (IOException | CsvException e) {
             System.err.println("Errore nella ricerca dei ristoranti vicini.");
