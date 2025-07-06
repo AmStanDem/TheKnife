@@ -60,7 +60,7 @@ Metodo 2. Avvio tramite interfaccia grafica
 
 📒 **Manuale utente**
 
-https://uninsubria365-my.sharepoint.com/:w:/r/personal/triotto1_studenti_uninsubria_it/Documents/ManualeUtente.docx?d=w8ba40d2e4a9e45c1b7fcc9a52921ac3e&csf=1&web=1&e=WVMIsp
+[![Anteprima Manuale](https://img.shields.io/badge/📖-Vedi_Manuale-blue)](https://github.com/AmStanDem/TheKnife/blob/master/ManualeUtente_v1.pdf)
 
 🔧 **Manuale tecnico**
 ancora da fare :(
