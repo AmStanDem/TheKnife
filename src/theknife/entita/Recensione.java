@@ -1,9 +1,14 @@
-package entita;
+package theknife.entita;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Rappresenta una recensione effettuata da un {@code Cliente} verso un {@code Ristorante}.
  * <p>

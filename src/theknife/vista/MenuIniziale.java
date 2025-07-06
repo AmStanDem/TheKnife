@@ -1,19 +1,24 @@
-package vista;
+package theknife.vista;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 
-import entita.*;
+import theknife.entita.*;
 import com.opencsv.exceptions.CsvException;
-import servizi.GeocodingService;
-import servizi.RecensioneService;
-import servizi.RistoranteService;
-import servizi.UtenteService;
+import theknife.servizi.GeocodingService;
+import theknife.servizi.RecensioneService;
+import theknife.servizi.RistoranteService;
+import theknife.servizi.UtenteService;
 
-import static io_file.GestoreFile.esisteUtente;
-import static servizi.UtenteService.autenticaUtente;
-
+import static theknife.io_file.GestoreFile.esisteUtente;
+import static theknife.servizi.UtenteService.autenticaUtente;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Menù iniziale all'avvio del programma.
  * Permette login, registrazione, accesso guest o uscita.

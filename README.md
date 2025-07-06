@@ -4,7 +4,7 @@
 
 </div>
 
-**Breve descrizione**: Questo è il progetto "TheKnife", un clone della famosa app TheFork come esercizio universitario
+**Breve descrizione**: Questo è il progetto "theknife.TheKnife", un clone della famosa app TheFork come esercizio universitario
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## 📜 **Introduzione** 
 
-TheKnife è una piattaforma multifunzione che ha lo scopo di mettere in contatto clienti e ristoratori in modo intuitivo. Da un lato offre agli utenti la possibilità di scoprire ristoranti in tutto il mondo e selezionarli in base al luogo, alla tipologia culinaria, alla fascia di prezzo, e alla possibilità o meno di prenotare un tavolo o di ordinare da asporto. Dall’altro consente ai ristoratori di promuovere la propria attività o la propria catena di ristoranti inserendo le informazioni essenziali, ricevendo recensioni e dialogando direttamente con la clientela attraverso risposte pubbliche, favorendo così visibilità e miglioramento del servizio.
+theknife.TheKnife è una piattaforma multifunzione che ha lo scopo di mettere in contatto clienti e ristoratori in modo intuitivo. Da un lato offre agli utenti la possibilità di scoprire ristoranti in tutto il mondo e selezionarli in base al luogo, alla tipologia culinaria, alla fascia di prezzo, e alla possibilità o meno di prenotare un tavolo o di ordinare da asporto. Dall’altro consente ai ristoratori di promuovere la propria attività o la propria catena di ristoranti inserendo le informazioni essenziali, ricevendo recensioni e dialogando direttamente con la clientela attraverso risposte pubbliche, favorendo così visibilità e miglioramento del servizio.
 
 ---
 
@@ -38,19 +38,19 @@ TheKnife è una piattaforma multifunzione che ha lo scopo di mettere in contatto
 ### Requisiti
 
 •	Java [Oracle Open JDK 24.0]
-•	File eseguibile TheKnife.jar
+•	File eseguibile theknife.TheKnife.jar
 
 ### Avvio
 
 Metodo 1. Avvio da terminale
   1.	Apri il prompt dei comandi (Windows) o il terminale (Linux/macOS).
-  2.	Vai nella cartella dove si trova il file TheKnife.jar:
+  2.	Vai nella cartella dove si trova il file theknife.TheKnife.jar:
       cd /percorso/della/cartella
   3.	Avvia il programma con: 
-      java -jar TheKnife.jar
+      java -jar theknife.TheKnife.jar
     	
 Metodo 2. Avvio tramite interfaccia grafica
-  1.	Vai nella cartella dove si trova il file TheKnife.jar
+  1.	Vai nella cartella dove si trova il file theknife.TheKnife.jar
   2.	Fai click destro sul file 
   3.	Seleziona Apri con -> Java (oppure Java(TM) Platform SE binary)
 

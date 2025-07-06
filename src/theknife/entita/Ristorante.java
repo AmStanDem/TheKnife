@@ -1,12 +1,17 @@
-package entita;
+package theknife.entita;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
- * Classe che rappresenta un ristorante nel sistema TheKnife.
+ * Classe che rappresenta un ristorante nel sistema theknife.TheKnife.
  * Contiene informazioni essenziali per la gestione delle recensioni
  * e delle caratteristiche del ristorante.
  *
@@ -497,7 +502,7 @@ public class Ristorante {
      * Include informazioni quali:
      * <ul>
      *   <li>Nome, tipo di cucina, località e prezzo medio</li>
-     *   <li>Disponibilità dei servizi di delivery e prenotazione</li>
+     *   <li>Disponibilità dei theknife.servizi di delivery e prenotazione</li>
      *   <li>Descrizione personalizzata</li>
      *   <li>Statistiche sulle recensioni, inclusa la media delle stelle</li>
      * </ul>

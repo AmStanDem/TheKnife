@@ -1,13 +1,18 @@
-package servizi;
+package theknife.servizi;
 
-import entita.*;
+import theknife.entita.*;
 import com.opencsv.exceptions.CsvException;
-import io_file.GestoreFile;
+import theknife.io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Servizio per la gestione dei ristoranti e delle loro informazioni.
  * Tramite l'inserimento dei filtri la ricerca del ristorante diviene più specifica affinchè l'utente possa tovare

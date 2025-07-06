@@ -1,6 +1,6 @@
-package io_file;
+package theknife.io_file;
 
-import entita.*;
+import theknife.entita.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -18,7 +18,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Gestore per le operazioni di lettura e scrittura su file CSV
  * per utenti, ristoranti, recensioni e preferiti.

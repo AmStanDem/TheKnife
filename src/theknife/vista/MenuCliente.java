@@ -1,16 +1,21 @@
-package vista;
+package theknife.vista;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import entita.*;
+import theknife.entita.*;
 import com.opencsv.exceptions.CsvException;
-import servizi.GeocodingService;
-import servizi.RecensioneService;
-import servizi.RistoranteService;
-import servizi.UtenteService;
-
+import theknife.servizi.GeocodingService;
+import theknife.servizi.RecensioneService;
+import theknife.servizi.RistoranteService;
+import theknife.servizi.UtenteService;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Classe che rappresenta il menu principale per un cliente autenticato.
  * Fornisce varie opzioni per visualizzare ristoranti, gestire preferiti e recensioni.

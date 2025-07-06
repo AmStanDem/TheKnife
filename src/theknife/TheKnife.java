@@ -1,12 +1,19 @@
-import vista.MenuIniziale;
+package theknife;
+
+import theknife.vista.MenuIniziale;
 
 import java.util.Scanner;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
- * Classe principale del progetto <strong>TheKnife</strong>.
+ * Classe principale del progetto <strong>theknife.TheKnife</strong>.
  * <p>
  * Questa classe rappresenta il punto di ingresso dell'applicazione e gestisce
- * l'inizializzazione dei componenti principali, l'avvio dei servizi e la visualizzazione
+ * l'inizializzazione dei componenti principali, l'avvio dei theknife.servizi e la visualizzazione
  * dell'interfaccia utente.
  * <p>
  * Il progetto è pensato per facilitare l'interazione tra utenti e ristoratori,
@@ -16,7 +23,7 @@ import java.util.Scanner;
  * <ul>
  *   <li>Avvio dell'applicazione</li>
  *   <li>Caricamento delle entità e dei file di configurazione</li>
- *   <li>Gestione dei servizi e della logica di business</li>
+ *   <li>Gestione dei theknife.servizi e della logica di business</li>
  *   <li>Visualizzazione dell'interfaccia utente</li>
  * </ul>
  * @author Thomas Riotto

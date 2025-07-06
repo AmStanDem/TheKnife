@@ -1,8 +1,8 @@
-package vista;
+package theknife.vista;
 
-import entita.Cliente;
-import entita.Ristoratore;
-import entita.Utente;
+import theknife.entita.Cliente;
+import theknife.entita.Ristoratore;
+import theknife.entita.Utente;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
@@ -10,8 +10,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-import static io_file.GestoreFile.esisteUtente;
-
+import static theknife.io_file.GestoreFile.esisteUtente;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Servizio per gestire la registrazione di un nuovo utente nel sistema.
  * Permette di acquisire i dati necessari tramite input da console e validarne la correttezza.

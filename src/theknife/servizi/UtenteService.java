@@ -1,15 +1,20 @@
-package servizi;
+package theknife.servizi;
 
-import entita.Cliente;
-import entita.Ristorante;
-import entita.Ristoratore;
-import entita.Utente;
+import theknife.entita.Cliente;
+import theknife.entita.Ristorante;
+import theknife.entita.Ristoratore;
+import theknife.entita.Utente;
 import com.opencsv.exceptions.CsvException;
-import io_file.GestoreFile;
+import theknife.io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Servizio per la gestione degli utenti e delle operazioni a essi correlate.
  * Funge da intermediario tra la logica di business e la persistenza dei dati.

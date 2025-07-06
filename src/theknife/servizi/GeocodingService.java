@@ -1,4 +1,4 @@
-package servizi;
+package theknife.servizi;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +13,12 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Servizio per la geolocalizzazione di luoghi in coordinate geografiche.
  *
@@ -48,7 +53,7 @@ public final class GeocodingService {
 
             final HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
-                    .header("User-Agent", "TheKnife/1.0")
+                    .header("User-Agent", "theknife.TheKnife/1.0")
                     .GET()
                     .build();
 

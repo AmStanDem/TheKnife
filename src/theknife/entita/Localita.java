@@ -1,10 +1,15 @@
-package entita;
-
+package theknife.entita;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Rappresenta una località geografica relativa a un ristorante o a un utente.<p>
  * Contiene informazioni su nazione, città, indirizzo e coordinate geografiche.<p>
  * Fornisce funzionalità per il calcolo della distanza tra località, utile per
- * visualizzare ristoranti vicini sulla piattaforma TheKnife.
+ * visualizzare ristoranti vicini sulla piattaforma theknife.TheKnife.
  *
  * @author Thomas Riotto
  */

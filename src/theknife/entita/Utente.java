@@ -1,9 +1,14 @@
-package entita;
+package theknife.entita;
 
 import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDate;
 import java.util.Objects;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Rappresenta un utente del sistema, che può essere un cliente o un ristoratore.
  * <p>

@@ -1,16 +1,21 @@
-package vista;
+package theknife.vista;
 
-import entita.*;
+import theknife.entita.*;
 import com.opencsv.exceptions.CsvException;
-import servizi.GeocodingService;
-import servizi.RecensioneService;
-import servizi.RistoranteService;
+import theknife.servizi.GeocodingService;
+import theknife.servizi.RecensioneService;
+import theknife.servizi.RistoranteService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Menu con le operazioni disponibili per un ristoratore.
  * Permette di aggiungere ristoranti, visualizzare recensioni,
@@ -262,7 +267,7 @@ public final class MenuRistoratore extends Menu {
             } while(!stato);
 
 
-            // Inserimento servizi
+            // Inserimento theknife.servizi
             System.out.println("\n=== SERVIZI DISPONIBILI ===");
             System.out.print("Servizio delivery disponibile? (s/n): ");
             String inputDelivery = scanner.next().toLowerCase();

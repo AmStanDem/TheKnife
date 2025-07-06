@@ -1,3 +1,9 @@
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Questo package contiene la classe GestoreFile, che serve per l'inserimento e rimozione dei dati nei file CSV.
  * <p>
@@ -10,5 +16,5 @@
  * </ul>
  * <p>
  */
-package io_file;
+package theknife.io_file;
 

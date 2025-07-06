@@ -1,5 +1,11 @@
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /***
- * Questo package contiene servizi fondamentali per il funzionamento dell'app:
+ * Questo package contiene theknife.servizi fondamentali per il funzionamento dell'app:
  * <p>
  *     <ul>
  *         <li>{@code GeocodingService}: servizio di geolocalizzazione dell'utente tramite l'uso delle coordinate geografiche</li>
@@ -8,9 +14,9 @@
  *         <li>{@code UtenteService}: servizio per la gestione dei dati dell'utente </li>
  *      </ul>
  * <p>
- * Il package ha lo scopo di offrire servizi essenziali per la gestione dei dati e all'interno del codice,
+ * Il package ha lo scopo di offrire theknife.servizi essenziali per la gestione dei dati e all'interno del codice,
  * facilitando la gestione dei dati e il mantenimento dell'applicazione.
  */
 
 
-package servizi;
+package theknife.servizi;

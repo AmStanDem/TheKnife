@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"entita"},{"l":"io_file"},{"l":"servizi"},{"l":"vista"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"theknife"},{"l":"theknife.entita"},{"l":"theknife.io_file"},{"l":"theknife.servizi"},{"l":"theknife.vista"}];updateSearchResults();

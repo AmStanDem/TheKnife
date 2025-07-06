@@ -1,5 +1,11 @@
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
- * Questo package contiene le entità principali del sistema gestionale TheKnife.
+ * Questo package contiene le entità principali del sistema gestionale theknife.TheKnife.
  * <p>
  * Le classi incluse modellano gli attori fondamentali dell'applicazione:
  * <ul>
@@ -14,4 +20,4 @@
  * Il package ha lo scopo di offrire una struttura modulare e coerente per la gestione degli oggetti
  * di dominio, facilitando lo sviluppo e il mantenimento dell'applicazione.
  */
-package entita;
+package theknife.entita;

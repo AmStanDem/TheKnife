@@ -1,19 +1,24 @@
-package servizi;
+package theknife.servizi;
 
-import entita.Cliente;
-import entita.Recensione;
-import entita.Ristorante;
-import entita.Ristoratore;
+import theknife.entita.Cliente;
+import theknife.entita.Recensione;
+import theknife.entita.Ristorante;
+import theknife.entita.Ristoratore;
 import com.opencsv.exceptions.CsvException;
-import io_file.GestoreFile;
+import theknife.io_file.GestoreFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static servizi.RistoranteService.getRecensioniRistorante;
-
+import static theknife.servizi.RistoranteService.getRecensioniRistorante;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Servizio per la gestione delle recensioni e delle operazioni correlate.
  * Funge da intermediario tra la logica di business e la persistenza dei dati.
@@ -25,7 +30,7 @@ public final class RecensioneService {
     /**
      * Costruttore privato che impedisce l'istanziamento della classe {@code RecensioneService}.
      * <p>
-     * Questa classe è una utility statica che fornisce servizi di gestione delle recensioni
+     * Questa classe è una utility statica che fornisce theknife.servizi di gestione delle recensioni
      * e non è progettata per essere istanziata. Tutti i metodi sono statici e accessibili direttamente.
      */
     private RecensioneService() {}

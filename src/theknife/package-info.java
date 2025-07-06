@@ -1,5 +1,11 @@
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
- * Il package <code>src</code> costituisce la base dell'applicazione <strong>TheKnife</strong> e
+ * Il package <code>TheKnife</code> costituisce la base dell'applicazione <strong>TheKnife</strong> e
  * include la suddivisione logica del codice in moduli funzionali.
  * <p>
  * I sottopackage presenti gestiscono responsabilità specifiche:
@@ -14,4 +20,4 @@
 
  *
  */
-package src;
+package theknife;

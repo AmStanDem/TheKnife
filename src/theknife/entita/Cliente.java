@@ -1,9 +1,14 @@
-package entita;
+package theknife.entita;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
  * Rappresenta un utente del sistema che assume il ruolo di cliente.
  * <p>

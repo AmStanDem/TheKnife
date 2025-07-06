@@ -1,7 +1,12 @@
-package entita;
-
+package theknife.entita;
+/*
+ * Riotto Thomas 760981 VA
+ * Pesavento Antonio 759933 VA
+ * Tullo Alessandro 760760 VA
+ * Zaro Marco 760194 VA
+ */
 /**
- * Rappresenta le varie tipologie di cucina disponibili nel sistema TheKnife.
+ * Rappresenta le varie tipologie di cucina disponibili nel sistema theknife.TheKnife.
  * <p>
  * Questa enumerazione è pensata per classificare i ristoranti secondo lo stile culinario,
  * semplificando la selezione da parte dei clienti. I valori disponibili includono
