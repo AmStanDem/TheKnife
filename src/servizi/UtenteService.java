@@ -18,7 +18,12 @@ import java.util.ArrayList;
  */
 public final class UtenteService {
 
-
+    /**
+     * Costruttore privato della classe {@code UtenteService}.
+     * <p>
+     * Impedisce l’istanziamento diretto della classe che espone esclusivamente metodi statici.
+     * L’uso di questo costruttore garantisce che {@code UtenteService} sia utilizzata solo come classe utility.
+     */
     private UtenteService() {
     }
 

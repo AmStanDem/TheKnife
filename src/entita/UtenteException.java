@@ -8,6 +8,11 @@ package entita;
  * @author Thomas Riotto
  */
 public class UtenteException extends RuntimeException {
+    /**
+     * Costruisce una nuova UtenteException con il messaggio specificato.
+     *
+     * @param message il messaggio di errore dettagliato
+     */
     public UtenteException(String message) {
         super(message);
     }

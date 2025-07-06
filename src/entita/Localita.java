@@ -12,17 +12,20 @@ package entita;
 public final class Localita {
 
     /**
-     * Nazione in cui si trova la località (es. "Italia").
+     * Nazione in cui si trova la località
+     * (es. "Italia").
      */
     private final String nazione;
 
     /**
-     * Città associata alla località (es. "Milano").
+     * Città associata alla località
+     * (es. "Milano").
      */
     private final String citta;
 
     /**
-     * Indirizzo specifico della località (es. "Via Roma 12").
+     * Indirizzo specifico della località
+     * (es. "Via Roma 12").
      */
     private final String indirizzo;
 
@@ -127,6 +130,11 @@ public final class Localita {
         return this.citta.equalsIgnoreCase(altra.citta) &&
                 this.nazione.equalsIgnoreCase(altra.nazione);
     }
+    /**
+     * Restituisce la nazione in cui si trova il ristorante.
+     *
+     * @return Nome della nazione
+     */
     public String getNazione() {
         return nazione;
     }

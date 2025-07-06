@@ -26,8 +26,14 @@ public final class GeocodingService {
     /** Oggetto per effettuare la lettura dei dati in JSON. */
     private static final Gson gson = new Gson();
 
-    private GeocodingService() {
-    }
+    /**
+     * Costruttore privato della classe GeocodingService.
+     * <p>
+     * Utilizzato per evitare l'istanziamento diretto e forzare l'uso di metodi statici
+     * o di singleton, se previsti dalla logica della classe.
+     */
+    private GeocodingService() {}
+
 
     /**
      * Effettua la geocodificazione di un indirizzo e restituisce le coordinate come array di double.
@@ -76,14 +82,26 @@ public final class GeocodingService {
     public static double[] chiediCoordinateManuali(Scanner scanner) {
         double latitudine = 0.0, longitudine = 0.0;
         boolean valido = false;
+        final String stop = "STOP";
+        String input;
 
         while (!valido) {
             try {
                 System.out.println("Url con: https://www.where-am-i.net/");
                 System.out.print("Inserisci la latitudine: ");
-                latitudine = Double.parseDouble(scanner.nextLine().trim());
+                input = scanner.nextLine().trim();
+                if (input.equalsIgnoreCase(stop)) {
+                    System.out.println("Inserito Stop; Inserimento coordinate manuali interrotto.");
+                    return null;
+                }
+                latitudine = Double.parseDouble(input);
                 System.out.print("Inserisci la longitudine: ");
-                longitudine = Double.parseDouble(scanner.nextLine().trim());
+                input = scanner.nextLine().trim();
+                if (input.equalsIgnoreCase(stop)) {
+                    System.out.println("Inserito Stop; Inserimento coordinate manuali interrotto.");
+                    return null;
+                }
+                longitudine = Double.parseDouble(input);
                 valido = true;
             } catch (NumberFormatException e) {
                 System.err.println("Valore non valido. Inserisci numeri decimali validi.");

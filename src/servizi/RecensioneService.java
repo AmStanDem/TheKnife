@@ -22,6 +22,13 @@ import static servizi.RistoranteService.getRecensioniRistorante;
  * @author Alessandro Tullo
  */
 public final class RecensioneService {
+    /**
+     * Costruttore privato che impedisce l'istanziamento della classe {@code RecensioneService}.
+     * <p>
+     * Questa classe è una utility statica che fornisce servizi di gestione delle recensioni
+     * e non è progettata per essere istanziata. Tutti i metodi sono statici e accessibili direttamente.
+     */
+    private RecensioneService() {}
 
     /**
      * Aggiunge una recensione tramite un cliente.

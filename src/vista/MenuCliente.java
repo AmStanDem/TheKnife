@@ -78,6 +78,7 @@ public final class MenuCliente extends Menu {
      */
     @Override
     public void mostra() {
+        System.out.println("\n=== MENU CLIENTE ===");
         System.out.println("Benvenuto " + cliente);
         int opzione;
 
@@ -154,10 +155,15 @@ public final class MenuCliente extends Menu {
      */
     private void visualizzaRistorantiVicini() {
         double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
-        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
+        if (coords == null) {
+            coords = GeocodingService.chiediCoordinateManuali(scanner);
+            if (coords == null) {
+                return;
+            }
+        }
         Localita localita = new Localita(coords[0], coords[1]);
         try {
-            var lista = RistoranteService.cercaRistorante(localita, 10.0);
+            var lista = RistoranteService.cercaRistorante(localita, 25.0);
             if (lista.isEmpty()) {
                 System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
                 return;
@@ -173,15 +179,18 @@ public final class MenuCliente extends Menu {
      */
     private void cercaRistoranteAvanzata() {
         double[] coords = GeocodingService.geocodeAddress(cliente.getLuogoDomicilio());
-        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
+        if (coords == null) {
+            coords = GeocodingService.chiediCoordinateManuali(scanner);
+            if (coords == null) {
+                return;
+            }
+        }
         Localita localita = new Localita(coords[0], coords[1]);
         try {
-            /**
-             * Comando per uscire o interrompere operazioni.
-             */
             ArrayList<Ristorante> risultati = RistoranteService.ricercaAvanzata(scanner, localita, stop);
             if (risultati.isEmpty()) {
-                System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
+                if (!RistoranteService.interrotto)
+                    System.out.println("Nessun ristorante trovato. Prova a restringere la ricerca.");
             } else {
                 RecensioneService.caricaRecensioniPerTuttiRistoranti(risultati);
                 gestisciRisultatiRicerca(risultati);

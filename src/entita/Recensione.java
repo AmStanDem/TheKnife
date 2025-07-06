@@ -114,6 +114,8 @@ public final class Recensione {
     // Getter methods
 
     /**
+     * Restituisce il cliente che ha fatto la recensione
+     *
      * @return Il cliente della recensione.
      */
     public Cliente getCliente() {
@@ -121,6 +123,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce la data della recensione
+     *
      * @return La data della recensione.
      */
     public LocalDateTime getDataRecensione() {
@@ -128,6 +132,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce la data della risposta del Ristoratore
+     *
      * @return La data della risposta del ristoratore.
      */
     public LocalDateTime getDataRisposta() {
@@ -135,6 +141,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce il messaggio della recensione
+     *
      * @return Il messaggio della recensione.
      */
     public String getMessaggio() {
@@ -142,6 +150,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce la risposta del ristoratore
+     *
      * @return La risposta del ristoratore.
      */
     public String getRispostaRistoratore() {
@@ -149,6 +159,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce il ristorante recensito
+     *
      * @return Il ristorante recensito
      */
     public Ristorante getRistorante() {
@@ -156,6 +168,8 @@ public final class Recensione {
     }
 
     /**
+     * Restituisce il numero di stelle della recensione
+     *
      * @return Il numero di stelle della recensione, da 1 a 5.
      */
     public int getStelle() {

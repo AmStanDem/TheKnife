@@ -28,6 +28,13 @@ public final class MenuRistoratore extends Menu {
      * Il ristoratore autenticato.
      */
     private final Ristoratore ristoratore;
+
+    /**
+     * Comando testuale utilizzato per interrompere l’esecuzione del menu.
+     * <p>
+     * Viene confrontato con l’input dell’utente per determinare se uscire dal ciclo
+     * di interazione. È marcato come {@code final} per garantire l’immutabilità.
+     */
     private final String stop = "stop";
 
     /**
@@ -163,6 +170,9 @@ public final class MenuRistoratore extends Menu {
 
             if (coords == null) {
                 coords = GeocodingService.chiediCoordinateManuali(scanner);
+                if (coords == null) {
+                    return;
+                }
             }
             latitudine = coords[0];
             longitudine = coords[1];

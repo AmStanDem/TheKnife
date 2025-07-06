@@ -7,6 +7,9 @@ package vista;
  */
 public abstract class Menu {
 
+    /**
+     * Metodo statico protetto che stampa un banner decorativo all'avvio del menu.
+     */
     protected static void stampaBanner() {
         System.out.println();
         System.out.println();

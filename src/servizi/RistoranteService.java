@@ -19,6 +19,23 @@ import java.util.Scanner;
 
 public final class RistoranteService {
 
+    /**
+     * Flag di controllo per interrompere l'esecuzione di operazioni.
+     * <p>
+     * Può essere utilizzato per segnalare che un processo in corso deve essere fermato,
+     * ad esempio durante il caricamento dei dati o l'elaborazione di file.
+     */
+    public static boolean interrotto = false;
+
+    /**
+     * Costruttore privato che impedisce l'istanziamento della classe {@code RistoranteService}.
+     * <p>
+     * Tutti i metodi sono statici, quindi non è prevista la creazione di oggetti.
+     */
+    private RistoranteService() {
+
+    }
+
 
     /**
      * Cerca ristoranti applicando una combinazione di filtri specificati.
@@ -332,7 +349,7 @@ public final class RistoranteService {
         );
     }
 
-    private static boolean interrotto = false;
+
 
 
     /**
@@ -379,7 +396,7 @@ public final class RistoranteService {
      * @return Il raggio in km desiderato
      */
     private static Double inserisciRaggio(Scanner scanner, String stop) {
-        System.out.print("\nRaggio di ricerca in km (default: 10km, premi INVIO per default): ");
+        System.out.print("\nRaggio di ricerca in km (default: 25km, massimo 25 km, premi INVIO per default): ");
         String input = scanner.nextLine().trim();
 
         if (input.equalsIgnoreCase(stop)) {
@@ -387,14 +404,14 @@ public final class RistoranteService {
             return null;
         }
 
-        if (input.isEmpty()) return 10.0;
+        if (input.isEmpty()) return 25.0;
 
         try {
             double raggio = Double.parseDouble(input);
-            return (raggio > 0) ? raggio : 10.0;
+            return (raggio > 0 && raggio < 25.0) ? raggio : 25.0;
         } catch (NumberFormatException e) {
-            System.out.println("Input non valido, utilizzato default 10km.");
-            return 10.0;
+            System.out.println("Input non valido, utilizzato default 25km.");
+            return 25.0;
         }
     }
 

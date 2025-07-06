@@ -123,8 +123,9 @@ public class GestoreFile {
     }
     //endregion
 
-    /** Valori di lookup per i boolean del delivery e prenotazione. */
+    /** Valore di lookup per i boolean del delivery e prenotazione. */
     private static final String VALORE_SI = "Sì";
+    /** Valore di lookup per i boolean del delivery e prenotazione. */
     private static final String VALORE_NO = "No";
 
     //endregion
@@ -132,7 +133,7 @@ public class GestoreFile {
     //region === COSTRUTTORI ===
 
     /**
-     * Tenuto intenzionalmente privato.
+     * Cotruttore vuoto tenuto intenzionalmente privato.
      */
     private GestoreFile() {
     }

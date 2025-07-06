@@ -64,16 +64,32 @@ public abstract class Utente {
 
     //region --- Getters e Setters ---
 
-    /** @return Il nome formattato dell’utente */
+    /**
+     * Restituisce Il nome formattato dell’utente
+     *
+     * @return Il nome formattato dell’utente
+     */
     public String getNome() { return nome; }
 
-    /** @return Il cognome formattato dell’utente */
+    /**
+     * Restituisce il cognome formattato dell’utente
+     *
+     * @return Il cognome formattato dell’utente
+     */
     public String getCognome() { return cognome; }
 
-    /** @return Lo username dell’utente */
+    /**
+     * Restituisce l'username dell’utente
+     *
+     * @return Lo username dell’utente
+     */
     public String getUsername() { return username; }
 
-    /** @return La password cifrata dell’utente */
+    /**
+     * Restituisce la password cifrata dell’utente
+     *
+     * @return La password cifrata dell’utente
+     */
     public String getPassword() { return password; }
 
     /**

@@ -1,5 +1,5 @@
 "Username","Ristorante","Nazione","Città","Indirizzo","Latitudine","Longitudine","Stelle","Messaggio","Data","Risposta","DataRisposta"
-"cliente01","ristorante02","Italia","Legnano","Piazza San Magno,9","45.5953029","8.9192421","2","si trova a Legnano","2025-07-02T18:47:26.749647900","",""
+"cliente01","ristorante02","Italia","Legnano","Piazza San Magno,9","45.5953029","8.9192421","5","stop","2025-07-06T11:50:53.170199","",""
 "elena_russo","Vegana Felicità","Italia","Torino","Piazza Castello 10","45.070312","7.686856","5","Ottimo ristorante vegano!","2025-07-04T19:35:41.815350","",""
 "marco_rossi","Sushi Zen Garden","Italia","Roma","Via del Corso 15","41.902782","12.496365","4","Ottimo sushi, servizio veloce.","2025-07-05T12:15:22","Grazie mille Marco! Ti aspettiamo di nuovo presto.","2025-07-05T13:00"
 "elena_russo","Indian Spice","Italia","Venezia","Campo San Polo 1200","45.437135","12.33459","3","Spezie troppo forti per i miei gusti.","2025-07-05T14:22:50","Grazie per il feedback Elena, proveremo a bilanciare meglio le spezie.","2025-07-05T15:00"

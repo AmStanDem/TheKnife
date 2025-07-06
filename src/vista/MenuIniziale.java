@@ -204,7 +204,12 @@ public final class MenuIniziale extends Menu {
             return;
         }
         double[] coords = GeocodingService.geocodeAddress(luogo);
-        if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
+        if (coords == null) {
+            coords = GeocodingService.chiediCoordinateManuali(scanner);
+            if (coords == null) {
+                return;
+            }
+        }
         Localita localita = new Localita(coords[0], coords[1]);
 
         ArrayList<Ristorante> ultimiRisultati = new ArrayList<>();
@@ -222,8 +227,8 @@ public final class MenuIniziale extends Menu {
             switch (scelta) {
                 case 1 -> {
                     try {
-                        ultimiRisultati = RistoranteService.cercaRistorante(localita, 10.0);
-                        if (ultimiRisultati.isEmpty()) System.out.println("Nessun ristorante entro 10 km.");
+                        ultimiRisultati = RistoranteService.cercaRistorante(localita, 25.0);
+                        if (ultimiRisultati.isEmpty()) System.out.println("Nessun ristorante entro 25 km.");
                         else {
                             RecensioneService.caricaRecensioniPerTuttiRistoranti(ultimiRisultati);
                             ultimiRisultati.forEach(System.out::println);
@@ -257,7 +262,12 @@ public final class MenuIniziale extends Menu {
                         return;
                     }
                     coords = GeocodingService.geocodeAddress(luogo);
-                    if (coords == null) coords = GeocodingService.chiediCoordinateManuali(scanner);
+                    if (coords == null) {
+                        coords = GeocodingService.chiediCoordinateManuali(scanner);
+                        if (coords == null) {
+                            return;
+                        }
+                    }
                     localita = new Localita(coords[0], coords[1]);
                 }
                 case 4 -> {
