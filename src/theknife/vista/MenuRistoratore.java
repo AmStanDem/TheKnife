@@ -653,8 +653,13 @@ public final class MenuRistoratore extends Menu {
             );
 
             if (successo) {
-                System.out.println("✓ Risposta modificata con successo!");
-                ristoratore.modificaRisposta(ristorante.getNome(),ristorante.getLocalita(),recensione.getCliente().getUsername(),nuovoTestoRisposta);
+                successo = ristoratore.modificaRisposta(ristorante.getNome(),ristorante.getLocalita(),recensione.getCliente().getUsername(),nuovoTestoRisposta);
+                if (successo) {
+                    System.out.println("✓ Risposta modificata con successo!");
+                }
+                else {
+                    System.err.println("Errore nella modifica della risposta.");
+                }
             } else {
                 System.err.println("Errore nella modifica della risposta.");
             }
@@ -684,7 +689,6 @@ public final class MenuRistoratore extends Menu {
 
             if (successo) {
                 System.out.println("✓ Risposta eliminata con successo!");
-                ristoratore.modificaRisposta(ristorante.getNome(),ristorante.getLocalita(),recensione.getCliente().getUsername(),"");
             } else {
                 System.err.println("Errore nell'eliminazione della risposta.");
             }
