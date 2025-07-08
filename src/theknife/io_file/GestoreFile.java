@@ -6,6 +6,8 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import java.nio.file.Paths;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,23 +36,50 @@ public class GestoreFile {
 
     //region === ATTRIBUTI ===
 
+    // === METODO PER OTTENERE IL PERCORSO DINAMICO ===
+    private static Path getPercorso(String nomeFile) {
+        try {
+            Path baseDir = Paths.get(GestoreFile.class.getProtectionDomain()
+                            .getCodeSource()
+                            .getLocation()
+                            .toURI())
+                    .getParent();
+
+            // Se siamo in esecuzione da IDE (es. out/production/TheKnife), saliamo di 2 livelli
+            if (baseDir.endsWith("production") || baseDir.toString().contains("out")) {
+                baseDir = baseDir.getParent().getParent(); // Torna a TheKnife/
+            } else {
+                baseDir = baseDir.getParent(); // Siamo nel JAR in bin/
+            }
+
+            return baseDir.resolve("data").resolve(nomeFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nel calcolo del percorso del file: " + nomeFile, e);
+        }
+    }
+
     //region === PERCORSI DEI FILE CSV ===
+
     /**
      * Path del file utenti
      */
-    private static final Path DATASET_UTENTI = Path.of("data", "Utenti.csv");
+    private static final Path DATASET_UTENTI = getPercorso("Utenti.csv");
+
     /**
      * Path del file ristoranti
      */
-    private static final Path DATASET_RISTORANTI = Path.of("data", "Ristoranti.csv");
+    private static final Path DATASET_RISTORANTI = getPercorso("Ristoranti.csv");
+
     /**
      * Path del file recensioni
      */
-    private static final Path DATASET_RECENSIONI = Path.of("data", "Recensioni.csv");
+    private static final Path DATASET_RECENSIONI = getPercorso("Recensioni.csv");
+
     /**
      * Path del file preferiti
      */
-    private static final Path DATASET_PREFERITI = Path.of("data", "Preferiti.csv");
+    private static final Path DATASET_PREFERITI = getPercorso("Preferiti.csv");
+
     //endregion
 
     //region === INTESTAZIONI DEI FILE CSV ===
@@ -369,6 +398,7 @@ public class GestoreFile {
      */
     public static Utente cercaUtente(String username) throws IOException, CsvException {
         try (BufferedReader br = Files.newBufferedReader(DATASET_UTENTI);
+
              CSVReader reader = new CSVReaderBuilder(br)
                      .withSkipLines(1)
                      .build()) {

@@ -430,7 +430,7 @@ public final class RistoranteService {
         System.out.println("\nFascia di prezzo:");
         Float prezzoMinimo = null, prezzoMassimo = null;
 
-        System.out.print("Prezzo minimo in € (premi INVIO per saltare): ");
+        System.out.print("Prezzo minimo in euro (premi INVIO per saltare): ");
         String minInput = scanner.nextLine().trim();
         if (minInput.equalsIgnoreCase(stop)) {
             interrotto = true;
@@ -444,7 +444,7 @@ public final class RistoranteService {
             } catch (NumberFormatException ignored) {}
         }
 
-        System.out.print("Prezzo massimo in € (premi INVIO per saltare): ");
+        System.out.print("Prezzo massimo in euro (premi INVIO per saltare): ");
         String maxInput = scanner.nextLine().trim();
         if (maxInput.equalsIgnoreCase(stop)) {
             interrotto = true;
