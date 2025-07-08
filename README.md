@@ -59,7 +59,7 @@ Metodo 2. Avvio tramite interfaccia grafica
 ## 🖥️ **Utilizzo**
 
 📒 **Manuale utente**
-[![Anteprima Manuale](https://img.shields.io/badge/📖-Vedi_Manuale-blue)](https://github.com/AmStanDem/TheKnife/blob/master/doc/ManualeUtente_v2.pdf)
+[![Anteprima Manuale](https://img.shields.io/badge/📖-Vedi_Manuale-blue)](https://github.com/AmStanDem/TheKnife/blob/master/doc/ManualeUtente_v3.pdf)
 
 🔧 **Manuale tecnico**
 [![Anteprima Manuale](https://img.shields.io/badge/📖-Vedi_Manuale-blue)](https://github.com/AmStanDem/TheKnife/blob/master/doc/ManualeTecnico_v2.pdf)
