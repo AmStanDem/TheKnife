@@ -296,7 +296,7 @@ public final class Recensione {
 
         sb.append(cliente.getUsername()).append(" (")
                 .append(cliente.getCognome()).append(" ").append(cliente.getNome())
-                .append(")    Stelle: ").append("★".repeat(stelle)).append(" (").append(stelle).append("/5)")
+                .append(")    Stelle: ").append("*".repeat(stelle)).append(" (").append(stelle).append("/5)")
                 .append("\nRistorante: ").append(ristorante.getNome());
 
         if (!messaggio.isEmpty()) {

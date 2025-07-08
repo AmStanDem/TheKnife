@@ -512,14 +512,14 @@ public class Ristorante {
      */
     @Override
     public String toString() {
-        return "🍽️  " + nome + "\n" +
-                "📍  Località: " + localita.getCitta() + "\n" +
-                "🍴  Cucina: " + tipoDiCucina + "\n" +
-                String.format("💶  Prezzo medio: %.2f €%n", prezzoMedio) +
-                "🚚  Delivery: " + (delivery ? "Sì" : "No") + "\n" +
-                "📅  Prenotazione online: " + (prenotazione ? "Sì" : "No") + "\n" +
-                "📝  Descrizione: " + (descrizione.isEmpty() ? "[Nessuna descrizione]" : descrizione) + "\n" +
-                "⭐️  Recensioni: " + getNumeroRecensioni() +
+        return "  " + nome + "\n" +
+                "  Località: " + localita.getCitta() + "\n" +
+                "  Cucina: " + tipoDiCucina + "\n" +
+                String.format("  Prezzo medio: %.2f euro%n", prezzoMedio) +
+                "  Delivery: " + (delivery ? "Sì" : "No") + "\n" +
+                "  Prenotazione online: " + (prenotazione ? "Sì" : "No") + "\n" +
+                "  Descrizione: " + (descrizione.isEmpty() ? "[Nessuna descrizione]" : descrizione) + "\n" +
+                "  Recensioni: " + getNumeroRecensioni() +
                 " (media " + String.format("%.1f", getMediaStelle()) + "/5)" + "\n";
     }
 

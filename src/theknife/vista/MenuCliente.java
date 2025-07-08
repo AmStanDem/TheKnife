@@ -449,7 +449,7 @@ public final class MenuCliente extends Menu {
         try {
             // Verifica se l'utente ha già recensito questo ristorante
             if (!RecensioneService.puoAggiungereRecensione(cliente, ristoranteSelezionato)) {
-                System.out.println("Hai già recensito questo ristorante. Usa l'opzione 'Modifica recensione' per modificarla.");
+                System.out.println("Hai gia' recensito questo ristorante. Usa l'opzione 'Modifica recensione' per modificarla.");
                 return;
             }
 
